@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cadmus.Biblio.Api</name>
+    </assembly>
+    <members>
+        <member name="M:Cadmus.Biblio.Api.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Creates the host builder.
+            </summary>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="T:Cadmus.Biblio.Api.Startup">
+            <summary>
+            Startup.
+            </summary>
+        </member>
+        <member name="P:Cadmus.Biblio.Api.Startup.Configuration">
+            <summary>
+            Gets the configuration.
+            </summary>
+        </member>
+        <member name="P:Cadmus.Biblio.Api.Startup.HostEnvironment">
+            <summary>
+            Gets the host environment.
+            </summary>
+        </member>
+        <member name="M:Cadmus.Biblio.Api.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Hosting.IHostEnvironment)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cadmus.Biblio.Api.Startup"/> class.
+            </summary>
+            <param name="configuration">The configuration.</param>
+            <param name="environment">The environment.</param>
+        </member>
+        <member name="M:Cadmus.Biblio.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures the services.
+            </summary>
+            <param name="services">The services.</param>
+        </member>
+        <member name="M:Cadmus.Biblio.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Configures the specified application.
+            </summary>
+            <param name="app">The application.</param>
+            <param name="env">The environment.</param>
+        </member>
+    </members>
+</doc>
