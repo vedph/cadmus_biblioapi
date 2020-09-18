@@ -222,10 +222,10 @@ namespace Cadmus.Biblio.Api
             // configuration
             services.AddSingleton(_ => Configuration);
             // repository
-            services.AddTransient<IBiblioRepository>(provider =>
+            services.AddTransient<IBiblioRepository>(_ =>
             {
                 return new EfBiblioRepository(
-                    Configuration.GetConnectionString("Default"), "mysql");
+                    Configuration.GetConnectionString("Biblio"), "mysql");
             });
 
             // swagger
