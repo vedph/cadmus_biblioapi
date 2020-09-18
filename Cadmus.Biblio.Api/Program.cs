@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Cadmus.Biblio.Api
 {
+    /// <summary>
+    /// Main program.
+    /// </summary>
     public sealed class Program
     {
         private static void DumpEnvironmentVars()
@@ -41,6 +44,11 @@ namespace Cadmus.Biblio.Api
                     webBuilder.UseSerilog();
                 });
 
+        /// <summary>
+        /// Entry point.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns>0=ok, else error.</returns>
         public static async Task<int> Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
@@ -55,7 +63,7 @@ namespace Cadmus.Biblio.Api
 
             try
             {
-                Log.Information("Starting host");
+                Log.Information("Starting biblio host");
                 DumpEnvironmentVars();
 
                 // this is the place for seeding:
@@ -72,7 +80,7 @@ namespace Cadmus.Biblio.Api
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly");
+                Log.Fatal(ex, "Biblio host terminated unexpectedly");
                 Debug.WriteLine(ex.ToString());
                 Console.WriteLine(ex.ToString());
                 return 1;
