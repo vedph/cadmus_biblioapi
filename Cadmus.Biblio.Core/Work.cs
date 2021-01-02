@@ -24,6 +24,12 @@ namespace Cadmus.Biblio.Core
         public List<Author> Contributors { get; set; }
 
         /// <summary>
+        /// Gets or sets an optional arbitrarily defined key to identify
+        /// this work (e.g. Rossi 1963).
+        /// </summary>
+        public string Key { get; set; }
+
+        /// <summary>
         /// Gets or sets the work's type name.
         /// </summary>
         public string Type { get; set; }
@@ -87,11 +93,6 @@ namespace Cadmus.Biblio.Core
         /// Gets or sets the last page number (0 if not applicable).
         /// </summary>
         public short LastPage { get; set; }
-
-        /// <summary>
-        /// Gets or sets the citation key.
-        /// </summary>
-        public string Key { get; set; }
 
         /// <summary>
         /// Gets or sets some optional notes.
