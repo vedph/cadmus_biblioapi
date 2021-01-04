@@ -32,14 +32,15 @@ Given that a part editor is just a web "page" with its own HTML-based UI and Jav
 
 This project is an example of such an additional API service, provided for those parts requiring to reference a shared bibliographic repository. As such, its database and API interface are designed to provide just the level of functionality typically required by Cadmus part editors.
 
+### Schema
+
 The bibliographic database here is a MySql database with a very simple schema, centered around the concept of work. Apart from its title and details, the work is connected to these other data:
 
-- a single _type_, drawn from an editable list (e.g. book, paper, web page, audio recording, TV show...);
-- any number of _authors_;
-- any number of _contributors_ (when the work is included in a container like e.g. a book collecting papers, and edited by one or more editors);
+- a single _work type_, drawn from an editable list (e.g. book, paper, web page, audio recording, TV show...);
+- any number of _authors_, with different roles (authors proper have a default role of null; other may be translators, organizations, etc.);
 - any number of _keywords_.
 
-We thus have tables for types, works, keywords, authors, and the links between authors and works, in two different roles (authors and contributors).
+Also, works can be contained in a _container_ (e.g. journal, proceedings, books of articles, etc.), with a schema very similar to that of works.
 
 (Paste the following code in the box at [PlantUml website](https://plantuml.com/) if you cannot see it):
 
@@ -48,37 +49,55 @@ We thus have tables for types, works, keywords, authors, and the links between a
 hide circle
 skinparam linetype ortho
 
-entity type {
-    * id: number <<PK AI>>
-    * name: text
+entity worktype {
+    * id <<PK>>
+    * name
 }
 
 entity author {
-    * id: number <<PK AI>>
-    * first: text
-    * last: text
-    * lastx: text
+    * id <<PK>>
+    * first
+    * last
+    * lastx
+    * suffix
 }
 
 entity work {
-    * id: number <<PK AI>>
-    * title: text
-    * titlex: text
-    * language: text
-    * edition: number
-    * number: number
-    * yearPub: number
-    * firstPage: number
-    * lastPage: number
-    * key: text
+    * id <<PK>>
+    * key
+    * title
+    * titlex
+    * language
+    * edition
+    * yearPub
+    * firstPage
+    * lastPage
     --
-    * typeId: number <<FK>>
-    * container: text
-    * containerx: text
-    * publisher: text
-    * placePub: text
-    * location: text
-    * accessDate: datetime
+    * typeId <<FK>>
+    * containerId
+    * publisher
+    * placePub
+    * location
+    * accessDate
+    * note
+}
+
+entity container {
+    * id <<PK>>
+    * key
+    * title
+    * titlex
+    * language
+    * edition
+    * yearPub
+    --
+    * typeId <<FK>>
+    * publisher
+    * placePub
+    * location
+    * accessDate
+    * number
+    * note
 }
 
 entity keyword {
@@ -89,23 +108,33 @@ entity keyword {
 }
 
 entity authorwork {
-    * authorId: number <<PK FK>>
-    * workId: number <<PK FK>>
+    * authorId <<PK FK>>
+    * workId <<PK FK>>
+    * role
 }
 
-entity contributorwork {
-    * authorId: number <<PK FK>>
-    * workId: number <<PK FK>>
+entity authorcontainer {
+    * authorId <<PK FK>>
+    * workId <<PK FK>>
+    * role
 }
 
-work }o-- type
+work }o-- worktype
+work }o-- container
 authorwork }o-- work
-keyword }o-- work
 authorwork }o-- author
-contributorwork }o-- work
-contributorwork }o-- author
+keywordwork }o-- keyword
+keywordwork }o-- work
+authorcontainer }o-- work
+authorcontainer }o-- author
+keywordcontainer }o-- keyword
+keywordcontainer }o-- container
 @enduml
 ```
+
+Alternatively, here is a picture:
+
+![schema](./schema.svg)
 
 Some notes about fields:
 
@@ -143,9 +172,9 @@ a) lookup:
 
 b) edit:
 
-- *add* a new work to the repository, together with its authors, type, and keywords.
-- *update* an existing work.
-- *delete* a work from the repository.
+- _add_ a new work to the repository, together with its authors, type, and keywords.
+- _update_ an existing work.
+- _delete_ a work from the repository.
 
 So for instance you might have a bibliographic references part, with a list of bibliographic references in the conventional form LastName + publication year. In its editor, you might either type the reference directly if you remember it; or use a lookup to find the work by just typing a few characters, and then pick it from the results.
 
