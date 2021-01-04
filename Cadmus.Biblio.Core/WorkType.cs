@@ -1,18 +1,17 @@
-﻿namespace Cadmus.Biblio.Ef
+﻿namespace Cadmus.Biblio.Core
 {
     /// <summary>
-    /// An entity representing the work's type.
+    /// The type of a work or container.
     /// </summary>
-    public sealed class EfWorkType
+    public class WorkType
     {
         /// <summary>
-        /// Gets or sets the identifier. This is an arbitrary string representing
-        /// the type (e.g. <c>book</c>).
+        /// Gets or sets the identifier.
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the human-readable name for the type.
+        /// Gets or sets the name.
         /// </summary>
         public string Name { get; set; }
 
@@ -24,7 +23,7 @@
         /// </returns>
         public override string ToString()
         {
-            return $"{Name} ({Id})";
+            return $"{Id}: {Name}";
         }
     }
 }

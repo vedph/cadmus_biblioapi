@@ -70,8 +70,8 @@ namespace Cadmus.Biblio.Ef
             if (!string.IsNullOrEmpty(filter.Title))
                 filter.Title = StandardFilter.Apply(filter.Title, true);
 
-            if (!string.IsNullOrEmpty(filter.Container))
-                filter.Container = StandardFilter.Apply(filter.Container, true);
+            if (!string.IsNullOrEmpty(filter.ContainerTitle))
+                filter.ContainerTitle = StandardFilter.Apply(filter.ContainerTitle, true);
         }
 
         /// <summary>
@@ -119,8 +119,8 @@ namespace Cadmus.Biblio.Ef
                         || string.IsNullOrEmpty(filter.Title)
                             || w.Titlex.Contains(filter.Title)
                         // container
-                        || string.IsNullOrEmpty(filter.Container)
-                            || w.Containerx.Contains(filter.Container)
+                        || string.IsNullOrEmpty(filter.ContainerTitle)
+                            || w.Containerx.Contains(filter.ContainerTitle)
                         // keyword
                         || string.IsNullOrEmpty(filter.Keyword)
                             || w.KeywordWorks.Any(
@@ -156,8 +156,8 @@ namespace Cadmus.Biblio.Ef
                         works = works.Where(w => w.Titlex.Contains(filter.Title));
 
                     // container
-                    if (!string.IsNullOrEmpty(filter.Container))
-                        works = works.Where(w => w.Containerx.Contains(filter.Container));
+                    if (!string.IsNullOrEmpty(filter.ContainerTitle))
+                        works = works.Where(w => w.Containerx.Contains(filter.ContainerTitle));
 
                     // keyword
                     if (!string.IsNullOrEmpty(filter.Keyword))

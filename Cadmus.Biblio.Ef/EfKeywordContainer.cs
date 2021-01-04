@@ -1,9 +1,6 @@
 ﻿namespace Cadmus.Biblio.Ef
 {
-    /// <summary>
-    /// Entity linking an <see cref="EfKeyword"/> to an <see cref="EfWork"/>.
-    /// </summary>
-    public sealed class EfKeywordWork
+    public sealed class EfKeywordContainer
     {
         /// <summary>
         /// Gets or sets the keyword's internal identifier.
@@ -18,12 +15,12 @@
         /// <summary>
         /// Gets or sets the work identifier.
         /// </summary>
-        public string WorkId { get; set; }
+        public string ContainerId { get; set; }
 
         /// <summary>
         /// Gets or sets the work.
         /// </summary>
-        public EfWork Work { get; set; }
+        public EfContainer Container { get; set; }
 
         /// <summary>
         /// Converts to string.
@@ -33,7 +30,7 @@
         /// </returns>
         public override string ToString()
         {
-            return $"{KeywordId}-{WorkId}";
+            return $"{KeywordId}-{ContainerId}";
         }
     }
 }

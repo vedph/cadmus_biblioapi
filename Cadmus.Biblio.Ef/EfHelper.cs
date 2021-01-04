@@ -35,7 +35,8 @@ namespace Cadmus.Biblio.Ef
             return new Author
             {
                 First = ef.First,
-                Last = ef.Last
+                Last = ef.Last,
+                Suffix = ef.Suffix
             };
         }
 
@@ -56,7 +57,6 @@ namespace Cadmus.Biblio.Ef
                 Language = ef.Language,
                 Container = ef.Container,
                 Edition = ef.Edition,
-                Number = ef.Number,
                 Publisher = ef.Publisher,
                 YearPub = ef.YearPub,
                 PlacePub = ef.PlacePub,
@@ -71,18 +71,7 @@ namespace Cadmus.Biblio.Ef
             if (ef.AuthorWorks?.Count > 0)
             {
                 work.Authors = (from aw in ef.AuthorWorks
-                                select new Author
-                                {
-                                    First = aw.Author?.First,
-                                    Last = aw.Author?.Last,
-                                    Role = aw.Role
-                                }).ToList();
-            }
-
-            if (ef.ContributorWorks?.Count > 0)
-            {
-                work.Authors = (from aw in ef.ContributorWorks
-                                select new Author
+                                select new WorkAuthor
                                 {
                                     First = aw.Author?.First,
                                     Last = aw.Author?.Last,
@@ -147,47 +136,6 @@ namespace Cadmus.Biblio.Ef
                 else
                 {
                     work.AuthorWorks.Add(new EfAuthorWork
-                    {
-                        Author = new EfAuthor
-                        {
-                            First = author.First,
-                            Last = author.Last,
-                            Lastx = StandardFilter.Apply(author.Last, true)
-                        },
-                        Work = work,
-                        Role = author.Role
-                    });
-                }
-            }
-        }
-
-        private static void AddContributors(IList<Author> authors, EfWork work,
-            BiblioDbContext context)
-        {
-            // remove any contributor from the target work
-            var old = context.ContributorWorks.Where(cw => cw.WorkId == work.Id);
-            context.ContributorWorks.RemoveRange(old);
-
-            // add the new contributors
-            work.ContributorWorks = new List<EfContributorWork>();
-
-            foreach (var author in authors)
-            {
-                var efa = context.Authors.FirstOrDefault(a =>
-                    a.First == author.First && a.Last == author.Last);
-
-                if (efa != null)
-                {
-                    work.ContributorWorks.Add(new EfContributorWork
-                    {
-                        Author = efa,
-                        Work = work,
-                        Role = author.Role
-                    });
-                }
-                else
-                {
-                    work.ContributorWorks.Add(new EfContributorWork
                     {
                         Author = new EfAuthor
                         {

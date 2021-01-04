@@ -3,12 +3,15 @@
 namespace Cadmus.Biblio.Ef
 {
     /// <summary>
-    /// A keyword.
+    /// A keyword entity.
     /// </summary>
     public class EfKeyword
     {
         /// <summary>
-        /// Gets or sets the identifier.
+        /// Gets or sets the internal identifier. This does not surface
+        /// to the bibliographic API, as a keyword identity is equal to
+        /// its language and value. Yet, for performance and simplicity here
+        /// an additional autonumber ID is used.
         /// </summary>
         public int Id { get; set; }
 

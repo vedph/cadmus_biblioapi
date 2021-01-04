@@ -37,12 +37,13 @@ namespace Cadmus.Biblio.Core
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets any portion of the container to be matched (filtered).
+        /// Gets or sets any portion of the container's title to be matched
+        /// (filtered).
         /// </summary>
-        public string Container { get; set; }
+        public string ContainerTitle { get; set; }
 
         /// <summary>
-        /// Gets or sets any portion of the keyword to be matched.
+        /// Gets or sets a keyword value to be matched.
         /// </summary>
         public string Keyword { get; set; }
 

@@ -22,10 +22,10 @@ namespace Cadmus.Biblio.Core
 
             if (work.Authors?.Count > 0)
             {
-                sb.Append(string.Join("; ",
+                sb.Append(string.Join(" & ",
                     from a in work.Authors
-                    orderby a.Last, a.First
-                    select $"{a.Last}, {a.First}"));
+                    orderby a.Last
+                    select a.Last));
             }
 
             sb.Append(' ').Append(work.YearPub);

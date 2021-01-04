@@ -1,10 +1,18 @@
-﻿namespace Cadmus.Biblio.Core
+﻿using System;
+using System.Text;
+
+namespace Cadmus.Biblio.Core
 {
     /// <summary>
     /// A work's author.
     /// </summary>
     public class Author
     {
+        /// <summary>
+        /// Gets or sets the identifier (36-chars GUID).
+        /// </summary>
+        public string Id { get; set; }
+
         /// <summary>
         /// First name.
         /// </summary>
@@ -16,12 +24,28 @@
         public string Last { get; set; }
 
         /// <summary>
-        /// Gets or sets the optional role, used with authors linked to a
-        /// specific work. This can represent the role of the author in the
-        /// bibliographic record, e.g. "editor", "translator", "organization",
-        /// etc.
+        /// Gets or sets an optional, arbitrary suffix which can be appended
+        /// to the name to disambiguate two authors with the same name.
         /// </summary>
-        public string Role { get; set; }
+        public string Suffix { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Author"/> class.
+        /// </summary>
+        public Author()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Author"/> class.
+        /// </summary>
+        /// <param name="id">The author's identifier.</param>
+        /// <exception cref="ArgumentNullException">null id</exception>
+        public Author(string id)
+        {
+            Id = id ?? throw new ArgumentNullException(nameof(id));
+        }
 
         /// <summary>
         /// Converts to string.
@@ -31,7 +55,14 @@
         /// </returns>
         public override string ToString()
         {
-            return $"{Last}, {First} [{Role}]";
+            StringBuilder sb = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(Last)) sb.Append(Last);
+            if (!string.IsNullOrEmpty(Suffix))
+                sb.Append(" (").Append(Suffix).Append(')');
+            if (!string.IsNullOrEmpty(First)) sb.Append(", ").Append(First);
+
+            return sb.ToString();
         }
     }
 }

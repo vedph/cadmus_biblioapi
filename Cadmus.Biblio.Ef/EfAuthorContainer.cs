@@ -1,9 +1,9 @@
 ﻿namespace Cadmus.Biblio.Ef
 {
     /// <summary>
-    /// Entity linking an <see cref="EfAuthor"/> to an <see cref="EfWork"/>.
+    /// Entity linking an <see cref="EfAuthor"/> to an <see cref="EfContainer"/>.
     /// </summary>
-    public class EfAuthorWork
+    public class EfAuthorContainer
     {
         /// <summary>
         /// Gets or sets the author identifier.
@@ -16,14 +16,14 @@
         public EfAuthor Author { get; set; }
 
         /// <summary>
-        /// Gets or sets the work identifier.
+        /// Gets or sets the container identifier.
         /// </summary>
-        public string WorkId { get; set; }
+        public string ContainerId { get; set; }
 
         /// <summary>
         /// Gets or sets the work.
         /// </summary>
-        public EfWork Work { get; set; }
+        public EfContainer Container{ get; set; }
 
         /// <summary>
         /// Gets or sets the optional role, used with authors linked to a
@@ -41,7 +41,7 @@
         /// </returns>
         public override string ToString()
         {
-            return $"{AuthorId}-{WorkId}" +
+            return $"{AuthorId}-{ContainerId}" +
                 (string.IsNullOrEmpty(Role) ? $" [{Role}]" : "");
         }
     }
