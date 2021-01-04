@@ -13,11 +13,6 @@ namespace Cadmus.Biblio.Ef
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the parent work's identifier.
-        /// </summary>
-        public int WorkId { get; set; }
-
-        /// <summary>
         /// Gets or sets the language (ISO 639-3).
         /// </summary>
         public string Language { get; set; }
@@ -31,11 +26,6 @@ namespace Cadmus.Biblio.Ef
         /// Gets or sets the indexable form of <see cref="Value"/>.
         /// </summary>
         public string Valuex { get; set; }
-
-        /// <summary>
-        /// Gets or sets the parent work.
-        /// </summary>
-        public EfWork Work { get; set; }
 
         /// <summary>
         /// Converts to string.

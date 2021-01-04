@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.21, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: cadmus-biblio
 -- ------------------------------------------------------
@@ -76,13 +76,27 @@ DROP TABLE IF EXISTS `keyword`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `keyword` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `workId` int NOT NULL,
   `language` char(3) NOT NULL,
   `value` varchar(50) NOT NULL,
   `valuex` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `work_keyword_idx` (`workId`),
-  CONSTRAINT `work_keyword` FOREIGN KEY (`workId`) REFERENCES `work` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `keywordwork`
+--
+
+DROP TABLE IF EXISTS `keywordwork`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `keywordwork` (
+  `keywordId` int NOT NULL,
+  `workId` int NOT NULL,
+  PRIMARY KEY (`keywordId`,`workId`),
+  KEY `work_keywordwork_idx` (`workId`),
+  CONSTRAINT `keyword_keywordwork` FOREIGN KEY (`keywordId`) REFERENCES `keyword` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `work_keywordwork` FOREIGN KEY (`workId`) REFERENCES `work` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -125,16 +139,12 @@ CREATE TABLE `work` (
   `firstPage` smallint NOT NULL,
   `lastPage` smallint NOT NULL,
   `key` varchar(300) NOT NULL,
-  `note` varchar(500) NULL,
+  `note` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `type_work_idx` (`typeId`),
   CONSTRAINT `type_work` FOREIGN KEY (`typeId`) REFERENCES `type` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping routines for database 'cadmus-biblio'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -145,4 +155,4 @@ CREATE TABLE `work` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-16 21:23:51
+-- Dump completed on 2021-01-04  9:56:08

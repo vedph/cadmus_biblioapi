@@ -8,6 +8,11 @@ namespace Cadmus.Biblio.Ef
 {
     public static class EfHelper
     {
+        /// <summary>
+        /// Gets the keyword corresponding to the specified EF keyword.
+        /// </summary>
+        /// <param name="ef">The keyword or null.</param>
+        /// <returns>The keyword or null.</returns>
         public static Keyword GetKeyword(EfKeyword ef)
         {
             if (ef == null) return null;
@@ -18,6 +23,11 @@ namespace Cadmus.Biblio.Ef
             };
         }
 
+        /// <summary>
+        /// Gets the author corresponding to the specified EF author.
+        /// </summary>
+        /// <param name="ef">The author or null.</param>
+        /// <returns>The author or null.</returns>
         public static Author GetAuthor(EfAuthor ef)
         {
             if (ef == null) return null;
@@ -29,6 +39,11 @@ namespace Cadmus.Biblio.Ef
             };
         }
 
+        /// <summary>
+        /// Gets the work corresponding to the specified EF work.
+        /// </summary>
+        /// <param name="ef">The EF work or null.</param>
+        /// <returns>The work.</returns>
         public static Work GetWork(EfWork ef)
         {
             if (ef == null) return null;
@@ -75,13 +90,34 @@ namespace Cadmus.Biblio.Ef
                                 }).ToList();
             }
 
-            if (ef.Keywords?.Count > 0)
+            if (ef.KeywordWorks?.Count > 0)
             {
-                work.Keywords = (from k in ef.Keywords
-                                 select GetKeyword(k)).ToList();
+                work.Keywords = (from kw in ef.KeywordWorks
+                                 select new Keyword
+                                 {
+                                     Language = kw.Keyword?.Language,
+                                     Value = kw.Keyword?.Value
+                                 }).ToList();
             }
 
             return work;
+        }
+
+        public static void UpdateAuthors(Work source, EfWork target,
+            BiblioDbContext context)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (target == null)
+                throw new ArgumentNullException(nameof(target));
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            // delete no more existing authors
+            // TODO
+
+            // update existing authors and insert new authors
+            // TODO
         }
 
         private static void AddAuthors(IList<Author> authors, EfWork work,
@@ -170,25 +206,49 @@ namespace Cadmus.Biblio.Ef
             BiblioDbContext context)
         {
             // remove any keyword from the target work
-            var old = context.Keywords.Where(k => k.WorkId == work.Id);
-            context.Keywords.RemoveRange(old);
+            var old = context.KeywordWorks.Where(kw => kw.WorkId == work.Id);
+            context.KeywordWorks.RemoveRange(old);
 
-            // add the new contributors
-            work.Keywords = new List<EfKeyword>();
+            // add the new keywords
+            work.KeywordWorks = new List<EfKeywordWork>();
 
             foreach (var keyword in keywords)
             {
-                work.Keywords.Add(new EfKeyword
+                var efk = context.Keywords.FirstOrDefault(k =>
+                    k.Value == keyword.Value && k.Language == keyword.Language);
+
+                if (efk != null)
                 {
-                    Work = work,
-                    Language = keyword.Language,
-                    Value = keyword.Value,
-                    Valuex = StandardFilter.Apply(keyword.Value, true),
-                });
+                    work.KeywordWorks.Add(new EfKeywordWork
+                    {
+                        Keyword = efk,
+                        Work = work
+                    });
+                }
+                else
+                {
+                    work.KeywordWorks.Add(new EfKeywordWork
+                    {
+                        Keyword = new EfKeyword
+                        {
+                            Language = keyword.Language,
+                            Value = keyword.Value,
+                            Valuex = StandardFilter.Apply(keyword.Value, true)
+                        },
+                        Work = work
+                    });
+                }
             }
         }
 
-        public static EfWork GetWork(Work work, BiblioDbContext context)
+        /// <summary>
+        /// Gets a new EF work entity from the specified work.
+        /// </summary>
+        /// <param name="work">The work or null.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The new EF work entity or null.</returns>
+        /// <exception cref="ArgumentNullException">context</exception>
+        public static EfWork GetEfWork(Work work, BiblioDbContext context)
         {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));

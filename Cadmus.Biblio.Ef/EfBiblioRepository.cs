@@ -52,9 +52,11 @@ namespace Cadmus.Biblio.Ef
                     .AsNoTracking()
                     .Include(w => w.Type)
                     .Include(w => w.AuthorWorks)
-                    .ThenInclude(w => w.Author)
+                    .ThenInclude(aw => aw.Author)
                     .Include(w => w.ContributorWorks)
-                    .ThenInclude(w => w.Author)
+                    .ThenInclude(cw => cw.Author)
+                    .Include(w => w.KeywordWorks)
+                    .ThenInclude(kw => kw.Keyword)
                     .FirstOrDefault(w => w.Id == id);
                 return EfHelper.GetWork(work);
             }
@@ -92,9 +94,11 @@ namespace Cadmus.Biblio.Ef
                     .AsNoTracking()
                     .Include(w => w.Type)
                     .Include(w => w.AuthorWorks)
-                    .ThenInclude(w => w.Author)
+                    .ThenInclude(aw => aw.Author)
                     .Include(w => w.ContributorWorks)
-                    .ThenInclude(w => w.Author);
+                    .ThenInclude(cw => cw.Author)
+                    .Include(w => w.KeywordWorks)
+                    .ThenInclude(kw => kw.Keyword);
 
                 if (filter.IsMatchAnyEnabled)
                 {
@@ -106,7 +110,8 @@ namespace Cadmus.Biblio.Ef
                             || w.Type.Name == filter.Type
                         // last
                         || string.IsNullOrEmpty(filter.LastName)
-                            || w.AuthorWorks.Any(aw => aw.Author.Lastx.Contains(filter.LastName))
+                            || w.AuthorWorks.Any(
+                                aw => aw.Author.Lastx.Contains(filter.LastName))
                         // language
                         || string.IsNullOrEmpty(filter.Language)
                             || w.Language == filter.Language
@@ -118,7 +123,8 @@ namespace Cadmus.Biblio.Ef
                             || w.Containerx.Contains(filter.Container)
                         // keyword
                         || string.IsNullOrEmpty(filter.Keyword)
-                            || w.Keywords.Any(k => k.Valuex.Contains(filter.Keyword))
+                            || w.KeywordWorks.Any(
+                                kw => kw.Keyword.Valuex.Equals(filter.Keyword))
                         // yearpubmin
                         || filter.YearPubMin == 0 || w.YearPub >= filter.YearPubMin
                         // yearpubmax
@@ -156,8 +162,8 @@ namespace Cadmus.Biblio.Ef
                     // keyword
                     if (!string.IsNullOrEmpty(filter.Keyword))
                     {
-                        works = works.Where(w => w.Keywords.Any(
-                            k => k.Valuex.Contains(filter.Keyword)));
+                        works = works.Where(w => w.KeywordWorks.Any(
+                            kw => kw.Keyword.Valuex.Equals(filter.Keyword)));
                     }
 
                     // yearpubmin
@@ -183,28 +189,41 @@ namespace Cadmus.Biblio.Ef
             }
         }
 
-        public string GetYearSuffix(string key)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Adds or updates the specified work.
+        /// </summary>
+        /// <param name="work">The work. If new, its internal ID is 0.</param>
+        /// <returns>
+        /// The work's internal ID.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">work</exception>
         public int AddWork(Work work)
         {
             if (work == null) throw new ArgumentNullException(nameof(work));
 
             using (var db = GetContext())
             {
-                EfWork ef;
+                // get an existing work if any
+                EfWork ef = null;
+                if (work.Id > 0) ef = db.Works.Find(work.Id);
 
-                // remove existing work
-                if (work.Id > 0)
+                // if work exists update it, else add it
+                if (ef != null)
                 {
-                    ef = db.Works.Find(work.Id);
-                    if (ef != null) db.Works.Remove(ef);
-                }
+                    // update scalar properties
+                    db.Entry(ef).CurrentValues.SetValues(work);
+                    // recalculate filtered properties
+                    ef.Titlex = StandardFilter.Apply(work.Title, true);
+                    ef.Containerx = StandardFilter.Apply(work.Container, true);
 
-                ef = EfHelper.GetWork(work, db);
-                db.Works.Add(ef);
+                    // update related entities
+                    // TODO
+                }
+                else
+                {
+                    ef = EfHelper.GetEfWork(work, db);
+                    db.Works.Add(ef);
+                }
 
                 db.SaveChanges();
                 return ef.Id;

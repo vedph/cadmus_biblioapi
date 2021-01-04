@@ -111,6 +111,7 @@ namespace Cadmus.Biblio.Core
         {
             Authors = new List<Author>();
             Contributors = new List<Author>();
+            Keywords = new List<Keyword>();
         }
 
         /// <summary>

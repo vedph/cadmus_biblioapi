@@ -1,11 +1,10 @@
 ﻿using Fusi.Text.Unicode;
-using System;
 using System.Text;
 
 namespace Cadmus.Biblio.Core
 {
     /// <summary>
-    /// A simple, general purpose text filter for pin values. This preserves
+    /// A simple, general purpose text filter. This preserves
     /// only letters, apostrophes and whitespaces, also removing any diacritics
     /// from the letters and lowercasing them. Whitespaces are flattened into
     /// spaces and normalized. Digits are dropped (by default) or preserved

@@ -1,5 +1,4 @@
-﻿using Cadmus.Biblio.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Cadmus.Biblio.Ef
@@ -30,8 +29,6 @@ namespace Cadmus.Biblio.Ef
 
         public EfWorkType Type { get; set; }
 
-        public List<EfKeyword> Keywords { get; set; }
-
         /// <summary>
         /// Gets or sets the author-works link.
         /// </summary>
@@ -41,6 +38,11 @@ namespace Cadmus.Biblio.Ef
         /// Gets or sets the contributor-works link.
         /// </summary>
         public List<EfContributorWork> ContributorWorks { get; set; }
+
+        /// <summary>
+        /// Gets or sets the keyword works.
+        /// </summary>
+        public List<EfKeywordWork> KeywordWorks { get; set; }
 
         /// <summary>
         /// Converts to string.

@@ -38,6 +38,11 @@ namespace Cadmus.Biblio.Ef
         /// </summary>
         public DbSet<EfContributorWork> ContributorWorks { get; set; }
 
+        /// <summary>
+        /// Gets or sets the keyword's works.
+        /// </summary>
+        public DbSet<EfKeywordWork> KeywordWorks { get; set; }
+
         // https://docs.microsoft.com/en-us/ef/core/miscellaneous/configuring-dbcontext
 
         /// <summary>
@@ -160,8 +165,6 @@ namespace Cadmus.Biblio.Ef
                 .IsRequired()
                 .IsUnicode(true)
                 .HasMaxLength(50);
-            modelBuilder.Entity<EfKeyword>().Property(k => k.WorkId)
-                .IsRequired();
 
             // author
             modelBuilder.Entity<EfAuthor>().ToTable("author");
@@ -242,6 +245,11 @@ namespace Cadmus.Biblio.Ef
             modelBuilder.Entity<EfContributorWork>().ToTable("contributorwork");
             modelBuilder.Entity<EfContributorWork>()
                 .HasKey(cw => new { cw.AuthorId, cw.WorkId });
+
+            // keywordwork
+            modelBuilder.Entity<EfKeywordWork>().ToTable("keywordwork");
+            modelBuilder.Entity<EfKeywordWork>()
+                .HasKey(kw => new { kw.KeywordId, kw.WorkId });
 
             base.OnModelCreating(modelBuilder);
         }
