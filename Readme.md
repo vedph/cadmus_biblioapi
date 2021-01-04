@@ -144,25 +144,18 @@ Some notes about fields:
   - only letters and digits and apostrophe (`'`) are preserved.
   - all the diacritics are removed, and uppercase letters are lowercased.
 
-- the `key` field is calculated by the backend, by concatenating all the authors (unfiltered, and sorted alphabetically) and the publication year. Each author is separated by `;`, and has the form `last, first`. Note that the alphabetical sort is required to make the key predictable. Otherwise, we should add more fields to represent their desired order; but this is too costly for such a corner case, so the best choice here is sticking to this convention. This field is used to allow faster lookup by key: clients can thus find the full bibliographic record from its key. When adding/updating a work, if another work with the same key already exists (which is rarely the case, but may happen when the same author(s) publish more than a work in the same year), a letter will be appended to the year (e.g. `Allen 1970b`), up to `z`.
+- the `key` field is calculated by the backend, by concatenating all the author last names (unfiltered, sorted alphabetically, and separated by an ampersand `&`) and the publication year. Note that the alphabetical sort is required to make the key predictable. Otherwise, we should add more fields to represent their desired order; but this is too costly for such a corner case, so the best choice here is sticking to this convention. This field is used to allow faster lookup by key: clients can thus find the full bibliographic record from its key. When adding/updating a work, if another work with the same key already exists (which is rarely the case, but may happen when the same author(s) publish more than a work in the same year), a letter will be appended to the year (e.g. `Allen 1970b`), up to `z`.
 
-More generally, it is important to notice that authors here are essentially their names, as all we want to get from the service is a full name when typing any part of it. So, for the purpose of this database two authors with the same first and last names are stored in a single author record. All what we care is connecting the author(s) names to the work.
+Any key field starting with `!` is treated as a manually managed key, and as such is not automatically updated.
 
-This also descends from the fact that we're going to use the services of this database in a context-less environment, where the editor component knows nothing about the details of the bibliographic data, but must be able to also write them.
+### Repository
 
-For instance, When entering a new work, we let the user fill a form with type, author, title, etc.; it is up to the backend distributing the received data into several tables. If a work's author is "John Moore", the backend will find this name among the authors; if found, it will use the existing record; otherwise, it will add a new one. The authors table here is just a list of names, not of persons, and that's its purpose.
+The database is managed by a repository, which provides these functionalities:
 
-This way, we can let the UI component be totally unaware of the bibliographic repository internals: there, each author has his own numeric ID, but this is not transmitted to the client, nor received from it; the client just deals with names. This ensures that bibliographic references can work with a simple convention like author name + publication year. Of course, just like when printing such references we disambiguate between homonyms by adding some special suffix to the names (e.g. "John Moore (1)", "John Moore (senior)" etc.), we could do the same when storing bibliography. In any case, the only purpose of this database is providing a centralized repository for picking references.
+- works (and containers): get a filtered paged list, get a work from its ID, add or update a work with its full data graph, delete a work.
+- TODO
 
-This explains why the API layer for this bibliography is designed in such a way: the central entity is the work, and the repository provided for interacting with the underlying database offers these functions:
-
-- to lookup works use `GetWorks`, which gets a page of works matching a specified filter. Given that the work here is the central entity, the functions connected to work editing all include its internal numeric ID: get by work ID (`GetWork`), delete by work ID (`DeleteWork`), add/update a work (`AddWork`: an existing work will have a non-zero ID), delete work by its internal ID (`DeleteWork`). For all the other entities, the ID is not even transmitted to the client.
-
-- to lookup work's _types_, use `GetTypes` to find the first N types (or all the types) matching a specified portion of their name. For all other purposes, types are edited indirectly, when a work is added or updated: if its type exists, its ID is used; otherwise, a new type record is added. We only add functions to explicitly add (`AddType`) or delete a type (`DeleteType` from its name): adding can be used to pre-populate a list of types without having to enter works; deleting can be done by clients, so that we delete the type by its name (its ID being unknown to the clients).
-
-- to lookup work's _authors_, use `GetAuthors` to find the first N authors matching the specified portion of their last name. For the rest, authors are added with their work. At most, you can use a prune function to remove all the unused authors (`PruneAuthors`).
-
-Thus, the whole API is modeled on the requirements of a simple and mostly agnostic client, intended to operate in any of these typical ways:
+The whole API is modeled on the requirements of a simple and mostly agnostic client, intended to operate in any of these typical ways:
 
 a) lookup:
 
