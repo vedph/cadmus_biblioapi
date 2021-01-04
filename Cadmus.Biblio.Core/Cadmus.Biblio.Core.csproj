@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Authors>Daniele Fusi</Authors>
+    <Company>Fusi</Company>
+    <Product>Cadmus</Product>
+    <Description>Cadmus bibliography API core</Description>
+    <Copyright>by Daniele Fusi 2020</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

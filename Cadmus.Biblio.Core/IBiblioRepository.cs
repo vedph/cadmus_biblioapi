@@ -63,19 +63,19 @@ namespace Cadmus.Biblio.Core
         void DeleteContainer(string id);
 
         /// <summary>
-        /// Gets the type with the specified ID.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>The type, or null if not found.</returns>
-        WorkType GetType(string id);
-
-        /// <summary>
         /// Gets the page of types matching the specified filter,
         /// or all of them when page size is 0.
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns>The types page.</returns>
         DataPage<WorkType> GetTypes(WorkTypeFilter filter);
+
+        /// <summary>
+        /// Gets the type with the specified ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>The type, or null if not found.</returns>
+        WorkType GetType(string id);
 
         /// <summary>
         /// Adds or updates the type with the specified ID and name.
