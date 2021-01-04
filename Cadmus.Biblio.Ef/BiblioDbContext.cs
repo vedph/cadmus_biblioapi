@@ -9,9 +9,9 @@ namespace Cadmus.Biblio.Ef
     public sealed class BiblioDbContext : DbContext
     {
         /// <summary>
-        /// Gets or sets the types.
+        /// Gets or sets the work types.
         /// </summary>
-        public DbSet<EfWorkType> Types { get; set; }
+        public DbSet<EfWorkType> WorkTypes { get; set; }
 
         /// <summary>
         /// Gets or sets the authors.

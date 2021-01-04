@@ -85,19 +85,8 @@ namespace Cadmus.Biblio.Core
         /// </summary>
         public WorkBase()
         {
-            Id = Guid.NewGuid().ToString();
             Authors = new List<WorkAuthor>();
             Keywords = new List<Keyword>();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WorkBase"/> class.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <exception cref="ArgumentNullException">id</exception>
-        public WorkBase(string id) : this()
-        {
-            Id = id ?? throw new ArgumentNullException(nameof(id));
         }
 
         /// <summary>

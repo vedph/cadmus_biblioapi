@@ -80,6 +80,14 @@ namespace Cadmus.Biblio.Ef
         public string Note { get; set; }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="EfWorkBase"/> class.
+        /// </summary>
+        public EfWorkBase()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+
+        /// <summary>
         /// Converts to string.
         /// </summary>
         /// <returns>

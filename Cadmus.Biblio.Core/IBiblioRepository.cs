@@ -24,6 +24,7 @@ namespace Cadmus.Biblio.Core
 
         /// <summary>
         /// Adds or updates the specified work.
+        /// Work type, authors, and keywords are stored too.
         /// </summary>
         /// <param name="work">The work.</param>
         void AddWork(Work work);
@@ -31,8 +32,8 @@ namespace Cadmus.Biblio.Core
         /// <summary>
         /// Deletes the work with the specified ID.
         /// </summary>
-        /// <param name="id">The work's internal identifier.</param>
-        void DeleteWork(int id);
+        /// <param name="id">The work's identifier.</param>
+        void DeleteWork(string id);
 
         /// <summary>
         /// Gets the specified page of filtered containers.
@@ -50,6 +51,7 @@ namespace Cadmus.Biblio.Core
 
         /// <summary>
         /// Adds or updates the specified container.
+        /// Container type, authors, and keywords are stored too.
         /// </summary>
         /// <param name="container">The container.</param>
         void AddContainer(Container container);
@@ -58,7 +60,7 @@ namespace Cadmus.Biblio.Core
         /// Deletes the container with the specified ID.
         /// </summary>
         /// <param name="id">The container's identifier.</param>
-        void DeleteContainer(int id);
+        void DeleteContainer(string id);
 
         /// <summary>
         /// Gets the type with the specified ID.
@@ -92,7 +94,7 @@ namespace Cadmus.Biblio.Core
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns>Page of authors.</returns>
-        IList<Author> GetAuthors(AuthorFilter filter);
+        DataPage<Author> GetAuthors(AuthorFilter filter);
 
         /// <summary>
         /// Gets the author with the specified ID.
@@ -118,6 +120,13 @@ namespace Cadmus.Biblio.Core
         /// any work or container.
         /// </summary>
         void PruneAuthors();
+
+        /// <summary>
+        /// Gets the specified page of keywords.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <returns>The page.</returns>
+        DataPage<Keyword> GetKeywords(KeywordFilter filter);
 
         /// <summary>
         /// Prunes the keywords by removing all the keywords not assigned to

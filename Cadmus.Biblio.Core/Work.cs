@@ -21,20 +21,5 @@
         /// applicable).
         /// </summary>
         public short LastPage { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Work"/> class.
-        /// </summary>
-        public Work()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Work"/> class.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        public Work(string id) : base(id)
-        {
-        }
     }
 }

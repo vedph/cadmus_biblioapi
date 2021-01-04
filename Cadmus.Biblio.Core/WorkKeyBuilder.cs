@@ -14,7 +14,7 @@ namespace Cadmus.Biblio.Core
         /// </summary>
         /// <param name="work">The work.</param>
         /// <exception cref="ArgumentNullException">work</exception>
-        public static string Build(Work work)
+        public static string Build(WorkBase work)
         {
             if (work == null) throw new ArgumentNullException(nameof(work));
 

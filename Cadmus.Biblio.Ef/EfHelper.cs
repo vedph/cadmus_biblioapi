@@ -6,10 +6,35 @@ using System.Text.RegularExpressions;
 
 namespace Cadmus.Biblio.Ef
 {
+    /// <summary>
+    /// Helper class for repositories.
+    /// </summary>
     public static class EfHelper
     {
         /// <summary>
-        /// Gets the keyword corresponding to the specified EF keyword.
+        /// The manual-key prefix. When a work or container key starts with
+        /// this prefix, it is not automatically updated by the system.
+        /// </summary>
+        public const string MAN_KEY_PREFIX = "!";
+
+        #region Entity to POCO        
+        /// <summary>
+        /// Gets the work's type corresponding to the specified work type entity.
+        /// </summary>
+        /// <param name="ef">The entity or null.</param>
+        /// <returns>The work type or null.</returns>
+        public static WorkType GetWorkType(EfWorkType ef)
+        {
+            if (ef == null) return null;
+            return new WorkType
+            {
+                Id = ef.Id,
+                Name = ef.Name
+            };
+        }
+
+        /// <summary>
+        /// Gets the keyword corresponding to the specified keyword entity.
         /// </summary>
         /// <param name="ef">The keyword or null.</param>
         /// <returns>The keyword or null.</returns>
@@ -41,9 +66,169 @@ namespace Cadmus.Biblio.Ef
         }
 
         /// <summary>
-        /// Gets the work corresponding to the specified EF work.
+        /// Gets the work information corresponding to the specified container
+        /// entity.
         /// </summary>
-        /// <param name="ef">The EF work or null.</param>
+        /// <param name="ef">The entity or null.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The object or null.</returns>
+        /// <exception cref="ArgumentNullException">context</exception>
+        public static WorkInfo GetWorkInfo(EfContainer ef, BiblioDbContext context)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            if (ef == null) return null;
+            WorkInfo info = new WorkInfo
+            {
+                Id = ef.Id,
+                Key = ef.Key,
+                Type = ef.Type?.Name,
+                Title = ef.Title,
+                Language = ef.Language,
+                Edition = ef.Edition,
+                YearPub = ef.YearPub,
+                PlacePub = ef.PlacePub,
+                Number = ef.Number
+            };
+
+            // authors
+            if (ef.AuthorContainers?.Count > 0)
+            {
+                info.Authors = (from aw in ef.AuthorContainers
+                                select new WorkAuthor
+                                {
+                                    First = aw.Author?.First,
+                                    Last = aw.Author?.Last,
+                                    Role = aw.Role
+                                }).ToList();
+            }
+
+            // keywords
+            if (ef.KeywordContainers?.Count > 0)
+            {
+                info.Keywords = (from kw in ef.KeywordContainers
+                                 select new Keyword
+                                 {
+                                     Language = kw.Keyword?.Language,
+                                     Value = kw.Keyword?.Value
+                                 }).ToList();
+            }
+
+            return info;
+        }
+
+        /// <summary>
+        /// Gets the work information corresponding to the specified work
+        /// entity.
+        /// </summary>
+        /// <param name="ef">The entity or null.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The object or null.</returns>
+        /// <exception cref="ArgumentNullException">context</exception>
+        public static WorkInfo GetWorkInfo(EfWork ef, BiblioDbContext context)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            if (ef == null) return null;
+            WorkInfo info = new WorkInfo
+            {
+                Id = ef.Id,
+                Key = ef.Key,
+                Type = ef.Type?.Name,
+                Title = ef.Title,
+                Language = ef.Language,
+                Edition = ef.Edition,
+                YearPub = ef.YearPub,
+                PlacePub = ef.PlacePub,
+                FirstPage = ef.FirstPage,
+                LastPage = ef.LastPage
+            };
+
+            // authors
+            if (ef.AuthorWorks?.Count > 0)
+            {
+                info.Authors = (from aw in ef.AuthorWorks
+                                select new WorkAuthor
+                                {
+                                    First = aw.Author?.First,
+                                    Last = aw.Author?.Last,
+                                    Role = aw.Role
+                                }).ToList();
+            }
+
+            // keywords
+            if (ef.KeywordWorks?.Count > 0)
+            {
+                info.Keywords = (from kw in ef.KeywordWorks
+                                 select new Keyword
+                                 {
+                                     Language = kw.Keyword?.Language,
+                                     Value = kw.Keyword?.Value
+                                 }).ToList();
+            }
+
+            // container
+            if (ef.Container != null)
+                info.Container = GetWorkInfo(ef.Container, context);
+
+            return info;
+        }
+
+        /// <summary>
+        /// Gets the container object corresponding to the specified container
+        /// entity.
+        /// </summary>
+        /// <param name="ef">The entity or null.</param>
+        /// <returns>The container or null.</returns>
+        public static Container GetContainer(EfContainer ef)
+        {
+            if (ef == null) return null;
+
+            Container container = new Container
+            {
+                Id = ef.Id,
+                Key = ef.Key,
+                Type = ef.Type?.Id,
+                Title = ef.Title,
+                Language = ef.Language,
+                Edition = ef.Edition,
+                Publisher = ef.Publisher,
+                YearPub = ef.YearPub,
+                PlacePub = ef.PlacePub,
+                Location = ef.Location,
+                AccessDate = ef.AccessDate,
+                Note = ef.Note,
+                Number = ef.Number
+            };
+
+            // authors
+            if (ef.AuthorContainers?.Count > 0)
+            {
+                container.Authors.AddRange(from ac in ef.AuthorContainers
+                                           select new WorkAuthor
+                                           {
+                                               Last = ac.Author.Last,
+                                               First = ac.Author.First,
+                                               Role = ac.Role
+                                           });
+            }
+
+            // keywords
+            if (ef.KeywordContainers?.Count > 0)
+            {
+                container.Keywords.AddRange(from ak in ef.KeywordContainers
+                                            select GetKeyword(ak.Keyword));
+            }
+
+            return container;
+        }
+
+        /// <summary>
+        /// Gets the work corresponding to the specified work entity.
+        /// </summary>
+        /// <param name="ef">The entity or null.</param>
         /// <returns>The work.</returns>
         public static Work GetWork(EfWork ef)
         {
@@ -55,7 +240,7 @@ namespace Cadmus.Biblio.Ef
                 Type = ef.Type?.Name,
                 Title = ef.Title,
                 Language = ef.Language,
-                Container = ef.Container,
+                Container = GetContainer(ef.Container),
                 Edition = ef.Edition,
                 Publisher = ef.Publisher,
                 YearPub = ef.YearPub,
@@ -68,85 +253,233 @@ namespace Cadmus.Biblio.Ef
                 Note = ef.Note,
             };
 
+            // authors
             if (ef.AuthorWorks?.Count > 0)
             {
-                work.Authors = (from aw in ef.AuthorWorks
-                                select new WorkAuthor
-                                {
-                                    First = aw.Author?.First,
-                                    Last = aw.Author?.Last,
-                                    Role = aw.Role
-                                }).ToList();
+                work.Authors.AddRange(from ac in ef.AuthorWorks
+                                      select new WorkAuthor
+                                      {
+                                          Last = ac.Author.Last,
+                                          First = ac.Author.First,
+                                          Role = ac.Role
+                                      });
             }
 
+            // keywords
             if (ef.KeywordWorks?.Count > 0)
             {
-                work.Keywords = (from kw in ef.KeywordWorks
-                                 select new Keyword
-                                 {
-                                     Language = kw.Keyword?.Language,
-                                     Value = kw.Keyword?.Value
-                                 }).ToList();
+                work.Keywords.AddRange(from aw in ef.KeywordWorks
+                                       select GetKeyword(aw.Keyword));
             }
 
             return work;
         }
+        #endregion
 
-        public static void UpdateAuthors(Work source, EfWork target,
+        #region POCO to Entity
+        /// <summary>
+        /// Gets the work entity corresponding to the specified type.
+        /// </summary>
+        /// <param name="type">The type or null.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The entity or null.</returns>
+        public static EfWorkType GetEfWorkType(WorkType type,
             BiblioDbContext context)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (target == null)
-                throw new ArgumentNullException(nameof(target));
+            if (type == null) return null;
+
+            EfWorkType ef = type.Id != null
+                ? context.WorkTypes.Find(type.Id) : null;
+            if (ef == null)
+            {
+                ef = new EfWorkType
+                {
+                    Id = type.Id
+                };
+                context.WorkTypes.Add(ef);
+            }
+            ef.Name = type.Name;
+
+            return ef;
+        }
+
+        /// <summary>
+        /// Gets the author entity corresponding to the specified author.
+        /// </summary>
+        /// <param name="author">The author or null.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The entity or null.</returns>
+        public static EfAuthor GetEfAuthor(Author author, BiblioDbContext context)
+        {
+            if (author == null) return null;
+
+            EfAuthor ef = author.Id != null
+                ? context.Authors.Find(author.Id) : null;
+            if (ef == null)
+            {
+                ef = new EfAuthor
+                {
+                    Id = Guid.NewGuid().ToString()
+                };
+            }
+            ef.First = author.First;
+            ef.Last = author.Last;
+            ef.Lastx = StandardFilter.Apply(author.Last, true);
+            ef.Suffix = author.Suffix;
+
+            return ef;
+        }
+
+        private static void AddAuthors(IList<WorkAuthor> authors,
+            EfContainer container,
+            BiblioDbContext context)
+        {
+            // remove any author from the target work
+            var old = context.AuthorContainers
+                .Where(ac => ac.ContainerId == container.Id);
+            context.AuthorContainers.RemoveRange(old);
+
+            // add back the received authors to it
+            container.AuthorContainers = new List<EfAuthorContainer>();
+
+            foreach (WorkAuthor author in authors)
+            {
+                EfAuthor efa = context.Authors.Find(author.Id) ?? new EfAuthor();
+                efa.First = author.First;
+                efa.Last = author.Last;
+                efa.Lastx = StandardFilter.Apply(author.Last, true);
+
+                container.AuthorContainers.Add(new EfAuthorContainer
+                {
+                    Author = efa,
+                    Role = author.Role,
+                    Container = container
+                });
+            }
+        }
+
+        private static void AddKeywords(IList<Keyword> keywords,
+            EfContainer container, BiblioDbContext context)
+        {
+            // remove any keyword from the target work
+            var old = context.KeywordWorks.Where(kw => kw.WorkId == container.Id);
+            context.KeywordWorks.RemoveRange(old);
+
+            // add back the received keywords to it
+            container.KeywordContainers = new List<EfKeywordContainer>();
+
+            foreach (Keyword keyword in keywords)
+            {
+                EfKeyword efk = context.Keywords.FirstOrDefault(k =>
+                    k.Value == keyword.Value && k.Language == keyword.Language)
+                    ?? new EfKeyword();
+                efk.Language = keyword.Language;
+                efk.Value = keyword.Value;
+                efk.Valuex = StandardFilter.Apply(keyword.Value, true);
+
+                container.KeywordContainers.Add(new EfKeywordContainer
+                {
+                    Keyword = efk,
+                    Container = container
+                });
+            }
+        }
+
+        /// <summary>
+        /// Gets the container entity corresponding to the specified container.
+        /// </summary>
+        /// <param name="container">The container or null.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The entity or null.</returns>
+        /// <exception cref="ArgumentNullException">context</exception>
+        public static EfContainer GetEfContainer(Container container,
+            BiblioDbContext context)
+        {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            // delete no more existing authors
-            // TODO
+            if (container == null) return null;
 
-            // update existing authors and insert new authors
-            // TODO
+            // find the container unless new
+            EfContainer ef = container.Id != null
+                ? context.Containers.Find(container.Id) : null;
+
+            // if new or not found, add it with a new ID
+            if (ef == null)
+            {
+                ef = new EfContainer
+                {
+                    Id = Guid.NewGuid().ToString()
+                };
+                context.Containers.Add(ef);
+            }
+
+            // update the container
+            ef.Type = context.WorkTypes.FirstOrDefault(t => t.Name == container.Type);
+            ef.Title = container.Title;
+            ef.Titlex = StandardFilter.Apply(container.Title, true);
+            ef.Language = container.Language;
+            ef.Edition = container.Edition;
+            ef.Publisher = container.Publisher;
+            ef.YearPub = container.YearPub;
+            ef.PlacePub = container.PlacePub;
+            ef.Location = container.Location;
+            ef.AccessDate = container.AccessDate;
+            ef.Number = container.Number;
+            ef.Note = container.Note;
+            ef.Key = container.Key?.StartsWith(MAN_KEY_PREFIX) ?? false
+                    ? container.Key : WorkKeyBuilder.Build(container);
+
+            // add key suffix if required and possible
+            if (!container.Key.StartsWith(MAN_KEY_PREFIX))
+            {
+                var existing = context.Works.FirstOrDefault(w => w.Key == ef.Key);
+                if (existing != null)
+                {
+                    Match m = Regex.Match(existing.Key, @"\d+([a-z])?$");
+                    if (m.Success)
+                    {
+                        char c = m.Groups[1].Value[0];
+                        if (c < 'z') c++;
+                        ef.Key += c;
+                    }
+                }
+            }
+
+            // authors
+            if (container.Authors?.Count > 0)
+                AddAuthors(container.Authors, ef, context);
+
+            // keywords
+            if (container.Keywords?.Count > 0)
+                AddKeywords(container.Keywords, ef, context);
+
+            return ef;
         }
 
-        private static void AddAuthors(IList<Author> authors, EfWork work,
+        private static void AddAuthors(IList<WorkAuthor> authors, EfWork work,
             BiblioDbContext context)
         {
             // remove any author from the target work
             var old = context.AuthorWorks.Where(aw => aw.WorkId == work.Id);
             context.AuthorWorks.RemoveRange(old);
 
-            // add the new authors
+            // add back the received authors to it
             work.AuthorWorks = new List<EfAuthorWork>();
 
-            foreach (var author in authors)
+            foreach (WorkAuthor author in authors)
             {
-                var efa = context.Authors.FirstOrDefault(a =>
-                    a.First == author.First && a.Last == author.Last);
+                EfAuthor efa = context.Authors.Find(author.Id) ?? new EfAuthor();
+                efa.First = author.First;
+                efa.Last = author.Last;
+                efa.Lastx = StandardFilter.Apply(author.Last, true);
 
-                if (efa != null)
+                work.AuthorWorks.Add(new EfAuthorWork
                 {
-                    work.AuthorWorks.Add(new EfAuthorWork
-                    {
-                        Author = efa,
-                        Work = work,
-                        Role = author.Role
-                    });
-                }
-                else
-                {
-                    work.AuthorWorks.Add(new EfAuthorWork
-                    {
-                        Author = new EfAuthor
-                        {
-                            First = author.First,
-                            Last = author.Last,
-                            Lastx = StandardFilter.Apply(author.Last, true)
-                        },
-                        Work = work,
-                        Role = author.Role
-                    });
-                }
+                    Author = efa,
+                    Role = author.Role,
+                    Work = work
+                });
             }
         }
 
@@ -157,44 +490,32 @@ namespace Cadmus.Biblio.Ef
             var old = context.KeywordWorks.Where(kw => kw.WorkId == work.Id);
             context.KeywordWorks.RemoveRange(old);
 
-            // add the new keywords
+            // add back the received keywords to it
             work.KeywordWorks = new List<EfKeywordWork>();
 
-            foreach (var keyword in keywords)
+            foreach (Keyword keyword in keywords)
             {
-                var efk = context.Keywords.FirstOrDefault(k =>
-                    k.Value == keyword.Value && k.Language == keyword.Language);
+                EfKeyword efk = context.Keywords.FirstOrDefault(k =>
+                    k.Value == keyword.Value && k.Language == keyword.Language)
+                    ?? new EfKeyword();
+                efk.Language = keyword.Language;
+                efk.Value = keyword.Value;
+                efk.Valuex = StandardFilter.Apply(keyword.Value, true);
 
-                if (efk != null)
+                work.KeywordWorks.Add(new EfKeywordWork
                 {
-                    work.KeywordWorks.Add(new EfKeywordWork
-                    {
-                        Keyword = efk,
-                        Work = work
-                    });
-                }
-                else
-                {
-                    work.KeywordWorks.Add(new EfKeywordWork
-                    {
-                        Keyword = new EfKeyword
-                        {
-                            Language = keyword.Language,
-                            Value = keyword.Value,
-                            Valuex = StandardFilter.Apply(keyword.Value, true)
-                        },
-                        Work = work
-                    });
-                }
+                    Keyword = efk,
+                    Work = work
+                });
             }
         }
 
         /// <summary>
-        /// Gets a new EF work entity from the specified work.
+        /// Gets the work entity corresponding to the specified work.
         /// </summary>
         /// <param name="work">The work or null.</param>
         /// <param name="context">The context.</param>
-        /// <returns>The new EF work entity or null.</returns>
+        /// <returns>The entity or null.</returns>
         /// <exception cref="ArgumentNullException">context</exception>
         public static EfWork GetEfWork(Work work, BiblioDbContext context)
         {
@@ -203,38 +524,50 @@ namespace Cadmus.Biblio.Ef
 
             if (work == null) return null;
 
-            EfWork ef = new EfWork
+            // find the work unless new
+            EfWork ef = work.Id != null ? context.Works.Find(work.Id) : null;
+
+            // if new or not found, add it with a new ID
+            if (ef == null)
             {
-                Id = work.Id,
-                Type = context.Types.FirstOrDefault(t => t.Name == work.Type),
-                Title = work.Title,
-                Titlex = StandardFilter.Apply(work.Title, true),
-                Language = work.Language,
-                Container = work.Container,
-                Containerx = StandardFilter.Apply(work.Container, true),
-                Edition = work.Edition,
-                Number = work.Number,
-                Publisher = work.Publisher,
-                YearPub = work.YearPub,
-                PlacePub = work.PlacePub,
-                Location = work.Location,
-                AccessDate = work.AccessDate,
-                FirstPage = work.FirstPage,
-                LastPage = work.LastPage,
-                Note = work.Note,
-                Key = WorkKeyBuilder.Build(work)
-            };
+                ef = new EfWork
+                {
+                    Id = Guid.NewGuid().ToString()
+                };
+                context.Works.Add(ef);
+            }
+
+            // update the work
+            ef.Type = context.WorkTypes.FirstOrDefault(t => t.Name == work.Type);
+            ef.Title = work.Title;
+            ef.Titlex = StandardFilter.Apply(work.Title, true);
+            ef.Language = work.Language;
+            ef.Container = GetEfContainer(work.Container, context);
+            ef.Edition = work.Edition;
+            ef.Publisher = work.Publisher;
+            ef.YearPub = work.YearPub;
+            ef.PlacePub = work.PlacePub;
+            ef.Location = work.Location;
+            ef.AccessDate = work.AccessDate;
+            ef.FirstPage = work.FirstPage;
+            ef.LastPage = work.LastPage;
+            ef.Note = work.Note;
+            ef.Key = work.Key?.StartsWith(MAN_KEY_PREFIX) ?? false
+                ? work.Key : WorkKeyBuilder.Build(work);
 
             // add key suffix if required and possible
-            var existing = context.Works.FirstOrDefault(w => w.Key == ef.Key);
-            if (existing != null)
+            if (!work.Key.StartsWith(MAN_KEY_PREFIX))
             {
-                Match m = Regex.Match(existing.Key, @"\d+([a-z])?$");
-                if (m.Success)
+                var existing = context.Works.FirstOrDefault(w => w.Key == ef.Key);
+                if (existing != null)
                 {
-                    char c = m.Groups[1].Value[0];
-                    if (c < 'z') c++;
-                    ef.Key += c;
+                    Match m = Regex.Match(existing.Key, @"\d+([a-z])?$");
+                    if (m.Success)
+                    {
+                        char c = m.Groups[1].Value[0];
+                        if (c < 'z') c++;
+                        ef.Key += c;
+                    }
                 }
             }
 
@@ -242,15 +575,12 @@ namespace Cadmus.Biblio.Ef
             if (work.Authors?.Count > 0)
                 AddAuthors(work.Authors, ef, context);
 
-            // contributors
-            if (work.Contributors?.Count > 0)
-                AddContributors(work.Contributors, ef, context);
-
             // keywords
             if (work.Keywords?.Count > 0)
                 AddKeywords(work.Keywords, ef, context);
 
             return ef;
         }
+        #endregion
     }
 }

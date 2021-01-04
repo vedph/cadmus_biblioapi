@@ -30,24 +30,6 @@ namespace Cadmus.Biblio.Core
         public string Suffix { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Author"/> class.
-        /// </summary>
-        public Author()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Author"/> class.
-        /// </summary>
-        /// <param name="id">The author's identifier.</param>
-        /// <exception cref="ArgumentNullException">null id</exception>
-        public Author(string id)
-        {
-            Id = id ?? throw new ArgumentNullException(nameof(id));
-        }
-
-        /// <summary>
         /// Converts to string.
         /// </summary>
         /// <returns>
