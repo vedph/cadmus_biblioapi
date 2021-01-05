@@ -13,10 +13,12 @@ namespace Cadmus.Biblio.Seed
 
             foreach (string word in new Faker().Random.WordsArray(count))
             {
+                int i = word.IndexOf(' ');
+                string value = i > -1? word.Substring(0, i) : word;
                 repository.AddKeyword(new Keyword
                 {
                     Language = "eng",
-                    Value = word
+                    Value = value
                 });
             }
         }

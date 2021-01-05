@@ -1,9 +1,7 @@
 ﻿using Bogus;
 using Cadmus.Biblio.Core;
-using Cadmus.Biblio.Ef;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Cadmus.Biblio.Seed
 {

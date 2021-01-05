@@ -76,6 +76,7 @@ namespace Cadmus.Biblio.Ef
 
             return new Author
             {
+                Id = ef.Id,
                 First = ef.First,
                 Last = ef.Last,
                 Suffix = ef.Suffix
@@ -334,16 +335,21 @@ namespace Cadmus.Biblio.Ef
                 ? context.Authors.Find(author.Id) : null;
             if (ef == null)
             {
+                if (author.Last == null) return null;
                 ef = new EfAuthor
                 {
                     Id = Guid.NewGuid().ToString()
                 };
+                context.Authors.Add(ef);
             }
 
-            ef.First = author.First;
-            ef.Last = author.Last;
-            ef.Lastx = StandardFilter.Apply(author.Last, true);
-            ef.Suffix = author.Suffix;
+            if (author.Last != null)
+            {
+                ef.First = author.First;
+                ef.Last = author.Last;
+                ef.Lastx = StandardFilter.Apply(author.Last, true);
+                ef.Suffix = author.Suffix;
+            }
 
             return ef;
         }
