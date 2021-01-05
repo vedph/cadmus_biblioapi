@@ -177,12 +177,8 @@ namespace Cadmus.Biblio.Ef
         /// <returns>
         /// Work, or null if not found
         /// </returns>
-        /// <exception cref="ArgumentNullException">id</exception>
-        public Work GetWork(string id)
+        public Work GetWork(Guid id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
-
             using (var db = GetContext())
             {
                 EfWork work = db.Works
@@ -226,12 +222,8 @@ namespace Cadmus.Biblio.Ef
         /// Deletes the work with the specified ID.
         /// </summary>
         /// <param name="id">The work's identifier.</param>
-        /// <exception cref="ArgumentNullException">id</exception>
-        public void DeleteWork(string id)
+        public void DeleteWork(Guid id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
-
             using (var db = GetContext())
             {
                 EfWork work = db.Works.Find(id);
@@ -362,12 +354,8 @@ namespace Cadmus.Biblio.Ef
         /// <returns>
         /// Container, or null if not found
         /// </returns>
-        /// <exception cref="ArgumentNullException">id</exception>
-        public Container GetContainer(string id)
+        public Container GetContainer(Guid id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
-
             using (var db = GetContext())
             {
                 EfContainer container = db.Containers
@@ -408,12 +396,8 @@ namespace Cadmus.Biblio.Ef
         /// Deletes the container.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <exception cref="ArgumentNullException">id</exception>
-        public void DeleteContainer(string id)
+        public void DeleteContainer(Guid id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
-
             using (var db = GetContext())
             {
                 EfContainer container = db.Containers.Find(id);
@@ -569,11 +553,8 @@ namespace Cadmus.Biblio.Ef
         /// <returns>
         /// The author, or null if not found.
         /// </returns>
-        /// <exception cref="ArgumentNullException">id</exception>
-        public Author GetAuthor(string id)
+        public Author GetAuthor(Guid id)
         {
-            if (id == null) throw new ArgumentNullException(nameof(id));
-
             using (var db = GetContext())
             {
                 EfAuthor ef = db.Authors.Find(id);
@@ -602,12 +583,8 @@ namespace Cadmus.Biblio.Ef
         /// Deletes the author with the specified ID.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <exception cref="ArgumentNullException">id</exception>
-        public void DeleteAuthor(string id)
+        public void DeleteAuthor(Guid id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
-
             using (var db = GetContext())
             {
                 EfAuthor ef = db.Authors.Find(id);

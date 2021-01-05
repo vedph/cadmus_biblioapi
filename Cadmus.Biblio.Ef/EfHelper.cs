@@ -331,14 +331,14 @@ namespace Cadmus.Biblio.Ef
         {
             if (author == null) return null;
 
-            EfAuthor ef = author.Id != null
+            EfAuthor ef = author.Id != Guid.Empty
                 ? context.Authors.Find(author.Id) : null;
             if (ef == null)
             {
                 if (author.Last == null) return null;
                 ef = new EfAuthor
                 {
-                    Id = Guid.NewGuid().ToString()
+                    Id = Guid.NewGuid()
                 };
                 context.Authors.Add(ef);
             }
@@ -369,7 +369,7 @@ namespace Cadmus.Biblio.Ef
             foreach (WorkAuthor author in authors)
             {
                 // find the author unless new
-                EfAuthor efa = author.Id != null
+                EfAuthor efa = author.Id != Guid.Empty
                     ? context.Authors.Find(author.Id)
                     : null;
 
@@ -450,7 +450,7 @@ namespace Cadmus.Biblio.Ef
             if (container == null) return null;
 
             // find the container unless new
-            EfContainer ef = container.Id != null
+            EfContainer ef = container.Id != Guid.Empty
                 ? context.Containers.Find(container.Id) : null;
 
             // if new or not found, add it with a new ID
@@ -459,7 +459,7 @@ namespace Cadmus.Biblio.Ef
                 if (container.Title == null) return null;
                 ef = new EfContainer
                 {
-                    Id = Guid.NewGuid().ToString()
+                    Id = Guid.NewGuid()
                 };
                 context.Containers.Add(ef);
             }
@@ -467,7 +467,7 @@ namespace Cadmus.Biblio.Ef
             // update the container unless empty
             if (container.Title != null)
             {
-                ef.Type = context.WorkTypes.FirstOrDefault(t => t.Name == container.Type);
+                ef.Type = context.WorkTypes.FirstOrDefault(t => t.Id == container.Type);
                 // if the type does not exist, add it -- this is defensive,
                 // and should not happen, as types are supposed to be a predefined set
                 if (ef.Type == null)
@@ -489,8 +489,17 @@ namespace Cadmus.Biblio.Ef
                 ef.AccessDate = container.AccessDate;
                 ef.Number = container.Number;
                 ef.Note = container.Note;
+
+                // authors
+                if (container.Authors?.Count > 0)
+                    AddAuthors(container.Authors, ef, context);
+
+                // keywords
+                if (container.Keywords?.Count > 0)
+                    AddKeywords(container.Keywords, ef, context);
+
                 ef.Key = container.Key?.StartsWith(MAN_KEY_PREFIX) ?? false
-                        ? container.Key : WorkKeyBuilder.Build(container);
+                    ? container.Key : WorkKeyBuilder.Build(GetContainer(ef));
 
                 // add key suffix if required and possible
                 if (!container.Key.StartsWith(MAN_KEY_PREFIX))
@@ -507,14 +516,6 @@ namespace Cadmus.Biblio.Ef
                         }
                     }
                 }
-
-                // authors
-                if (container.Authors?.Count > 0)
-                    AddAuthors(container.Authors, ef, context);
-
-                // keywords
-                if (container.Keywords?.Count > 0)
-                    AddKeywords(container.Keywords, ef, context);
             }
 
             return ef;
@@ -533,7 +534,7 @@ namespace Cadmus.Biblio.Ef
             foreach (WorkAuthor author in authors)
             {
                 // find the author unless new
-                EfAuthor efa = author.Id != null
+                EfAuthor efa = author.Id != Guid.Empty
                     ? context.Authors.Find(author.Id)
                     : null;
 
@@ -613,20 +614,20 @@ namespace Cadmus.Biblio.Ef
             if (work == null) return null;
 
             // find the work unless new
-            EfWork ef = work.Id != null ? context.Works.Find(work.Id) : null;
+            EfWork ef = work.Id != Guid.Empty ? context.Works.Find(work.Id) : null;
 
             // if new or not found, add it with a new ID
             if (ef == null)
             {
                 ef = new EfWork
                 {
-                    Id = Guid.NewGuid().ToString()
+                    Id = Guid.NewGuid()
                 };
                 context.Works.Add(ef);
             }
 
             // update the work
-            ef.Type = context.WorkTypes.FirstOrDefault(t => t.Name == work.Type);
+            ef.Type = context.WorkTypes.FirstOrDefault(t => t.Id == work.Type);
             // if the type does not exist, add it -- this is defensive,
             // and should not happen, as types are supposed to be a predefined set
             if (ef.Type == null)
@@ -650,8 +651,17 @@ namespace Cadmus.Biblio.Ef
             ef.FirstPage = work.FirstPage;
             ef.LastPage = work.LastPage;
             ef.Note = work.Note;
+
+            // authors
+            if (work.Authors?.Count > 0)
+                AddAuthors(work.Authors, ef, context);
+
+            // keywords
+            if (work.Keywords?.Count > 0)
+                AddKeywords(work.Keywords, ef, context);
+
             ef.Key = work.Key?.StartsWith(MAN_KEY_PREFIX) ?? false
-                ? work.Key : WorkKeyBuilder.Build(work);
+                ? work.Key : WorkKeyBuilder.Build(GetWork(ef));
 
             // add key suffix if required and possible
             if (!work.Key.StartsWith(MAN_KEY_PREFIX))
@@ -668,14 +678,6 @@ namespace Cadmus.Biblio.Ef
                     }
                 }
             }
-
-            // authors
-            if (work.Authors?.Count > 0)
-                AddAuthors(work.Authors, ef, context);
-
-            // keywords
-            if (work.Keywords?.Count > 0)
-                AddKeywords(work.Keywords, ef, context);
 
             return ef;
         }

@@ -28,14 +28,14 @@ namespace Cadmus.Biblio.Seed
             for (int n = 1; n <= count; n++)
             {
                 Container container = new Faker<Container>()
-                    .RuleFor(c => c.Id, Guid.NewGuid().ToString())
+                    .RuleFor(c => c.Id, Guid.NewGuid())
                     .RuleFor(c => c.Type, f => f.PickRandom(WorkTypeSeeder.TypeIds))
                     .RuleFor(c => c.Title, f => f.Random.Words(3))
                     .RuleFor(c => c.Language, "eng")
                     .RuleFor(c => c.Edition, f => f.Random.Short(0, 3))
                     .RuleFor(c => c.Publisher, f => f.Company.CompanyName())
                     .RuleFor(c => c.YearPub,
-                        f => f.Random.Number(1900, DateTime.Now.Year))
+                        f => (short)f.Random.Number(1900, DateTime.Now.Year))
                     .RuleFor(c => c.PlacePub, f => f.Address.City())
                     .RuleFor(c => c.Location,
                         f => f.Random.Bool()? f.Internet.Url() : null)

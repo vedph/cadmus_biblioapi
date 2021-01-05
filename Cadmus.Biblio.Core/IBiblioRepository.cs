@@ -1,5 +1,5 @@
 ﻿using Fusi.Tools.Data;
-using System.Collections.Generic;
+using System;
 
 namespace Cadmus.Biblio.Core
 {
@@ -20,7 +20,7 @@ namespace Cadmus.Biblio.Core
         /// </summary>
         /// <param name="id">The work's identifier.</param>
         /// <returns>Work, or null if not found</returns>
-        Work GetWork(string id);
+        Work GetWork(Guid id);
 
         /// <summary>
         /// Adds or updates the specified work.
@@ -40,7 +40,7 @@ namespace Cadmus.Biblio.Core
         /// Deletes the work with the specified ID.
         /// </summary>
         /// <param name="id">The work's identifier.</param>
-        void DeleteWork(string id);
+        void DeleteWork(Guid id);
 
         /// <summary>
         /// Gets the specified page of filtered containers.
@@ -54,7 +54,7 @@ namespace Cadmus.Biblio.Core
         /// </summary>
         /// <param name="id">The container's identifier.</param>
         /// <returns>Container, or null if not found</returns>
-        Container GetContainer(string id);
+        Container GetContainer(Guid id);
 
         /// <summary>
         /// Adds or updates the specified container.
@@ -72,7 +72,7 @@ namespace Cadmus.Biblio.Core
         /// Deletes the container with the specified ID.
         /// </summary>
         /// <param name="id">The container's identifier.</param>
-        void DeleteContainer(string id);
+        void DeleteContainer(Guid id);
 
         /// <summary>
         /// Gets the page of types matching the specified filter,
@@ -113,7 +113,7 @@ namespace Cadmus.Biblio.Core
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>The author, or null if not found.</returns>
-        Author GetAuthor(string id);
+        Author GetAuthor(Guid id);
 
         /// <summary>
         /// Adds or updates the specified author.
@@ -125,7 +125,7 @@ namespace Cadmus.Biblio.Core
         /// Deletes the author with the specified ID.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        void DeleteAuthor(string id);
+        void DeleteAuthor(Guid id);
 
         /// <summary>
         /// Prunes the authors by removing all the authors not assigned to

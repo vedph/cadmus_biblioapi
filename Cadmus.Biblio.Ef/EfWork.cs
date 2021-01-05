@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Cadmus.Biblio.Ef
 {
@@ -15,7 +16,7 @@ namespace Cadmus.Biblio.Ef
         /// <summary>
         /// Gets or sets the optional container identifier.
         /// </summary>
-        public string ContainerId { get; set; }
+        public Guid? ContainerId { get; set; }
 
         /// <summary>
         /// Gets or sets the optional container.

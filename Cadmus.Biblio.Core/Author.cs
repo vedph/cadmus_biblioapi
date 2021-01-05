@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace Cadmus.Biblio.Core
 {
@@ -10,7 +11,7 @@ namespace Cadmus.Biblio.Core
         /// <summary>
         /// Gets or sets the identifier (36-chars GUID).
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// First name.

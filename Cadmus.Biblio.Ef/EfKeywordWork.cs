@@ -1,4 +1,6 @@
-﻿namespace Cadmus.Biblio.Ef
+﻿using System;
+
+namespace Cadmus.Biblio.Ef
 {
     /// <summary>
     /// Entity linking an <see cref="EfKeyword"/> to an <see cref="EfWork"/>.
@@ -18,7 +20,7 @@
         /// <summary>
         /// Gets or sets the work identifier.
         /// </summary>
-        public string WorkId { get; set; }
+        public Guid WorkId { get; set; }
 
         /// <summary>
         /// Gets or sets the work.

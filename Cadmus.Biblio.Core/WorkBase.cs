@@ -11,7 +11,7 @@ namespace Cadmus.Biblio.Core
         /// <summary>
         /// Gets or sets the identifier (36-chars GUID).
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Gets or sets an optional arbitrarily defined key to identify

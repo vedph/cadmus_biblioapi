@@ -10,7 +10,7 @@ namespace Cadmus.Biblio.Ef
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Gets or sets an optional arbitrarily defined key to identify
@@ -84,7 +84,7 @@ namespace Cadmus.Biblio.Ef
         /// </summary>
         public EfWorkBase()
         {
-            Id = Guid.NewGuid().ToString();
+            Id = Guid.NewGuid();
         }
 
         /// <summary>
