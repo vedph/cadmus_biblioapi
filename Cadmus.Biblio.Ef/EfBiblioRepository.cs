@@ -661,6 +661,23 @@ namespace Cadmus.Biblio.Ef
         }
 
         /// <summary>
+        /// Adds or updates the specified keyword.
+        /// </summary>
+        /// <param name="keyword">The keyword.</param>
+        /// <exception cref="ArgumentNullException">keyword</exception>
+        public void AddKeyword(Keyword keyword)
+        {
+            if (keyword == null)
+                throw new ArgumentNullException(nameof(keyword));
+
+            using (var db = GetContext())
+            {
+                EfKeyword ef = EfHelper.GetEfKeyword(keyword, db);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
         /// Prunes the keywords by removing all the keywords not assigned to
         /// any work.
         /// </summary>

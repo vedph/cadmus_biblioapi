@@ -581,6 +581,34 @@ namespace Cadmus.Biblio.Ef
 
             return ef;
         }
+
+        /// <summary>
+        /// Gets the entity keyword corresponding to the specified keyword.
+        /// </summary>
+        /// <param name="keyword">The keyword or null.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The entity or null.</returns>
+        /// <exception cref="ArgumentNullException">context</exception>
+        public static EfKeyword GetEfKeyword(Keyword keyword, BiblioDbContext context)
+        {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            if (keyword == null) return null;
+            EfKeyword ef = context.Keywords.FirstOrDefault(
+                k => k.Language == keyword.Language
+                && k.Value == keyword.Value);
+            if (ef == null)
+            {
+                ef = new EfKeyword();
+                context.Keywords.Add(ef);
+            }
+            ef.Language = keyword.Language;
+            ef.Value = keyword.Value;
+            ef.Valuex = StandardFilter.Apply(keyword.Value, true);
+            
+            return ef;
+        }
         #endregion
     }
 }

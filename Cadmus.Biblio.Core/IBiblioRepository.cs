@@ -129,6 +129,12 @@ namespace Cadmus.Biblio.Core
         DataPage<Keyword> GetKeywords(KeywordFilter filter);
 
         /// <summary>
+        /// Adds or updates the specified keyword.
+        /// </summary>
+        /// <param name="keyword">The keyword.</param>
+        void AddKeyword(Keyword keyword);
+
+        /// <summary>
         /// Prunes the keywords by removing all the keywords not assigned to
         /// any work.
         /// </summary>
