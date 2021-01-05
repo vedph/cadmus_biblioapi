@@ -15,13 +15,16 @@ namespace Cadmus.Biblio.Commands
         private readonly IConfiguration _config;
         private readonly string _database;
         private readonly int _count;
+        private readonly string _entities;
 
-        public SeedCommand(AppOptions options, string database, int count)
+        public SeedCommand(AppOptions options, string database, int count,
+            string entities)
         {
             _config = options.Configuration;
             _database = database ??
                 throw new ArgumentNullException(nameof(database));
             _count = count;
+            _entities = entities?.ToUpperInvariant();
         }
 
         public static void Configure(CommandLineApplication command,
@@ -37,6 +40,11 @@ namespace Cadmus.Biblio.Commands
                 "Items count (default=100)",
                 CommandOptionType.SingleValue);
 
+            CommandOption partsOption = command.Option("-e|--entities",
+                "The list of entities to be seeded: " +
+                "T(ypes) A(uthors) C(containers) K(eywords) W(orks)",
+                CommandOptionType.SingleValue);
+
             command.OnExecute(() =>
             {
                 int count = 100;
@@ -47,7 +55,8 @@ namespace Cadmus.Biblio.Commands
 
                 options.Command = new SeedCommand(options,
                     databaseArgument.Value,
-                    count);
+                    count,
+                    partsOption.HasValue()? partsOption.Value() : null);
                 return 0;
             });
         }
@@ -58,8 +67,9 @@ namespace Cadmus.Biblio.Commands
             Console.WriteLine("SEED DATABASE\n");
             Console.ResetColor();
             Console.WriteLine(
-                $"Input:  {_database}\n" +
-                $"Count: {_count}\n");
+                $"Input: {_database}\n" +
+                $"Count: {_count}\n" +
+                $"Entities: {_entities ?? "all"}");
 
             // create database if not exists
             string connection = string.Format(CultureInfo.InvariantCulture,
@@ -84,7 +94,7 @@ namespace Cadmus.Biblio.Commands
                 new EfBiblioRepository(connection, "mysql");
             BiblioSeeder seeder = new BiblioSeeder(repository);
 
-            seeder.Seed(_count);
+            seeder.Seed(_count, _entities);
 
             Console.WriteLine(" completed");
 

@@ -3,7 +3,6 @@ using Fusi.Tools.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace Cadmus.Biblio.Ef
 {
@@ -159,13 +158,15 @@ namespace Cadmus.Biblio.Ef
                     .ThenBy(w => w.Titlex)
                     .ThenBy(w => w.Key)
                     .ThenBy(w => w.Id);
-                works = works.Skip(filter.GetSkipCount()).Take(filter.PageSize);
+                var pgWorks = works.Skip(filter.GetSkipCount())
+                    .Take(filter.PageSize)
+                    .ToList();
 
                 return new DataPage<WorkInfo>(
                     filter.PageNumber,
                     filter.PageSize,
                     tot,
-                    (from w in works select EfHelper.GetWorkInfo(w, db)).ToList());
+                    (from w in pgWorks select EfHelper.GetWorkInfo(w, db)).ToList());
             }
         }
 
@@ -342,13 +343,15 @@ namespace Cadmus.Biblio.Ef
                     .ThenBy(c => c.Titlex)
                     .ThenBy(c => c.Key)
                     .ThenBy(c => c.Id);
-                containers = containers.Skip(filter.GetSkipCount()).Take(filter.PageSize);
+                var pgContainers = containers.Skip(filter.GetSkipCount())
+                    .Take(filter.PageSize)
+                    .ToList();
 
                 return new DataPage<WorkInfo>(
                     filter.PageNumber,
                     filter.PageSize,
                     tot,
-                    (from w in containers select EfHelper.GetWorkInfo(w, db)).ToList());
+                    (from w in pgContainers select EfHelper.GetWorkInfo(w, db)).ToList());
             }
         }
 
@@ -465,13 +468,15 @@ namespace Cadmus.Biblio.Ef
 
                 // sort and page
                 types = types.OrderBy(t => t.Name).ThenBy(t => t.Id);
-                types = types.Skip(filter.GetSkipCount()).Take(filter.PageSize);
+                var pgTypes = types.Skip(filter.GetSkipCount())
+                    .Take(filter.PageSize)
+                    .ToList();
 
                 return new DataPage<WorkType>(
                     filter.PageNumber,
                     filter.PageSize,
                     tot,
-                    (from t in types select EfHelper.GetWorkType(t)).ToList());
+                    (from t in pgTypes select EfHelper.GetWorkType(t)).ToList());
             }
         }
 
@@ -545,13 +550,15 @@ namespace Cadmus.Biblio.Ef
                     .ThenBy(a => a.First)
                     .ThenBy(a => a.Suffix)
                     .ThenBy(a => a.Id);
-                authors = authors.Skip(filter.GetSkipCount()).Take(filter.PageSize);
+                var pgAuthors = authors.Skip(filter.GetSkipCount())
+                    .Take(filter.PageSize)
+                    .ToList();
 
                 return new DataPage<Author>(
                     filter.PageNumber,
                     filter.PageSize,
                     tot,
-                    (from a in authors select EfHelper.GetAuthor(a)).ToList());
+                    (from a in pgAuthors select EfHelper.GetAuthor(a)).ToList());
             }
         }
 

@@ -2,7 +2,7 @@
   "profiles": {
     "cadmus-biblio": {
       "commandName": "Project",
-      "commandLineArgs": "seed cadmus-biblio"
+      "commandLineArgs": "seed cadmus-biblio -e CW"
     }
   }
 }
