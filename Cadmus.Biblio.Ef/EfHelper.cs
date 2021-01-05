@@ -1,7 +1,9 @@
 ﻿using Cadmus.Biblio.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace Cadmus.Biblio.Ef
@@ -16,6 +18,21 @@ namespace Cadmus.Biblio.Ef
         /// this prefix, it is not automatically updated by the system.
         /// </summary>
         public const string MAN_KEY_PREFIX = "!";
+
+        /// <summary>
+        /// Gets the MySql schema for the bibliographic database.
+        /// </summary>
+        /// <returns>SQL code.</returns>
+        public static string GetSchema()
+        {
+            using (StreamReader reader = new StreamReader(
+                Assembly.GetExecutingAssembly()
+                .GetManifestResourceStream(
+                    "Cadmus.Biblio.Ef.Assets.cadmus-biblio.sql")))
+            {
+                return reader.ReadToEnd();
+            }
+        }
 
         #region Entity to POCO        
         /// <summary>

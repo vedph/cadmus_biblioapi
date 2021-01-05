@@ -134,7 +134,7 @@ keywordcontainer }o-- container
 
 Alternatively, here is a picture:
 
-![schema](./schema.svg)
+![schema](./schema.png)
 
 Some notes about fields:
 
@@ -150,10 +150,10 @@ Some notes about fields:
 
 The database is managed by a repository, which provides these functionalities:
 
-- _works_ (and _containers_): get a filtered paged list, get a work from its ID, add or update a work with its full data graph, delete a work.
+- _works_ (and _containers_): get a filtered paged list, get a work from its ID, add or update a work with its full data graph (authors, keywords, type, container), delete a work.
 - _work types_: get a filtered paged list, get a type from its ID, add or update a type, delete a type.
 - _authors_: get a filtered paged list, get an author from its ID, add or update an author, delete an author, prune authors.
-- _keywords_: get a filtered paged list, prune keywords.
+- _keywords_: get a filtered paged list, add a keyword, prune keywords.
 
 The whole API is modeled on the requirements of a simple and mostly agnostic client, intended to operate in any of these typical ways:
 
