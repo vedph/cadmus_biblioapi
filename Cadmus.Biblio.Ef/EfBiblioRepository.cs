@@ -199,7 +199,14 @@ namespace Cadmus.Biblio.Ef
 
         /// <summary>
         /// Adds or updates the specified work.
-        /// Work type, authors, and keywords are stored too.
+        /// Work type, container, authors, and keywords are stored too.
+        /// As for authors, you can specify only the author's ID to assign
+        /// the work to an existing author; otherwise, the author will be
+        /// either added or updated as required. Keywords are added or
+        /// updated as required. Type is added if not found, even this should
+        /// not happen, as types are a predefined set. As for the container,
+        /// you can specify only its ID to assign the work to it; otherwise,
+        /// the container will be added or updated as required.
         /// </summary>
         /// <param name="work">The work.</param>
         /// <exception cref="ArgumentNullException">work</exception>
@@ -375,6 +382,11 @@ namespace Cadmus.Biblio.Ef
         /// <summary>
         /// Adds or updates the specified container.
         /// Container type, authors, and keywords are stored too.
+        /// As for authors, you can specify only the author's ID to assign
+        /// the work to an existing author; otherwise, the author will be
+        /// either added or updated as required. Keywords are added or
+        /// updated as required. Type is added if not found, even this should
+        /// not happen, as types are a predefined set.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <exception cref="ArgumentNullException">container</exception>

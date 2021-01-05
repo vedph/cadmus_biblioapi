@@ -322,6 +322,7 @@ namespace Cadmus.Biblio.Ef
                     Id = Guid.NewGuid().ToString()
                 };
             }
+
             ef.First = author.First;
             ef.Last = author.Last;
             ef.Lastx = StandardFilter.Apply(author.Last, true);
@@ -339,16 +340,37 @@ namespace Cadmus.Biblio.Ef
                 .Where(ac => ac.ContainerId == container.Id);
             context.AuthorContainers.RemoveRange(old);
 
-            // add back the received authors to it
+            // add back the received authors
             container.AuthorContainers = new List<EfAuthorContainer>();
 
             foreach (WorkAuthor author in authors)
             {
-                EfAuthor efa = context.Authors.Find(author.Id) ?? new EfAuthor();
-                efa.First = author.First;
-                efa.Last = author.Last;
-                efa.Lastx = StandardFilter.Apply(author.Last, true);
+                // find the author unless new
+                EfAuthor efa = author.Id != null
+                    ? context.Authors.Find(author.Id)
+                    : null;
 
+                if (efa == null)
+                {
+                    // if an existing author was required and we did not find
+                    // him, ignore (defensive)
+                    if (author.Last == null) continue;
+
+                    // else we have a new author, add it
+                    efa = new EfAuthor();
+                    context.Authors.Add(efa);
+                }
+
+                // update the author if data are available
+                // (we can consider an author empty if its Last property is empty)
+                if (author.Last != null)
+                {
+                    efa.First = author.First;
+                    efa.Last = author.Last;
+                    efa.Lastx = StandardFilter.Apply(author.Last, true);
+                }
+
+                // add the link
                 container.AuthorContainers.Add(new EfAuthorContainer
                 {
                     Author = efa,
@@ -371,8 +393,12 @@ namespace Cadmus.Biblio.Ef
             foreach (Keyword keyword in keywords)
             {
                 EfKeyword efk = context.Keywords.FirstOrDefault(k =>
-                    k.Value == keyword.Value && k.Language == keyword.Language)
-                    ?? new EfKeyword();
+                    k.Value == keyword.Value && k.Language == keyword.Language);
+                if (efk == null)
+                {
+                    efk = new EfKeyword();
+                    context.Keywords.Add(efk);
+                }
                 efk.Language = keyword.Language;
                 efk.Value = keyword.Value;
                 efk.Valuex = StandardFilter.Apply(keyword.Value, true);
@@ -407,6 +433,7 @@ namespace Cadmus.Biblio.Ef
             // if new or not found, add it with a new ID
             if (ef == null)
             {
+                if (container.Title == null) return null;
                 ef = new EfContainer
                 {
                     Id = Guid.NewGuid().ToString()
@@ -414,45 +441,58 @@ namespace Cadmus.Biblio.Ef
                 context.Containers.Add(ef);
             }
 
-            // update the container
-            ef.Type = context.WorkTypes.FirstOrDefault(t => t.Name == container.Type);
-            ef.Title = container.Title;
-            ef.Titlex = StandardFilter.Apply(container.Title, true);
-            ef.Language = container.Language;
-            ef.Edition = container.Edition;
-            ef.Publisher = container.Publisher;
-            ef.YearPub = container.YearPub;
-            ef.PlacePub = container.PlacePub;
-            ef.Location = container.Location;
-            ef.AccessDate = container.AccessDate;
-            ef.Number = container.Number;
-            ef.Note = container.Note;
-            ef.Key = container.Key?.StartsWith(MAN_KEY_PREFIX) ?? false
-                    ? container.Key : WorkKeyBuilder.Build(container);
-
-            // add key suffix if required and possible
-            if (!container.Key.StartsWith(MAN_KEY_PREFIX))
+            // update the container unless empty
+            if (container.Title != null)
             {
-                var existing = context.Works.FirstOrDefault(w => w.Key == ef.Key);
-                if (existing != null)
+                ef.Type = context.WorkTypes.FirstOrDefault(t => t.Name == container.Type);
+                // if the type does not exist, add it -- this is defensive,
+                // and should not happen, as types are supposed to be a predefined set
+                if (ef.Type == null)
                 {
-                    Match m = Regex.Match(existing.Key, @"\d+([a-z])?$");
-                    if (m.Success)
+                    ef.Type = new EfWorkType
                     {
-                        char c = m.Groups[1].Value[0];
-                        if (c < 'z') c++;
-                        ef.Key += c;
+                        Id = container.Type,
+                        Name = container.Type    // name=ID, better than nothing
+                    };
+                }
+                ef.Title = container.Title;
+                ef.Titlex = StandardFilter.Apply(container.Title, true);
+                ef.Language = container.Language;
+                ef.Edition = container.Edition;
+                ef.Publisher = container.Publisher;
+                ef.YearPub = container.YearPub;
+                ef.PlacePub = container.PlacePub;
+                ef.Location = container.Location;
+                ef.AccessDate = container.AccessDate;
+                ef.Number = container.Number;
+                ef.Note = container.Note;
+                ef.Key = container.Key?.StartsWith(MAN_KEY_PREFIX) ?? false
+                        ? container.Key : WorkKeyBuilder.Build(container);
+
+                // add key suffix if required and possible
+                if (!container.Key.StartsWith(MAN_KEY_PREFIX))
+                {
+                    var existing = context.Works.FirstOrDefault(w => w.Key == ef.Key);
+                    if (existing != null)
+                    {
+                        Match m = Regex.Match(existing.Key, @"\d+([a-z])?$");
+                        if (m.Success)
+                        {
+                            char c = m.Groups[1].Value[0];
+                            if (c < 'z') c++;
+                            ef.Key += c;
+                        }
                     }
                 }
+
+                // authors
+                if (container.Authors?.Count > 0)
+                    AddAuthors(container.Authors, ef, context);
+
+                // keywords
+                if (container.Keywords?.Count > 0)
+                    AddKeywords(container.Keywords, ef, context);
             }
-
-            // authors
-            if (container.Authors?.Count > 0)
-                AddAuthors(container.Authors, ef, context);
-
-            // keywords
-            if (container.Keywords?.Count > 0)
-                AddKeywords(container.Keywords, ef, context);
 
             return ef;
         }
@@ -464,16 +504,37 @@ namespace Cadmus.Biblio.Ef
             var old = context.AuthorWorks.Where(aw => aw.WorkId == work.Id);
             context.AuthorWorks.RemoveRange(old);
 
-            // add back the received authors to it
+            // add back the received authors
             work.AuthorWorks = new List<EfAuthorWork>();
 
             foreach (WorkAuthor author in authors)
             {
-                EfAuthor efa = context.Authors.Find(author.Id) ?? new EfAuthor();
-                efa.First = author.First;
-                efa.Last = author.Last;
-                efa.Lastx = StandardFilter.Apply(author.Last, true);
+                // find the author unless new
+                EfAuthor efa = author.Id != null
+                    ? context.Authors.Find(author.Id)
+                    : null;
 
+                if (efa == null)
+                {
+                    // if an existing author was required and we did not find
+                    // him, ignore (defensive)
+                    if (author.Last == null) continue;
+
+                    // else we have a new author, add it
+                    efa = new EfAuthor();
+                    context.Authors.Add(efa);
+                }
+
+                // update the author if data are available
+                // (we can consider an author empty if its Last property is empty)
+                if (author.Last != null)
+                {
+                    efa.First = author.First;
+                    efa.Last = author.Last;
+                    efa.Lastx = StandardFilter.Apply(author.Last, true);
+                }
+
+                // add the link
                 work.AuthorWorks.Add(new EfAuthorWork
                 {
                     Author = efa,
@@ -496,8 +557,12 @@ namespace Cadmus.Biblio.Ef
             foreach (Keyword keyword in keywords)
             {
                 EfKeyword efk = context.Keywords.FirstOrDefault(k =>
-                    k.Value == keyword.Value && k.Language == keyword.Language)
-                    ?? new EfKeyword();
+                    k.Value == keyword.Value && k.Language == keyword.Language);
+                if (efk == null)
+                {
+                    efk = new EfKeyword();
+                    context.Keywords.Add(efk);
+                }
                 efk.Language = keyword.Language;
                 efk.Value = keyword.Value;
                 efk.Valuex = StandardFilter.Apply(keyword.Value, true);
@@ -539,6 +604,16 @@ namespace Cadmus.Biblio.Ef
 
             // update the work
             ef.Type = context.WorkTypes.FirstOrDefault(t => t.Name == work.Type);
+            // if the type does not exist, add it -- this is defensive,
+            // and should not happen, as types are supposed to be a predefined set
+            if (ef.Type == null)
+            {
+                ef.Type = new EfWorkType
+                {
+                    Id = work.Type,
+                    Name = work.Type    // name=ID, better than nothing
+                };
+            }
             ef.Title = work.Title;
             ef.Titlex = StandardFilter.Apply(work.Title, true);
             ef.Language = work.Language;
@@ -606,7 +681,7 @@ namespace Cadmus.Biblio.Ef
             ef.Language = keyword.Language;
             ef.Value = keyword.Value;
             ef.Valuex = StandardFilter.Apply(keyword.Value, true);
-            
+
             return ef;
         }
         #endregion
