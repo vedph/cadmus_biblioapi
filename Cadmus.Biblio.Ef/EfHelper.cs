@@ -407,8 +407,9 @@ namespace Cadmus.Biblio.Ef
             EfContainer container, BiblioDbContext context)
         {
             // remove any keyword from the target work
-            var old = context.KeywordWorks.Where(kw => kw.WorkId == container.Id);
-            context.KeywordWorks.RemoveRange(old);
+            var old = context.KeywordContainers
+                .Where(kc => kc.ContainerId == container.Id);
+            context.KeywordContainers.RemoveRange(old);
 
             // add back the received keywords to it
             container.KeywordContainers = new List<EfKeywordContainer>();
