@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "cadmus-biblio": {
+      "commandName": "Project",
+      "commandLineArgs": "seed cadmus-biblio"
+    }
+  }
+}

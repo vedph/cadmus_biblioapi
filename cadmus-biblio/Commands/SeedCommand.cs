@@ -54,7 +54,7 @@ namespace Cadmus.Biblio.Commands
 
         public Task Run()
         {
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("SEED DATABASE\n");
             Console.ResetColor();
             Console.WriteLine(
@@ -68,7 +68,7 @@ namespace Cadmus.Biblio.Commands
 
             MySqlDbManager manager = new MySqlDbManager(connection);
 
-            if (!manager.Exists(connection))
+            if (!manager.Exists(_database))
             {
                 Console.WriteLine("Creating database...");
                 Serilog.Log.Information($"Creating database {_database}...");
