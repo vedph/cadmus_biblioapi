@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 namespace Cadmus.Biblio.Api.Controllers
 {
     /// <summary>
-    /// Author model.
+    /// Work's author.
     /// </summary>
-    public class AuthorBindingModel
+    public sealed class WorkAuthorBindingModel
     {
         /// <summary>
         /// The ID.
@@ -16,14 +16,12 @@ namespace Cadmus.Biblio.Api.Controllers
         /// <summary>
         /// First name.
         /// </summary>
-        [Required]
         [MaxLength(50)]
         public string First { get; set; }
 
         /// <summary>
         /// Last name.
         /// </summary>
-        [Required]
         [MaxLength(50)]
         public string Last { get; set; }
 
@@ -33,5 +31,12 @@ namespace Cadmus.Biblio.Api.Controllers
         /// </summary>
         [MaxLength(50)]
         public string Suffix { get; set; }
+
+        /// <summary>
+        /// Gets or sets the optional role of this author in the context
+        /// of his work.
+        /// </summary>
+        [MaxLength(50)]
+        public string Role { get; set; }
     }
 }

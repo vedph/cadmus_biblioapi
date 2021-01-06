@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cadmus.Biblio.Api.Controllers
 {
+    /// <summary>
+    /// Keywords.
+    /// </summary>
+    /// <seealso cref="Controller" />
     [ApiController]
     public sealed class KeywordController : Controller
     {
@@ -71,6 +75,9 @@ namespace Cadmus.Biblio.Api.Controllers
             }, keyword);
         }
 
+        /// <summary>
+        /// Prunes the unused keywords.
+        /// </summary>
         [HttpDelete("api/unused/keywords")]
         public void PruneKeywords()
         {

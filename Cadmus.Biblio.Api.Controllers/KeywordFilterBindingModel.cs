@@ -5,6 +5,7 @@ namespace Cadmus.Biblio.Api.Controllers
     public sealed class KeywordFilterBindingModel : PagingOptionsBindingModel
     {
         [MaxLength(3)]
+        [RegularExpression("^[a-z]{3}$")]
         public string Language { get; set; }
 
         [MaxLength(50)]

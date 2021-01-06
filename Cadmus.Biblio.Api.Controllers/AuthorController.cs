@@ -13,6 +13,11 @@ namespace Cadmus.Biblio.Api.Controllers
     {
         private readonly IBiblioRepository _repository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorController"/>
+        /// class.
+        /// </summary>
+        /// <param name="repository">The repository.</param>
         public AuthorController(IBiblioRepository repository)
         {
             _repository = repository;
@@ -76,12 +81,19 @@ namespace Cadmus.Biblio.Api.Controllers
             }, author);
         }
 
+        /// <summary>
+        /// Deletes the author with the specified ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
         [HttpDelete("api/authors/{id}")]
         public void DeleteAuthor([FromRoute] Guid id)
         {
             _repository.DeleteAuthor(id);
         }
 
+        /// <summary>
+        /// Prunes the unused authors.
+        /// </summary>
         [HttpDelete("api/unused/authors")]
         public void PruneAuthors()
         {
