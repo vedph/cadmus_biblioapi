@@ -181,3 +181,35 @@ The main tasks to integrate a service like this in Cadmus are:
 - if required, add the same `AuthenticationController` found in Cadmus API and use the same authentication MongoDB database used by Cadmus to authorize the requests to the API. Configure CORS and authentication as required, and protect the desired API endpoints.
 
 - add a layer to the Docker compose stack, dependent from the Cadmus API (to be able to use its authentication DB); the Cadmus web app depends on it.
+
+## Seeding
+
+To empty the database:
+
+```sql
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE `authorwork`;
+TRUNCATE TABLE `authorcontainer`;
+TRUNCATE TABLE `authorwork`;
+TRUNCATE TABLE `container`;
+TRUNCATE TABLE `keyword`;
+TRUNCATE TABLE `keywordcontainer`;
+TRUNCATE TABLE `keywordwork`;
+TRUNCATE TABLE `work`;
+TRUNCATE TABLE `worktype`;
+SET FOREIGN_KEY_CHECKS = 1;
+```
+
+You can seed the database with mock data using the `seed` command of `cadmus-biblio`:
+
+```ps1
+.\cadmus-biblio seed cadmus-biblio
+```
+
+To fill only a subset of the tables, use the `-e` option with a string including any combination of these letters:
+
+- `T`=types
+- `K`=keywords
+- `A`=authors
+- `C`=containers
+- `W`=works

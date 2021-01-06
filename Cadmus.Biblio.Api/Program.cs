@@ -9,6 +9,7 @@ using Serilog;
 using Serilog.Events;
 using Cadmus.Api.Services.Seeding;
 using System.Threading.Tasks;
+using Cadmus.Biblio.Api.Services;
 
 namespace Cadmus.Biblio.Api
 {
@@ -72,7 +73,11 @@ namespace Cadmus.Biblio.Api
                 var host = await CreateHostBuilder(args)
                     .UseSerilog()
                     .Build()
-                    .SeedAsync(accounts: true, data: false); // see Services/HostSeedExtension
+                    // Cadmus seeder (authentication)
+                    .SeedAsync(accounts: true, data: false);
+
+                // Biblio seeder
+                await host.SeedBiblioAsync();
 
                 host.Run();
 

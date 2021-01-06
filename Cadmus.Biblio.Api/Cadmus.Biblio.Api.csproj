@@ -31,11 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cadmus.Biblio.Api.Controllers\Cadmus.Biblio.Api.Controllers.csproj" />
+    <ProjectReference Include="..\Cadmus.Biblio.Core\Cadmus.Biblio.Core.csproj" />
     <ProjectReference Include="..\Cadmus.Biblio.Ef\Cadmus.Biblio.Ef.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\Cadmus.Biblio.Seed\Cadmus.Biblio.Seed.csproj" />
   </ItemGroup>
 
 

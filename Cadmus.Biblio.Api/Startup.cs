@@ -24,6 +24,7 @@ using Cadmus.Api.Services.Auth;
 using Cadmus.Api.Services.Messaging;
 using Cadmus.Biblio.Core;
 using Cadmus.Biblio.Ef;
+using System.Globalization;
 
 namespace Cadmus.Biblio.Api
 {
@@ -56,7 +57,7 @@ namespace Cadmus.Biblio.Api
                 resolver.GetRequiredService<IOptions<DotNetMailerOptions>>().Value);
         }
 
-        private void ConfigureCorsServices(IServiceCollection services)
+        private static void ConfigureCorsServices(IServiceCollection services)
         {
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {
@@ -118,7 +119,7 @@ namespace Cadmus.Biblio.Api
 #endif
         }
 
-        private void ConfigureSwaggerServices(IServiceCollection services)
+        private static void ConfigureSwaggerServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
@@ -224,8 +225,12 @@ namespace Cadmus.Biblio.Api
             // repository
             services.AddTransient<IBiblioRepository>(_ =>
             {
-                return new EfBiblioRepository(
-                    Configuration.GetConnectionString("Biblio"), "mysql");
+                string cs = string.Format(
+                    CultureInfo.InvariantCulture,
+                    Configuration.GetConnectionString("Biblio"),
+                    Configuration.GetValue<string>("DatabaseNames:Biblio"));
+
+                return new EfBiblioRepository(cs, "mysql");
             });
 
             // swagger
