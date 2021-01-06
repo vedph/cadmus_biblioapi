@@ -2,8 +2,6 @@
 using Fusi.Tools.Data;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cadmus.Biblio.Api.Controllers
 {
@@ -15,6 +13,20 @@ namespace Cadmus.Biblio.Api.Controllers
         public AuthorController(IBiblioRepository repository)
         {
             _repository = repository;
+        }
+
+        [HttpGet("api/authors")]
+        [Produces("application/json")]
+        [ProducesResponseType(200)]
+        public ActionResult<DataPage<Author>> GetAuthors(
+            [FromQuery] AuthorFilterBindingModel model)
+        {
+            return Ok(_repository.GetAuthors(new AuthorFilter
+            {
+                PageNumber = model.PageNumber,
+                PageSize = model.PageSize,
+                Last = model.Last
+            }));
         }
 
         [HttpGet("api/authors/{id}")]
