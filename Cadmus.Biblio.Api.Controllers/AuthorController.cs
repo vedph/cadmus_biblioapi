@@ -5,6 +5,9 @@ using System;
 
 namespace Cadmus.Biblio.Api.Controllers
 {
+    /// <summary>
+    /// Authors.
+    /// </summary>
     [ApiController]
     public sealed class AuthorController : Controller
     {
@@ -15,6 +18,11 @@ namespace Cadmus.Biblio.Api.Controllers
             _repository = repository;
         }
 
+        /// <summary>
+        /// Get the specified page of authors.
+        /// </summary>
+        /// <param name="model">The author filter model.</param>
+        /// <returns>Page.</returns>
         [HttpGet("api/authors")]
         [Produces("application/json")]
         [ProducesResponseType(200)]
@@ -29,7 +37,12 @@ namespace Cadmus.Biblio.Api.Controllers
             }));
         }
 
-        [HttpGet("api/authors/{id}")]
+        /// <summary>
+        /// Get the author with the specified ID.
+        /// </summary>
+        /// <param name="id">Author's ID.</param>
+        /// <returns>Author.</returns>
+        [HttpGet("api/authors/{id}", Name = "GetAuthor")]
         [Produces("application/json")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -38,6 +51,35 @@ namespace Cadmus.Biblio.Api.Controllers
             Author author = _repository.GetAuthor(id);
             if (author == null) return NotFound();
             return Ok(author);
+        }
+
+        /// <summary>
+        /// Add or update the specified author.
+        /// </summary>
+        /// <param name="model">The author.</param>
+        [HttpPost("api/authors")]
+        [Produces("application/json")]
+        [ProducesResponseType(201)]
+        public IActionResult AddAuthor([FromBody] AuthorBindingModel model)
+        {
+            Author author = new Author
+            {
+                Id = model.Id ?? Guid.Empty,
+                First = model.First,
+                Last = model.Last,
+                Suffix = model.Suffix
+            };
+            _repository.AddAuthor(author);
+            return CreatedAtRoute("GetAuthor", new
+            {
+                id = author.Id,
+            }, author);
+        }
+
+        [HttpDelete("api/authors/{id}")]
+        public void DeleteAuthor([FromRoute] Guid id)
+        {
+            _repository.DeleteAuthor(id);
         }
     }
 }
