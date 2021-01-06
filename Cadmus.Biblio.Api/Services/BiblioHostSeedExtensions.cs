@@ -54,7 +54,7 @@ namespace Cadmus.Biblio.Api.Services
                     {
                         Logger = logger
                     };
-                    seeder.Seed(config.GetValue<int>("Seed:ItemCount"));
+                    seeder.Seed(config.GetValue<int>("Seed:EntityCount"));
 
                     Console.WriteLine("Seeding completed");
                     return Task.CompletedTask;

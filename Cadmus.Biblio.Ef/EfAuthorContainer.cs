@@ -36,6 +36,13 @@ namespace Cadmus.Biblio.Ef
         public string Role { get; set; }
 
         /// <summary>
+        /// Gets or sets the ordinal number of this author in the author(s)
+        /// list of the target work. When there is a single author, this is
+        /// meaningless.
+        /// </summary>
+        public short Ordinal { get; set; }
+
+        /// <summary>
         /// Converts to string.
         /// </summary>
         /// <returns>

@@ -120,7 +120,8 @@ namespace Cadmus.Biblio.Ef
                                     Id = aw.AuthorId,
                                     First = aw.Author?.First,
                                     Last = aw.Author?.Last,
-                                    Role = aw.Role
+                                    Role = aw.Role,
+                                    Ordinal = aw.Ordinal
                                 }).ToList();
             }
 
@@ -175,7 +176,8 @@ namespace Cadmus.Biblio.Ef
                                     Id = aw.AuthorId,
                                     First = aw.Author?.First,
                                     Last = aw.Author?.Last,
-                                    Role = aw.Role
+                                    Role = aw.Role,
+                                    Ordinal = aw.Ordinal
                                 }).ToList();
             }
 
@@ -232,7 +234,8 @@ namespace Cadmus.Biblio.Ef
                                            {
                                                Last = ac.Author.Last,
                                                First = ac.Author.First,
-                                               Role = ac.Role
+                                               Role = ac.Role,
+                                               Ordinal = ac.Ordinal
                                            });
             }
 
@@ -282,7 +285,8 @@ namespace Cadmus.Biblio.Ef
                                       {
                                           Last = ac.Author.Last,
                                           First = ac.Author.First,
-                                          Role = ac.Role
+                                          Role = ac.Role,
+                                          Ordinal = ac.Ordinal
                                       });
             }
 
@@ -368,9 +372,12 @@ namespace Cadmus.Biblio.Ef
 
             // add back the received authors
             container.AuthorContainers = new List<EfAuthorContainer>();
+            short ordinal = 0;
 
             foreach (WorkAuthor author in authors)
             {
+                ordinal++;
+
                 // find the author unless new
                 EfAuthor efa = author.Id != Guid.Empty
                     ? context.Authors.Find(author.Id)
@@ -401,6 +408,7 @@ namespace Cadmus.Biblio.Ef
                 {
                     Author = efa,
                     Role = author.Role,
+                    Ordinal = ordinal,
                     Container = container
                 });
             }
@@ -548,8 +556,11 @@ namespace Cadmus.Biblio.Ef
             // add back the received authors
             work.AuthorWorks = new List<EfAuthorWork>();
 
+            short ordinal = 0;
             foreach (WorkAuthor author in authors)
             {
+                ordinal++;
+
                 // find the author unless new
                 EfAuthor efa = author.Id != Guid.Empty
                     ? context.Authors.Find(author.Id)
@@ -580,6 +591,7 @@ namespace Cadmus.Biblio.Ef
                 {
                     Author = efa,
                     Role = author.Role,
+                    Ordinal = ordinal,
                     Work = work
                 });
             }
