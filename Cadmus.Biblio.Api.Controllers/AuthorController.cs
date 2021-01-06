@@ -81,5 +81,11 @@ namespace Cadmus.Biblio.Api.Controllers
         {
             _repository.DeleteAuthor(id);
         }
+
+        [HttpDelete("api/unused/authors")]
+        public void PruneAuthors()
+        {
+            _repository.PruneAuthors();
+        }
     }
 }

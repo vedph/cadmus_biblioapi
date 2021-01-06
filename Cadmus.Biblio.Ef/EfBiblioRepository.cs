@@ -623,6 +623,20 @@ namespace Cadmus.Biblio.Ef
         }
 
         /// <summary>
+        /// Gets the keyword with the specified ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>The keyword or null if not found.</returns>
+        public Keyword GetKeyword(int id)
+        {
+            using (var db = GetContext())
+            {
+                EfKeyword ef = db.Keywords.Find(id);
+                return ef != null ? EfHelper.GetKeyword(ef) : null;
+            }
+        }
+
+        /// <summary>
         /// Gets the specified page of keywords.
         /// </summary>
         /// <param name="filter">The filter.</param>
@@ -661,8 +675,9 @@ namespace Cadmus.Biblio.Ef
         /// Adds or updates the specified keyword.
         /// </summary>
         /// <param name="keyword">The keyword.</param>
+        /// <returns>The keyword's ID.</returns>
         /// <exception cref="ArgumentNullException">keyword</exception>
-        public void AddKeyword(Keyword keyword)
+        public int AddKeyword(Keyword keyword)
         {
             if (keyword == null)
                 throw new ArgumentNullException(nameof(keyword));
@@ -671,6 +686,7 @@ namespace Cadmus.Biblio.Ef
             {
                 EfKeyword ef = EfHelper.GetEfKeyword(keyword, db);
                 db.SaveChanges();
+                return ef.Id;
             }
         }
 

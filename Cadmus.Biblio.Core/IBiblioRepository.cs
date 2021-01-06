@@ -134,6 +134,13 @@ namespace Cadmus.Biblio.Core
         void PruneAuthors();
 
         /// <summary>
+        /// Gets the keyword with the specified ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>The keyword or null if not found.</returns>
+        Keyword GetKeyword(int id);
+
+        /// <summary>
         /// Gets the specified page of keywords.
         /// </summary>
         /// <param name="filter">The filter.</param>
@@ -144,7 +151,8 @@ namespace Cadmus.Biblio.Core
         /// Adds or updates the specified keyword.
         /// </summary>
         /// <param name="keyword">The keyword.</param>
-        void AddKeyword(Keyword keyword);
+        /// <returns>The keyword's ID.</returns>
+        int AddKeyword(Keyword keyword);
 
         /// <summary>
         /// Prunes the keywords by removing all the keywords not assigned to
