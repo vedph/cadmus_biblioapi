@@ -117,6 +117,7 @@ namespace Cadmus.Biblio.Ef
                 info.Authors = (from aw in ef.AuthorContainers
                                 select new WorkAuthor
                                 {
+                                    Id = aw.AuthorId,
                                     First = aw.Author?.First,
                                     Last = aw.Author?.Last,
                                     Role = aw.Role
@@ -171,6 +172,7 @@ namespace Cadmus.Biblio.Ef
                 info.Authors = (from aw in ef.AuthorWorks
                                 select new WorkAuthor
                                 {
+                                    Id = aw.AuthorId,
                                     First = aw.Author?.First,
                                     Last = aw.Author?.Last,
                                     Role = aw.Role
@@ -528,17 +530,8 @@ namespace Cadmus.Biblio.Ef
                 // add key suffix if required and possible
                 if (!container.Key.StartsWith(MAN_KEY_PREFIX))
                 {
-                    var existing = context.Works.FirstOrDefault(w => w.Key == ef.Key);
-                    if (existing != null)
-                    {
-                        Match m = Regex.Match(existing.Key, @"\d+([a-z])?$");
-                        if (m.Success)
-                        {
-                            char c = m.Groups[1].Value[0];
-                            if (c < 'z') c++;
-                            ef.Key += c;
-                        }
-                    }
+                    char c = GetSuffixForKey(ef.Key, context);
+                    if (c != '\0') ef.Key += c;
                 }
             }
 
@@ -644,6 +637,22 @@ namespace Cadmus.Biblio.Ef
             }
         }
 
+        private static char GetSuffixForKey(string key, BiblioDbContext context)
+        {
+            var existing = context.Works.FirstOrDefault(w => w.Key == key);
+            if (existing != null)
+            {
+                Match m = Regex.Match(existing.Key, @"\d+([a-z])?$");
+                if (m.Success && m.Groups[1].Value.Length > 0)
+                {
+                    char c = m.Groups[1].Value[0];
+                    if (c < 'z') c++;
+                    return c;
+                }
+            }
+            return '\0';
+        }
+
         /// <summary>
         /// Gets the work entity corresponding to the specified work.
         /// </summary>
@@ -711,17 +720,8 @@ namespace Cadmus.Biblio.Ef
             // add key suffix if required and possible
             if (!work.Key.StartsWith(MAN_KEY_PREFIX))
             {
-                var existing = context.Works.FirstOrDefault(w => w.Key == ef.Key);
-                if (existing != null)
-                {
-                    Match m = Regex.Match(existing.Key, @"\d+([a-z])?$");
-                    if (m.Success)
-                    {
-                        char c = m.Groups[1].Value[0];
-                        if (c < 'z') c++;
-                        ef.Key += c;
-                    }
-                }
+                char c = GetSuffixForKey(ef.Key, context);
+                if (c != '\0') ef.Key += c;
             }
 
             return ef;
