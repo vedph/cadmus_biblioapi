@@ -1,4 +1,5 @@
 ﻿using Cadmus.Biblio.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -406,32 +407,52 @@ namespace Cadmus.Biblio.Ef
         private static void AddKeywords(IList<Keyword> keywords,
             EfContainer container, BiblioDbContext context)
         {
-            // remove any keyword from the target work
-            var old = context.KeywordContainers
-                .Where(kc => kc.ContainerId == container.Id);
-            context.KeywordContainers.RemoveRange(old);
-
-            // add back the received keywords to it
-            container.KeywordContainers = new List<EfKeywordContainer>();
-
+            // collect the keywords to be assigned, adding the missing ones
+            List<EfKeywordContainer> requested = new List<EfKeywordContainer>();
             foreach (Keyword keyword in keywords)
             {
+                // find the keyword by its content, as we have no ID
                 EfKeyword efk = context.Keywords.FirstOrDefault(k =>
                     k.Value == keyword.Value && k.Language == keyword.Language);
+
+                // if not found, add it
                 if (efk == null)
                 {
-                    efk = new EfKeyword();
+                    efk = new EfKeyword
+                    {
+                        Language = keyword.Language,
+                        Value = keyword.Value,
+                        Valuex = StandardFilter.Apply(keyword.Value, true)
+                    };
                     context.Keywords.Add(efk);
                 }
-                efk.Language = keyword.Language;
-                efk.Value = keyword.Value;
-                efk.Valuex = StandardFilter.Apply(keyword.Value, true);
 
-                container.KeywordContainers.Add(new EfKeywordContainer
+                requested.Add(new EfKeywordContainer
                 {
                     Keyword = efk,
                     Container = container
                 });
+            }
+
+            // remove all the keywords which are no more requested
+            if (container.KeywordContainers != null)
+            {
+                foreach (EfKeywordContainer kc in container.KeywordContainers)
+                {
+                    if (requested.All(r => r.KeywordId != kc.KeywordId))
+                        context.KeywordContainers.Remove(kc);
+                }
+            }
+            else container.KeywordContainers = new List<EfKeywordContainer>();
+
+            // add all those which are not yet present
+            foreach (EfKeywordContainer kc in requested)
+            {
+                if (container.KeywordContainers.All(
+                    r => r.KeywordId != kc.KeywordId))
+                {
+                    container.KeywordContainers.Add(kc);
+                }
             }
         }
 
@@ -450,9 +471,11 @@ namespace Cadmus.Biblio.Ef
 
             if (container == null) return null;
 
-            // find the container unless new
+            // get the container unless it's new
             EfContainer ef = container.Id != Guid.Empty
-                ? context.Containers.Find(container.Id) : null;
+                ? context.Containers
+                    .Include(c => c.KeywordContainers)
+                    .FirstOrDefault(c => c.Id == container.Id) : null;
 
             // if new or not found, add it with a new ID
             if (ef == null)
@@ -572,31 +595,52 @@ namespace Cadmus.Biblio.Ef
         private static void AddKeywords(IList<Keyword> keywords, EfWork work,
             BiblioDbContext context)
         {
-            // remove any keyword from the target work
-            var old = context.KeywordWorks.Where(kw => kw.WorkId == work.Id);
-            context.KeywordWorks.RemoveRange(old);
-
-            // add back the received keywords to it
-            work.KeywordWorks = new List<EfKeywordWork>();
-
+            // collect the keywords to be assigned, adding the missing ones
+            List<EfKeywordWork> requested = new List<EfKeywordWork>();
             foreach (Keyword keyword in keywords)
             {
+                // find the keyword by its content, as we have no ID
                 EfKeyword efk = context.Keywords.FirstOrDefault(k =>
                     k.Value == keyword.Value && k.Language == keyword.Language);
+
+                // if not found, add it
                 if (efk == null)
                 {
-                    efk = new EfKeyword();
+                    efk = new EfKeyword
+                    {
+                        Language = keyword.Language,
+                        Value = keyword.Value,
+                        Valuex = StandardFilter.Apply(keyword.Value, true)
+                    };
                     context.Keywords.Add(efk);
                 }
-                efk.Language = keyword.Language;
-                efk.Value = keyword.Value;
-                efk.Valuex = StandardFilter.Apply(keyword.Value, true);
 
-                work.KeywordWorks.Add(new EfKeywordWork
+                requested.Add(new EfKeywordWork
                 {
                     Keyword = efk,
                     Work = work
                 });
+            }
+
+            // remove all the keywords which are no more requested
+            if (work.KeywordWorks != null)
+            {
+                foreach (EfKeywordWork kw in work.KeywordWorks)
+                {
+                    if (requested.All(r => r.KeywordId != kw.KeywordId))
+                        context.KeywordWorks.Remove(kw);
+                }
+            }
+            else work.KeywordWorks = new List<EfKeywordWork>();
+
+            // add all those which are not yet present
+            foreach (EfKeywordWork kw in requested)
+            {
+                if (work.KeywordWorks.All(
+                    r => r.KeywordId != kw.KeywordId))
+                {
+                    work.KeywordWorks.Add(kw);
+                }
             }
         }
 

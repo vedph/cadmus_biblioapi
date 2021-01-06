@@ -330,8 +330,9 @@ namespace Cadmus.Biblio.Ef
                 int tot = containers.Count();
 
                 // sort and page
-                containers = containers.OrderBy(c => c.AuthorContainers[0].Author.Lastx)
-                    .ThenBy(c => c.AuthorContainers[0].Author.First)
+                containers = containers
+                    .OrderBy(c => c.AuthorContainers.Select(ac => ac.Author).First().Lastx)
+                    .ThenBy(c => c.AuthorContainers.Select(ac => ac.Author).First().First)
                     .ThenBy(c => c.Titlex)
                     .ThenBy(c => c.Key)
                     .ThenBy(c => c.Id);
