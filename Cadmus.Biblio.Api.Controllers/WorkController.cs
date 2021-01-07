@@ -39,7 +39,7 @@ namespace Cadmus.Biblio.Api.Controllers
             {
                 PageNumber = model.PageNumber,
                 PageSize = model.PageSize,
-                IsMatchAnyEnabled = model.IsMatchAnyEnabled,
+                IsMatchAnyEnabled = model.MatchAny,
                 Type = model.Type,
                 LastName = model.LastName,
                 Language = model.Language,

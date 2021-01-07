@@ -14,7 +14,7 @@ namespace Cadmus.Biblio.Api.Controllers
         /// value is false, meaning that all the specified properties must
         /// be matched.
         /// </summary>
-        public bool IsMatchAnyEnabled { get; set; }
+        public bool MatchAny { get; set; }
 
         /// <summary>
         /// The work's type.
