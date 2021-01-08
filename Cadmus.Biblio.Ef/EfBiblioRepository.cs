@@ -118,7 +118,7 @@ namespace Cadmus.Biblio.Ef
                     if (filter.YearPubMax > 0)
                         predicate.Or(w => w.YearPub <= filter.YearPubMax);
 
-                    works = db.Works.AsExpandable().Where(predicate);
+                    works = works.AsExpandable().Where(predicate);
                 }
                 else
                 {
@@ -319,7 +319,7 @@ namespace Cadmus.Biblio.Ef
                     if (filter.YearPubMax > 0)
                         predicate.Or(c => c.YearPub <= filter.YearPubMax);
 
-                    containers = db.Containers.AsExpandable().Where(predicate);
+                    containers = containers.AsExpandable().Where(predicate);
                 }
                 else
                 {
