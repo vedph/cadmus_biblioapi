@@ -1,5 +1,6 @@
 ﻿using Cadmus.Biblio.Core;
 using Fusi.Tools.Data;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -74,33 +75,50 @@ namespace Cadmus.Biblio.Ef
 
                 if (filter.IsMatchAnyEnabled)
                 {
-                    works = works.Where(w =>
-                        // key
-                        string.IsNullOrEmpty(filter.Key) || w.Key == filter.Key
-                        // type
-                        || string.IsNullOrEmpty(filter.Type)
-                            || w.Type.Name == filter.Type
-                        // last
-                        || string.IsNullOrEmpty(filter.LastName)
-                            || w.AuthorWorks.Any(
-                                aw => aw.Author.Lastx.Contains(filter.LastName))
-                        // language
-                        || string.IsNullOrEmpty(filter.Language)
-                            || w.Language == filter.Language
-                        // title
-                        || string.IsNullOrEmpty(filter.Title)
-                            || w.Titlex.Contains(filter.Title)
-                        // container
-                        || string.IsNullOrEmpty(filter.ContainerTitle)
-                            || w.Container.Titlex.Contains(filter.ContainerTitle)
-                        // keyword
-                        || string.IsNullOrEmpty(filter.Keyword)
-                            || w.KeywordWorks.Any(
-                                kw => kw.Keyword.Valuex.Equals(filter.Keyword))
-                        // yearpubmin
-                        || filter.YearPubMin == 0 || w.YearPub >= filter.YearPubMin
-                        // yearpubmax
-                        || filter.YearPubMax == 0 || w.YearPub <= filter.YearPubMax);
+                    // we need a predicate builder to chain clauses with OR
+                    // (note: this requires package LinqKit.Core)
+                    // http://www.albahari.com/nutshell/predicatebuilder.aspx
+
+                    var predicate = PredicateBuilder.New<EfWork>();
+
+                    if (!string.IsNullOrEmpty(filter.Key))
+                        predicate.Or(w => w.Key.Equals(filter.Key));
+
+                    if (!string.IsNullOrEmpty(filter.Type))
+                        predicate.Or(w => w.Type.Equals(filter.Type));
+
+                    if (!string.IsNullOrEmpty(filter.LastName))
+                    {
+                        predicate.Or(w =>
+                            w.AuthorWorks.Any(aw =>
+                                aw.Author.Lastx.Contains(filter.LastName)));
+                    }
+
+                    if (!string.IsNullOrEmpty(filter.Language))
+                        predicate.Or(w => w.Language.Equals(filter.Language));
+
+                    if (!string.IsNullOrEmpty(filter.Title))
+                        predicate.Or(w => w.Titlex.Contains(filter.Title));
+
+                    if (!string.IsNullOrEmpty(filter.ContainerTitle))
+                    {
+                        predicate.Or(w => w.Container.Titlex.Contains(
+                            filter.ContainerTitle));
+                    }
+
+                    if (!string.IsNullOrEmpty(filter.Keyword))
+                    {
+                        predicate.Or(w => w.KeywordWorks.Any(
+                            kw => kw.Keyword.Valuex.Equals(filter.Keyword)));
+                    }
+
+                    if (filter.YearPubMin > 0)
+                        predicate.Or(w => w.YearPub >= filter.YearPubMin);
+
+                    if (filter.YearPubMax > 0)
+                        predicate.Or(w => w.YearPub <= filter.YearPubMax);
+
+                    works = db.Works.AsExpandable().Where(predicate);
                 }
                 else
                 {
@@ -153,8 +171,11 @@ namespace Cadmus.Biblio.Ef
                 int tot = works.Count();
 
                 // sort and page
-                works = works.OrderBy(w => w.AuthorWorks[0].Author.Lastx)
-                    .ThenBy(w => w.AuthorWorks[0].Author.First)
+                works = works
+                    .OrderBy(w => w.AuthorWorks.Select(aw => aw.Author)
+                        .First().Lastx)
+                    .ThenBy(w => w.AuthorWorks.Select(aw => aw.Author)
+                        .First().First)
                     .ThenBy(w => w.Titlex)
                     .ThenBy(w => w.Key)
                     .ThenBy(w => w.Id);
@@ -261,30 +282,44 @@ namespace Cadmus.Biblio.Ef
 
                 if (filter.IsMatchAnyEnabled)
                 {
-                    containers = containers.Where(c =>
-                        // key
-                        string.IsNullOrEmpty(filter.Key) || c.Key == filter.Key
-                        // type
-                        || string.IsNullOrEmpty(filter.Type)
-                            || c.Type.Name == filter.Type
-                        // last
-                        || string.IsNullOrEmpty(filter.LastName)
-                            || c.AuthorContainers.Any(
-                                aw => aw.Author.Lastx.Contains(filter.LastName))
-                        // language
-                        || string.IsNullOrEmpty(filter.Language)
-                            || c.Language == filter.Language
-                        // title
-                        || string.IsNullOrEmpty(filter.Title)
-                            || c.Titlex.Contains(filter.Title)
-                        // keyword
-                        || string.IsNullOrEmpty(filter.Keyword)
-                            || c.KeywordContainers.Any(
-                                kw => kw.Keyword.Valuex.Equals(filter.Keyword))
-                        // yearpubmin
-                        || filter.YearPubMin == 0 || c.YearPub >= filter.YearPubMin
-                        // yearpubmax
-                        || filter.YearPubMax == 0 || c.YearPub <= filter.YearPubMax);
+                    // we need a predicate builder to chain clauses with OR
+                    // (note: this requires package LinqKit.Core)
+                    // http://www.albahari.com/nutshell/predicatebuilder.aspx
+
+                    var predicate = PredicateBuilder.New<EfContainer>();
+
+                    if (!string.IsNullOrEmpty(filter.Key))
+                        predicate.Or(c => c.Key.Equals(filter.Key));
+
+                    if (!string.IsNullOrEmpty(filter.Type))
+                        predicate.Or(c => c.Type.Equals(filter.Type));
+
+                    if (!string.IsNullOrEmpty(filter.LastName))
+                    {
+                        predicate.Or(c =>
+                            c.AuthorContainers.Any(ac =>
+                                ac.Author.Lastx.Contains(filter.LastName)));
+                    }
+
+                    if (!string.IsNullOrEmpty(filter.Language))
+                        predicate.Or(c => c.Language.Equals(filter.Language));
+
+                    if (!string.IsNullOrEmpty(filter.Title))
+                        predicate.Or(c => c.Titlex.Contains(filter.Title));
+
+                    if (!string.IsNullOrEmpty(filter.Keyword))
+                    {
+                        predicate.Or(c => c.KeywordContainers.Any(
+                            kc => kc.Keyword.Valuex.Equals(filter.Keyword)));
+                    }
+
+                    if (filter.YearPubMin > 0)
+                        predicate.Or(c => c.YearPub >= filter.YearPubMin);
+
+                    if (filter.YearPubMax > 0)
+                        predicate.Or(c => c.YearPub <= filter.YearPubMax);
+
+                    containers = db.Containers.AsExpandable().Where(predicate);
                 }
                 else
                 {
