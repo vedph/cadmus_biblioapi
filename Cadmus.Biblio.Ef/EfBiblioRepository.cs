@@ -3,6 +3,7 @@ using Fusi.Tools.Data;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Cadmus.Biblio.Ef
@@ -488,9 +489,17 @@ namespace Cadmus.Biblio.Ef
 
                 // sort and page
                 types = types.OrderBy(t => t.Name).ThenBy(t => t.Id);
-                var pgTypes = types.Skip(filter.GetSkipCount())
-                    .Take(filter.PageSize)
-                    .ToList();
+                List<EfWorkType> pgTypes;
+                if (filter.PageSize > 0)
+                {
+                    pgTypes = types.Skip(filter.GetSkipCount())
+                        .Take(filter.PageSize)
+                        .ToList();
+                }
+                else
+                {
+                    pgTypes = types.Skip(filter.GetSkipCount()).ToList();
+                }
 
                 return new DataPage<WorkType>(
                     filter.PageNumber,
