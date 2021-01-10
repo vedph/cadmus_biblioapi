@@ -1,6 +1,7 @@
 ﻿using Cadmus.Biblio.Core;
 using Fusi.DbManager;
 using Fusi.DbManager.MySql;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Cadmus.Biblio.Ef.Test
@@ -318,14 +319,180 @@ namespace Cadmus.Biblio.Ef.Test
             int id = repository.AddKeyword(keyword);
 
             repository.DeleteKeyword(123);
-            
+
             Assert.NotNull(repository.GetKeyword(id));
         }
 
         [Fact]
         public void DeleteKeyword_Existing_Deleted()
         {
-            // TODO
+            ResetDatabase();
+            var repository = GetRepository();
+            Keyword keyword = new Keyword
+            {
+                Language = "eng",
+                Value = "test"
+            };
+            int id = repository.AddKeyword(keyword);
+
+            repository.DeleteKeyword(id);
+
+            Assert.Null(repository.GetKeyword(id));
+        }
+
+        [Fact]
+        public void PruneKeywords_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            int koid = repository.AddKeyword(new Keyword
+            {
+                Language = "eng",
+                Value = "orphan"
+            });
+            Keyword kw = new Keyword
+            {
+                Language = "eng",
+                Value = "work"
+            };
+            int kwid = repository.AddKeyword(kw);
+            Keyword kc = new Keyword
+            {
+                Language = "eng",
+                Value = "container"
+            };
+            int kcid = repository.AddKeyword(kc);
+
+            // work with kw
+            repository.AddWork(new Work
+            {
+                Key = "Rossi 1963",
+                Title = "Title",
+                Language = "ita",
+                YearPub = 1963,
+                Keywords = new List<Keyword>(new[] { kw })
+            });
+            // container with kc
+            repository.AddContainer(new Container
+            {
+                Key = "Bianchi 1970",
+                Title = "Title",
+                Language = "ita",
+                YearPub = 1970,
+                Keywords = new List<Keyword>(new[] { kc })
+            });
+
+            repository.PruneKeywords();
+
+            Assert.NotNull(repository.GetKeyword(kwid));
+            Assert.NotNull(repository.GetKeyword(kcid));
+            Assert.Null(repository.GetKeyword(koid));
+        }
+
+        private static IList<Keyword> GetSampleKeywords()
+        {
+            return new List<Keyword>(new[]
+            {
+                new Keyword
+                {
+                    Language = "eng",
+                    Value = "green"
+                },
+                new Keyword
+                {
+                    Language = "eng",
+                    Value = "red"
+                },
+                new Keyword
+                {
+                    Language = "ita",
+                    Value = "rosso"
+                }
+            });
+        }
+
+        [Fact]
+        public void GetKeywords_Unfiltered_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            foreach (Keyword keyword in GetSampleKeywords())
+                repository.AddKeyword(keyword);
+
+            var page = repository.GetKeywords(new KeywordFilter
+            {
+                PageNumber = 1,
+                PageSize = 2,
+            });
+
+            Assert.Equal(3, page.Total);
+            Assert.Equal(2, page.Items.Count);
+
+            Assert.Equal("green", page.Items[0].Value);
+            Assert.Equal("red", page.Items[1].Value);
+        }
+
+        [Fact]
+        public void GetKeywords_ByLanguage_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            foreach (Keyword keyword in GetSampleKeywords())
+                repository.AddKeyword(keyword);
+
+            var page = repository.GetKeywords(new KeywordFilter
+            {
+                PageNumber = 1,
+                PageSize = 2,
+                Language = "ita"
+            });
+
+            Assert.Equal(1, page.Total);
+            Assert.Equal(1, page.Items.Count);
+
+            Assert.Equal("rosso", page.Items[0].Value);
+        }
+
+        [Fact]
+        public void GetKeywords_ByValue_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            foreach (Keyword keyword in GetSampleKeywords())
+                repository.AddKeyword(keyword);
+
+            var page = repository.GetKeywords(new KeywordFilter
+            {
+                PageNumber = 1,
+                PageSize = 2,
+                Value = "re"
+            });
+
+            Assert.Equal(2, page.Total);
+            Assert.Equal(2, page.Items.Count);
+
+            Assert.Equal("green", page.Items[0].Value);
+            Assert.Equal("red", page.Items[1].Value);
+        }
+
+        [Fact]
+        public void GetKeywords_ByLanguageAndValue_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            foreach (Keyword keyword in GetSampleKeywords())
+                repository.AddKeyword(keyword);
+
+            var page = repository.GetKeywords(new KeywordFilter
+            {
+                PageNumber = 1,
+                PageSize = 2,
+                Language = "ita",
+                Value = "re"
+            });
+
+            Assert.Equal(0, page.Total);
+            Assert.Equal(0, page.Items.Count);
         }
         #endregion
     }

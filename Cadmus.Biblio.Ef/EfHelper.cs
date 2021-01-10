@@ -466,6 +466,29 @@ namespace Cadmus.Biblio.Ef
             }
         }
 
+        private static EfWorkType GetOrCreateWorkType(string id, string name,
+            BiblioDbContext context)
+        {
+            // force a valid type
+            if (id == null) id = "-";
+            if (name == null) name = id;
+
+            // get it
+            EfWorkType ef = context.WorkTypes.Find(id);
+            if (ef == null)
+            {
+                ef = new EfWorkType
+                {
+                    Id = id,
+                    Name = name
+                };
+                context.WorkTypes.Add(ef);
+            }
+            else if (name != null) ef.Name = name;
+
+            return ef;
+        }
+
         /// <summary>
         /// Gets the container entity corresponding to the specified container.
         /// </summary>
@@ -501,17 +524,7 @@ namespace Cadmus.Biblio.Ef
             // update the container unless empty
             if (container.Title != null)
             {
-                ef.Type = context.WorkTypes.FirstOrDefault(t => t.Id == container.Type);
-                // if the type does not exist, add it -- this is defensive,
-                // and should not happen, as types are supposed to be a predefined set
-                if (ef.Type == null)
-                {
-                    ef.Type = new EfWorkType
-                    {
-                        Id = container.Type,
-                        Name = container.Type    // name=ID, better than nothing
-                    };
-                }
+                ef.Type = GetOrCreateWorkType(container.Type, null, context);
                 ef.Title = container.Title;
                 ef.Titlex = StandardFilter.Apply(container.Title, true);
                 ef.Language = container.Language;
@@ -693,17 +706,7 @@ namespace Cadmus.Biblio.Ef
             }
 
             // update the work
-            ef.Type = context.WorkTypes.FirstOrDefault(t => t.Id == work.Type);
-            // if the type does not exist, add it -- this is defensive,
-            // and should not happen, as types are supposed to be a predefined set
-            if (ef.Type == null)
-            {
-                ef.Type = new EfWorkType
-                {
-                    Id = work.Type,
-                    Name = work.Type    // name=ID, better than nothing
-                };
-            }
+            ef.Type = GetOrCreateWorkType(work.Type, null, context);
             ef.Title = work.Title;
             ef.Titlex = StandardFilter.Apply(work.Title, true);
             ef.Language = work.Language;
