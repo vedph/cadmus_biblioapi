@@ -751,21 +751,81 @@ namespace Cadmus.Biblio.Ef.Test
         }
 
         [Fact]
-        public void AddContainer_NewAuthor_Added()
+        public void AddContainer_ExistingAuthor_Added()
         {
             ResetDatabase();
             var repository = GetRepository();
-            // TODO
-            throw new NotImplementedException();
+            Author author = new Author
+            {
+                First = "John",
+                Last = "Doe",
+            };
+            repository.AddAuthor(author);
+            Container container = GetSampleContainer();
+            container.Authors.Add(new WorkAuthor
+            {
+                Id = author.Id
+            });
+
+            repository.AddContainer(container);
+
+            // ID and key were updated
+            Assert.NotEqual(Guid.Empty, container.Id);
+            Assert.NotNull(container.Key);
+
+            var container2 = repository.GetContainer(container.Id);
+            Assert.NotNull(container2);
+            Assert.Equal(container.Key, container2.Key);
+            Assert.Equal(container.Type, container2.Type);
+            Assert.Equal(container.Title, container2.Title);
+            Assert.Equal(container.Language, container2.Language);
+            Assert.Equal(container.Edition, container2.Edition);
+            Assert.Equal(container.Publisher, container2.Publisher);
+            Assert.Equal(container.YearPub, container2.YearPub);
+            Assert.Equal(container.PlacePub, container2.PlacePub);
+            Assert.Equal(container.Location, container2.Location);
+            Assert.Equal(container.AccessDate, container2.AccessDate);
+            Assert.Equal(container.Number, container2.Number);
+            Assert.Equal(container.Note, container2.Note);
+            Assert.Equal(container.Authors.Count, container2.Authors.Count);
+            Assert.Equal(container.Keywords.Count, container2.Keywords.Count);
         }
 
         [Fact]
-        public void AddContainer_NewType_Added()
+        public void AddContainer_ExistingType_Added()
         {
             ResetDatabase();
             var repository = GetRepository();
-            // TODO
-            throw new NotImplementedException();
+            WorkType type = new WorkType
+            {
+                Id = "journal",
+                Name = "Journal"
+            };
+            repository.AddWorkType(type);
+            Container container = GetSampleContainer();
+
+            repository.AddContainer(container);
+
+            // ID and key were updated
+            Assert.NotEqual(Guid.Empty, container.Id);
+            Assert.NotNull(container.Key);
+
+            var container2 = repository.GetContainer(container.Id);
+            Assert.NotNull(container2);
+            Assert.Equal(container.Key, container2.Key);
+            Assert.Equal(container.Type, container2.Type);
+            Assert.Equal(container.Title, container2.Title);
+            Assert.Equal(container.Language, container2.Language);
+            Assert.Equal(container.Edition, container2.Edition);
+            Assert.Equal(container.Publisher, container2.Publisher);
+            Assert.Equal(container.YearPub, container2.YearPub);
+            Assert.Equal(container.PlacePub, container2.PlacePub);
+            Assert.Equal(container.Location, container2.Location);
+            Assert.Equal(container.AccessDate, container2.AccessDate);
+            Assert.Equal(container.Number, container2.Number);
+            Assert.Equal(container.Note, container2.Note);
+            Assert.Equal(container.Authors.Count, container2.Authors.Count);
+            Assert.Equal(container.Keywords.Count, container2.Keywords.Count);
         }
 
         [Fact]
@@ -810,8 +870,12 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            // TODO
-            throw new NotImplementedException();
+            Container container = GetSampleContainer();
+            repository.AddContainer(container);
+
+            repository.DeleteContainer(Guid.NewGuid());
+
+            Assert.NotNull(repository.GetContainer(container.Id));
         }
 
         [Fact]
@@ -819,8 +883,101 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            // TODO
-            throw new NotImplementedException();
+            Container container = GetSampleContainer();
+            repository.AddContainer(container);
+
+            repository.DeleteContainer(container.Id);
+
+            Assert.Null(repository.GetContainer(container.Id));
+        }
+
+        private static IList<Container> GetSampleContainers()
+        {
+            return new List<Container>(new[]
+            {
+                new Container
+                {
+                    Key = null,
+                    Type = "journal",
+                    Title = "The Journal of Samples",
+                    Language = "eng",
+                    YearPub = 2020,
+                    Number = "1",
+                    Authors = new List<WorkAuthor>(new[]
+                    {
+                        new WorkAuthor
+                        {
+                            First = "John",
+                            Last = "Doe",
+                            Suffix = "jr.",
+                            Ordinal = 1,
+                            Role = "editor"
+                        }
+                    }),
+                    Keywords = new List<Keyword>(new[]
+                    {
+                        new Keyword
+                        {
+                            Language = "eng",
+                            Value = "test"
+                        }
+                    })
+                },
+                new Container
+                {
+                    Key = null,
+                    Type = "journal",
+                    Title = "The Pit",
+                    Language = "eng",
+                    YearPub = 2010,
+                    Number = "12",
+                    Authors = new List<WorkAuthor>(new[]
+                    {
+                        new WorkAuthor
+                        {
+                            First = "Bob",
+                            Last = "Charles",
+                            Ordinal = 1,
+                            Role = "editor"
+                        }
+                    }),
+                    Keywords = new List<Keyword>(new[]
+                    {
+                        new Keyword
+                        {
+                            Language = "eng",
+                            Value = "test"
+                        }
+                    })
+                },
+                new Container
+                {
+                    Key = null,
+                    Type = "procs",
+                    Title = "Atti del convegno X",
+                    Language = "ita",
+                    YearPub = 2011,
+                    Authors = new List<WorkAuthor>(new[]
+                    {
+                        new WorkAuthor
+                        {
+                            First = "John",
+                            Last = "Doe",
+                            Suffix = "jr.",
+                            Ordinal = 1,
+                            Role = "editor"
+                        }
+                    }),
+                    Keywords = new List<Keyword>(new[]
+                    {
+                        new Keyword
+                        {
+                            Language = "eng",
+                            Value = "another"
+                        }
+                    })
+                },
+            });
         }
 
         [Fact]
@@ -828,8 +985,19 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            // TODO
-            throw new NotImplementedException();
+            foreach (Container container in GetSampleContainers())
+                repository.AddContainer(container);
+
+            var page = repository.GetContainers(new WorkFilter
+            {
+                IsMatchAnyEnabled = false,
+                LastName = "Doe",
+                Language = "eng"
+            });
+
+            Assert.Equal(1, page.Total);
+            Assert.Equal(1, page.Items.Count);
+            Assert.Equal("The Journal of Samples", page.Items[0].Title);
         }
 
         [Fact]
@@ -837,8 +1005,20 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            // TODO
-            throw new NotImplementedException();
+            foreach (Container container in GetSampleContainers())
+                repository.AddContainer(container);
+
+            var page = repository.GetContainers(new WorkFilter
+            {
+                IsMatchAnyEnabled = true,
+                LastName = "Doe",
+                YearPubMax = 1900
+            });
+
+            Assert.Equal(2, page.Total);
+            Assert.Equal(2, page.Items.Count);
+            Assert.Equal("Atti del convegno X", page.Items[0].Title);
+            Assert.Equal("The Journal of Samples", page.Items[1].Title);
         }
         #endregion
     }
