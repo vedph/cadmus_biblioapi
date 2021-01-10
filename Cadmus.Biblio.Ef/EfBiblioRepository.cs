@@ -681,6 +681,23 @@ namespace Cadmus.Biblio.Ef
         }
 
         /// <summary>
+        /// Deletes the keyword with the specified ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        public void DeleteKeyword(int id)
+        {
+            using (var db = GetContext())
+            {
+                EfKeyword ef = db.Keywords.Find(id);
+                if (ef != null)
+                {
+                    db.Keywords.Remove(ef);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the specified page of keywords.
         /// </summary>
         /// <param name="filter">The filter.</param>

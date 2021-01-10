@@ -76,6 +76,16 @@ namespace Cadmus.Biblio.Api.Controllers
         }
 
         /// <summary>
+        /// Deletes the specified keyword.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        [HttpDelete("api/keywords/{id}")]
+        public void DeleteKeyword([FromRoute] int id)
+        {
+            _repository.DeleteKeyword(id);
+        }
+
+        /// <summary>
         /// Prunes the unused keywords.
         /// </summary>
         [HttpDelete("api/unused/keywords")]

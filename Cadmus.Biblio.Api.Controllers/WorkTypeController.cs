@@ -25,7 +25,7 @@ namespace Cadmus.Biblio.Api.Controllers
         [HttpGet("api/work-types")]
         [Produces("application/json")]
         [ProducesResponseType(200)]
-        public ActionResult<DataPage<WorkType>> GetTypes(
+        public ActionResult<DataPage<WorkType>> GetWorkTypes(
             [FromQuery] WorkTypeFilterBindingModel model)
         {
             return Ok(_repository.GetWorkTypes(new WorkTypeFilter
@@ -41,11 +41,11 @@ namespace Cadmus.Biblio.Api.Controllers
         /// </summary>
         /// <param name="id">Type's ID.</param>
         /// <returns>Type.</returns>
-        [HttpGet("api/work-types/{id}", Name = "GetType")]
+        [HttpGet("api/work-types/{id}", Name = "GetWorkType")]
         [Produces("application/json")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public ActionResult<WorkType> GetType([FromRoute] string id)
+        public ActionResult<WorkType> GetWorkType([FromRoute] string id)
         {
             WorkType type = _repository.GetWorkType(id);
             if (type == null) return NotFound();
@@ -59,7 +59,7 @@ namespace Cadmus.Biblio.Api.Controllers
         [HttpPost("api/work-types")]
         [Produces("application/json")]
         [ProducesResponseType(201)]
-        public IActionResult AddType([FromBody] WorkTypeBindingModel model)
+        public IActionResult AddWorkType([FromBody] WorkTypeBindingModel model)
         {
             WorkType type = new WorkType
             {
@@ -67,14 +67,14 @@ namespace Cadmus.Biblio.Api.Controllers
                 Name = model.Name
             };
             _repository.AddWorkType(type);
-            return CreatedAtRoute("GetType", new
+            return CreatedAtRoute("GetWorkType", new
             {
                 id = type.Id,
             }, type);
         }
 
         [HttpDelete("api/work-types/{id}")]
-        public void DeleteType([FromRoute] string id)
+        public void DeleteWorkType([FromRoute] string id)
         {
             _repository.DeleteWorkType(id);
         }

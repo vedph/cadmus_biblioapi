@@ -155,6 +155,12 @@ namespace Cadmus.Biblio.Core
         int AddKeyword(Keyword keyword);
 
         /// <summary>
+        /// Deletes the keyword with the specified ID.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        void DeleteKeyword(int id);
+
+        /// <summary>
         /// Prunes the keywords by removing all the keywords not assigned to
         /// any work.
         /// </summary>

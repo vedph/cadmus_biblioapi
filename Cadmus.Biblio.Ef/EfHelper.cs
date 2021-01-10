@@ -757,12 +757,14 @@ namespace Cadmus.Biblio.Ef
                 && k.Value == keyword.Value);
             if (ef == null)
             {
-                ef = new EfKeyword();
+                ef = new EfKeyword
+                {
+                    Language = keyword.Language,
+                    Value = keyword.Value,
+                    Valuex = StandardFilter.Apply(keyword.Value, true)
+                };
                 context.Keywords.Add(ef);
             }
-            ef.Language = keyword.Language;
-            ef.Value = keyword.Value;
-            ef.Valuex = StandardFilter.Apply(keyword.Value, true);
 
             return ef;
         }

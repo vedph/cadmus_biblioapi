@@ -38,6 +38,7 @@ namespace Cadmus.Biblio.Ef.Test
                 string.Format(CST, "cadmus-biblio-test"), "mysql");
         }
 
+        #region Work types
         [Fact]
         public void AddWorkType_NotExisting_Added()
         {
@@ -76,6 +77,40 @@ namespace Cadmus.Biblio.Ef.Test
             Assert.NotNull(type2);
             Assert.Equal(type.Id, type2.Id);
             Assert.Equal(type.Name, type2.Name);
+        }
+
+        [Fact]
+        public void DeleteWorkType_NotExisting_Nope()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            WorkType type = new WorkType
+            {
+                Id = "book",
+                Name = "Book"
+            };
+            repository.AddWorkType(type);
+
+            repository.DeleteWorkType("not-existing");
+
+            Assert.NotNull(repository.GetWorkType("book"));
+        }
+
+        [Fact]
+        public void DeleteWorkType_Existing_Deleted()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            WorkType type = new WorkType
+            {
+                Id = "book",
+                Name = "Book"
+            };
+            repository.AddWorkType(type);
+
+            repository.DeleteWorkType("book");
+
+            Assert.Null(repository.GetWorkType("book"));
         }
 
         [Fact]
@@ -180,7 +215,7 @@ namespace Cadmus.Biblio.Ef.Test
                 PageSize = 0    // unpaged
             });
 
-            Assert.Equal(1, page.Total);
+            Assert.Equal(3, page.Total);
             Assert.Equal(3, page.Items.Count);
 
             WorkType type2 = page.Items[0];
@@ -231,5 +266,67 @@ namespace Cadmus.Biblio.Ef.Test
             Assert.Equal("journal", type2.Id);
             Assert.Equal("Journal", type2.Name);
         }
+        #endregion
+
+        #region Keywords
+        [Fact]
+        public void AddKeyword_NotExisting_Added()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Keyword keyword = new Keyword
+            {
+                Language = "eng",
+                Value = "test"
+            };
+
+            int id = repository.AddKeyword(keyword);
+
+            Keyword keyword2 = repository.GetKeyword(id);
+            Assert.NotNull(keyword2);
+            Assert.Equal(keyword.Language, keyword2.Language);
+            Assert.Equal(keyword.Value, keyword2.Value);
+        }
+
+        [Fact]
+        public void AddKeyword_Existing_Nope()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Keyword keyword = new Keyword
+            {
+                Language = "eng",
+                Value = "test"
+            };
+            int id = repository.AddKeyword(keyword);
+
+            int id2 = repository.AddKeyword(keyword);
+
+            Assert.Equal(id, id2);
+        }
+
+        [Fact]
+        public void DeleteKeyword_NotExisting_Nope()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Keyword keyword = new Keyword
+            {
+                Language = "eng",
+                Value = "test"
+            };
+            int id = repository.AddKeyword(keyword);
+
+            repository.DeleteKeyword(123);
+            
+            Assert.NotNull(repository.GetKeyword(id));
+        }
+
+        [Fact]
+        public void DeleteKeyword_Existing_Deleted()
+        {
+            // TODO
+        }
+        #endregion
     }
 }
