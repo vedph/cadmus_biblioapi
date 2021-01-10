@@ -1021,5 +1021,383 @@ namespace Cadmus.Biblio.Ef.Test
             Assert.Equal("The Journal of Samples", page.Items[1].Title);
         }
         #endregion
+
+        #region Works
+        private static Work GetSampleWork()
+        {
+            return new Work
+            {
+                Key = null,
+                Type = "book",
+                Title = "A Beautiful Book",
+                Language = "eng",
+                Edition = 1,
+                Publisher = "Springer",
+                YearPub = 2020,
+                PlacePub = "Boston",
+                Location = "www.bestbooknest.com/123",
+                Note = "A note",
+                FirstPage = 1,
+                LastPage = 123,
+                Authors = new List<WorkAuthor>(new[]
+                {
+                    new WorkAuthor
+                    {
+                        First = "John",
+                        Last = "Doe",
+                        Suffix = "jr.",
+                        Ordinal = 1,
+                        Role = "editor"
+                    }
+                }),
+                Keywords = new List<Keyword>(new[]
+                {
+                    new Keyword
+                    {
+                        Language = "eng",
+                        Value = "test"
+                    }
+                })
+            };
+        }
+
+        [Fact]
+        public void AddWork_NotExisting_Added()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Work work = GetSampleWork();
+
+            repository.AddWork(work);
+
+            // ID and key were updated
+            Assert.NotEqual(Guid.Empty, work.Id);
+            Assert.NotNull(work.Key);
+
+            var work2 = repository.GetWork(work.Id);
+            Assert.NotNull(work2);
+            Assert.Equal(work.Key, work2.Key);
+            Assert.Equal(work.Type, work2.Type);
+            Assert.Equal(work.Title, work2.Title);
+            Assert.Equal(work.Language, work2.Language);
+            Assert.Equal(work.Edition, work2.Edition);
+            Assert.Equal(work.Publisher, work2.Publisher);
+            Assert.Equal(work.YearPub, work2.YearPub);
+            Assert.Equal(work.PlacePub, work2.PlacePub);
+            Assert.Equal(work.Location, work2.Location);
+            Assert.Equal(work.AccessDate, work2.AccessDate);
+            Assert.Equal(work.Note, work2.Note);
+            Assert.Equal(work.FirstPage, work2.FirstPage);
+            Assert.Equal(work.LastPage, work2.LastPage);
+            Assert.Equal(work.Authors.Count, work2.Authors.Count);
+            Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
+        }
+
+        [Fact]
+        public void AddWork_NotExistingWithContainer_Added()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Work work = GetSampleWork();
+            work.Container = GetSampleContainer();
+
+            repository.AddWork(work);
+
+            // ID and key were updated
+            Assert.NotEqual(Guid.Empty, work.Id);
+            Assert.NotNull(work.Key);
+
+            var work2 = repository.GetWork(work.Id);
+            Assert.NotNull(work2);
+            Assert.NotNull(work2.Container);
+            Assert.Equal(work.Key, work2.Key);
+            Assert.Equal(work.Type, work2.Type);
+            Assert.Equal(work.Title, work2.Title);
+            Assert.Equal(work.Language, work2.Language);
+            Assert.Equal(work.Edition, work2.Edition);
+            Assert.Equal(work.Publisher, work2.Publisher);
+            Assert.Equal(work.YearPub, work2.YearPub);
+            Assert.Equal(work.PlacePub, work2.PlacePub);
+            Assert.Equal(work.Location, work2.Location);
+            Assert.Equal(work.AccessDate, work2.AccessDate);
+            Assert.Equal(work.Note, work2.Note);
+            Assert.Equal(work.FirstPage, work2.FirstPage);
+            Assert.Equal(work.LastPage, work2.LastPage);
+            Assert.Equal(work.Authors.Count, work2.Authors.Count);
+            Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
+        }
+
+        [Fact]
+        public void AddWork_ExistingAuthor_Added()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Author author = new Author
+            {
+                First = "John",
+                Last = "Doe",
+            };
+            repository.AddAuthor(author);
+            Work work = GetSampleWork();
+            work.Authors.Add(new WorkAuthor
+            {
+                Id = author.Id
+            });
+
+            repository.AddWork(work);
+
+            // ID and key were updated
+            Assert.NotEqual(Guid.Empty, work.Id);
+            Assert.NotNull(work.Key);
+
+            var work2 = repository.GetWork(work.Id);
+            Assert.NotNull(work2);
+            Assert.Equal(work.Key, work2.Key);
+            Assert.Equal(work.Type, work2.Type);
+            Assert.Equal(work.Title, work2.Title);
+            Assert.Equal(work.Language, work2.Language);
+            Assert.Equal(work.Edition, work2.Edition);
+            Assert.Equal(work.Publisher, work2.Publisher);
+            Assert.Equal(work.YearPub, work2.YearPub);
+            Assert.Equal(work.PlacePub, work2.PlacePub);
+            Assert.Equal(work.Location, work2.Location);
+            Assert.Equal(work.AccessDate, work2.AccessDate);
+            Assert.Equal(work.FirstPage, work2.FirstPage);
+            Assert.Equal(work.LastPage, work2.LastPage);
+            Assert.Equal(work.Note, work2.Note);
+            Assert.Equal(work.Authors.Count, work2.Authors.Count);
+            Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
+        }
+
+        [Fact]
+        public void AddWork_ExistingType_Added()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            WorkType type = new WorkType
+            {
+                Id = "journal",
+                Name = "Journal"
+            };
+            repository.AddWorkType(type);
+            Work work = GetSampleWork();
+
+            repository.AddWork(work);
+
+            // ID and key were updated
+            Assert.NotEqual(Guid.Empty, work.Id);
+            Assert.NotNull(work.Key);
+
+            var work2 = repository.GetWork(work.Id);
+            Assert.NotNull(work2);
+            Assert.Equal(work.Key, work2.Key);
+            Assert.Equal(work.Type, work2.Type);
+            Assert.Equal(work.Title, work2.Title);
+            Assert.Equal(work.Language, work2.Language);
+            Assert.Equal(work.Edition, work2.Edition);
+            Assert.Equal(work.Publisher, work2.Publisher);
+            Assert.Equal(work.YearPub, work2.YearPub);
+            Assert.Equal(work.PlacePub, work2.PlacePub);
+            Assert.Equal(work.Location, work2.Location);
+            Assert.Equal(work.AccessDate, work2.AccessDate);
+            Assert.Equal(work.FirstPage, work2.FirstPage);
+            Assert.Equal(work.LastPage, work2.LastPage);
+            Assert.Equal(work.Note, work2.Note);
+            Assert.Equal(work.Authors.Count, work2.Authors.Count);
+            Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
+        }
+
+        [Fact]
+        public void AddWork_Existing_Updated()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Work work = GetSampleWork();
+            repository.AddWork(work);
+            Guid id = work.Id;
+            string key = work.Key;
+
+            work.Title = "A new title";
+            work.YearPub = 2021;
+            repository.AddWork(work);
+
+            // ID is equal, key has changed
+            Assert.Equal(id, work.Id);
+            Assert.NotNull(work.Key);
+            Assert.NotEqual(key, work.Key);
+
+            var work2 = repository.GetWork(work.Id);
+            Assert.NotNull(work2);
+            Assert.Equal(work.Key, work2.Key);
+            Assert.Equal(work.Type, work2.Type);
+            Assert.Equal(work.Title, work2.Title);
+            Assert.Equal(work.Language, work2.Language);
+            Assert.Equal(work.Edition, work2.Edition);
+            Assert.Equal(work.Publisher, work2.Publisher);
+            Assert.Equal(work.YearPub, work2.YearPub);
+            Assert.Equal(work.PlacePub, work2.PlacePub);
+            Assert.Equal(work.Location, work2.Location);
+            Assert.Equal(work.AccessDate, work2.AccessDate);
+            Assert.Equal(work.FirstPage, work2.FirstPage);
+            Assert.Equal(work.LastPage, work2.LastPage);
+            Assert.Equal(work.Note, work2.Note);
+            Assert.Equal(work.Authors.Count, work2.Authors.Count);
+            Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
+        }
+
+        [Fact]
+        public void DeleteWork_NotExisting_Nope()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Work work = GetSampleWork();
+            repository.AddWork(work);
+
+            repository.DeleteWork(Guid.NewGuid());
+
+            Assert.NotNull(repository.GetWork(work.Id));
+        }
+
+        [Fact]
+        public void DeleteWork_Existing_Deleted()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Work work = GetSampleWork();
+            repository.AddWork(work);
+
+            repository.DeleteWork(work.Id);
+
+            Assert.Null(repository.GetWork(work.Id));
+        }
+
+        private static IList<Work> GetSampleWorks()
+        {
+            return new List<Work>(new[]
+            {
+                new Work
+                {
+                    Key = null,
+                    Type = "book",
+                    Title = "The Alpha",
+                    Language = "eng",
+                    YearPub = 2020,
+                    Authors = new List<WorkAuthor>(new[]
+                    {
+                        new WorkAuthor
+                        {
+                            First = "John",
+                            Last = "Doe",
+                            Suffix = "jr.",
+                            Ordinal = 1,
+                            Role = "editor"
+                        }
+                    }),
+                    Keywords = new List<Keyword>(new[]
+                    {
+                        new Keyword
+                        {
+                            Language = "eng",
+                            Value = "test"
+                        }
+                    })
+                },
+                new Work
+                {
+                    Key = null,
+                    Type = "book",
+                    Title = "The Beta",
+                    Language = "eng",
+                    YearPub = 2010,
+                    Authors = new List<WorkAuthor>(new[]
+                    {
+                        new WorkAuthor
+                        {
+                            First = "Bob",
+                            Last = "Charles",
+                            Ordinal = 1,
+                            Role = "editor"
+                        }
+                    }),
+                    Keywords = new List<Keyword>(new[]
+                    {
+                        new Keyword
+                        {
+                            Language = "eng",
+                            Value = "test"
+                        }
+                    })
+                },
+                new Work
+                {
+                    Key = null,
+                    Type = "paper",
+                    Title = "Il gamma",
+                    Language = "ita",
+                    YearPub = 2011,
+                    Authors = new List<WorkAuthor>(new[]
+                    {
+                        new WorkAuthor
+                        {
+                            First = "John",
+                            Last = "Doe",
+                            Suffix = "jr.",
+                            Ordinal = 1,
+                            Role = "editor"
+                        }
+                    }),
+                    Keywords = new List<Keyword>(new[]
+                    {
+                        new Keyword
+                        {
+                            Language = "eng",
+                            Value = "another"
+                        }
+                    })
+                },
+            });
+        }
+
+        [Fact]
+        public void GetWorks_AndFiltered_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            foreach (Work work in GetSampleWorks())
+                repository.AddWork(work);
+
+            var page = repository.GetWorks(new WorkFilter
+            {
+                IsMatchAnyEnabled = false,
+                LastName = "Doe",
+                Language = "eng"
+            });
+
+            Assert.Equal(1, page.Total);
+            Assert.Equal(1, page.Items.Count);
+            Assert.Equal("The Alpha", page.Items[0].Title);
+        }
+
+        [Fact]
+        public void GetWorks_OrFiltered_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            foreach (Work work in GetSampleWorks())
+                repository.AddWork(work);
+
+            var page = repository.GetWorks(new WorkFilter
+            {
+                IsMatchAnyEnabled = true,
+                LastName = "Doe",
+                YearPubMax = 1900
+            });
+
+            Assert.Equal(2, page.Total);
+            Assert.Equal(2, page.Items.Count);
+            Assert.Equal("Il gamma", page.Items[0].Title);
+            Assert.Equal("The Alpha", page.Items[1].Title);
+        }
+        #endregion
     }
 }

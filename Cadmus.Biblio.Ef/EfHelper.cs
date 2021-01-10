@@ -377,15 +377,26 @@ namespace Cadmus.Biblio.Ef
                     ? context.Authors.Find(author.Id)
                     : null;
 
+                // if not found, add a new author
                 if (efa == null)
                 {
-                    // if an existing author was required and we did not find
-                    // him, ignore (defensive)
+                    // if an existing author was required but was not found,
+                    // just ignore him (defensive)
                     if (author.Last == null) continue;
 
                     // else we have a new author, add it
                     efa = new EfAuthor();
                     context.Authors.Add(efa);
+                }
+                else
+                {
+                    // if was found, supply data in the received author if empty
+                    if (author.Last == null)
+                    {
+                        author.First = efa.First;
+                        author.Last = efa.Last;
+                        author.Suffix = efa.Suffix;
+                    }
                 }
 
                 // update the author if data are available
@@ -572,15 +583,26 @@ namespace Cadmus.Biblio.Ef
                     ? context.Authors.Find(author.Id)
                     : null;
 
+                // if not found, add a new author
                 if (efa == null)
                 {
-                    // if an existing author was required and we did not find
-                    // him, ignore (defensive)
+                    // if an existing author was required but was not found,
+                    // just ignore him (defensive)
                     if (author.Last == null) continue;
 
                     // else we have a new author, add it
                     efa = new EfAuthor();
                     context.Authors.Add(efa);
+                }
+                else
+                {
+                    // if was found, supply data in the received author if empty
+                    if (author.Last == null)
+                    {
+                        author.First = efa.First;
+                        author.Last = efa.Last;
+                        author.Suffix = efa.Suffix;
+                    }
                 }
 
                 // update the author if data are available
