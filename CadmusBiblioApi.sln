@@ -22,7 +22,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Biblio.Seed", "Cadmu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cadmus-biblio", "cadmus-biblio\cadmus-biblio.csproj", "{009F459F-46C7-45EB-BFBA-608316817BEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Biblio.Api.Controllers", "Cadmus.Biblio.Api.Controllers\Cadmus.Biblio.Api.Controllers.csproj", "{038AAD46-44CB-441E-8601-A7888BB58253}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Biblio.Api.Controllers", "Cadmus.Biblio.Api.Controllers\Cadmus.Biblio.Api.Controllers.csproj", "{038AAD46-44CB-441E-8601-A7888BB58253}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Biblio.Core.Test", "Cadmus.Biblio.Core.Test\Cadmus.Biblio.Core.Test.csproj", "{09E9F1AC-2A90-43A5-AA58-E44540579C98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +60,10 @@ Global
 		{038AAD46-44CB-441E-8601-A7888BB58253}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{038AAD46-44CB-441E-8601-A7888BB58253}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{038AAD46-44CB-441E-8601-A7888BB58253}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09E9F1AC-2A90-43A5-AA58-E44540579C98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09E9F1AC-2A90-43A5-AA58-E44540579C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09E9F1AC-2A90-43A5-AA58-E44540579C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09E9F1AC-2A90-43A5-AA58-E44540579C98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
