@@ -25,6 +25,26 @@ namespace Cadmus.Biblio.Core.Test
         }
 
         [Fact]
+        public void Build_SingleContainer_Ok()
+        {
+            string key = WorkKeyBuilder.Build(new Container
+            {
+                Authors = new List<WorkAuthor>(new[]
+                {
+                    new WorkAuthor
+                    {
+                        First = "John",
+                        Last = "Doe"
+                    }
+                }),
+                Number = "n.s.11",
+                YearPub = 2020
+            });
+
+            Assert.Equal("Doe n.s.11 2020", key);
+        }
+
+        [Fact]
         public void Build_SingleAuthorWithSuffix_Ok()
         {
             string key = WorkKeyBuilder.Build(new Work

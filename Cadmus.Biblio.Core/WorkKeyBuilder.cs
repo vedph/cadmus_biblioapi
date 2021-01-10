@@ -26,6 +26,7 @@ namespace Cadmus.Biblio.Core
 
             StringBuilder sb = new StringBuilder();
 
+            // authors
             if (work.Authors?.Count > 0)
             {
                 sb.Append(string.Join(" & ",
@@ -36,6 +37,12 @@ namespace Cadmus.Biblio.Core
                         : $"{a.Last} {a.Suffix}"));
             }
 
+            // number if any
+            Container container = work as Container;
+            if (!string.IsNullOrEmpty(container?.Number))
+                sb.Append(' ').Append(container.Number);
+
+            // year
             sb.Append(' ').Append(work.YearPub);
 
             return sb.ToString();
