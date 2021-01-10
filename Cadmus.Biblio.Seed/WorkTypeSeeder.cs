@@ -21,7 +21,7 @@ namespace Cadmus.Biblio.Seed
                 new WorkType{ Id = "article", Name = "Article" }
             })
             {
-                repository.AddType(type);
+                repository.AddWorkType(type);
             }
         }
     }

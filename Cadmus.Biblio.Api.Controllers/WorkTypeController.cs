@@ -28,7 +28,7 @@ namespace Cadmus.Biblio.Api.Controllers
         public ActionResult<DataPage<WorkType>> GetTypes(
             [FromQuery] WorkTypeFilterBindingModel model)
         {
-            return Ok(_repository.GetTypes(new WorkTypeFilter
+            return Ok(_repository.GetWorkTypes(new WorkTypeFilter
             {
                 PageNumber = model.PageNumber,
                 PageSize = model.PageSize,
@@ -47,7 +47,7 @@ namespace Cadmus.Biblio.Api.Controllers
         [ProducesResponseType(404)]
         public ActionResult<WorkType> GetType([FromRoute] string id)
         {
-            WorkType type = _repository.GetType(id);
+            WorkType type = _repository.GetWorkType(id);
             if (type == null) return NotFound();
             return Ok(type);
         }
@@ -66,7 +66,7 @@ namespace Cadmus.Biblio.Api.Controllers
                 Id = model.Id,
                 Name = model.Name
             };
-            _repository.AddType(type);
+            _repository.AddWorkType(type);
             return CreatedAtRoute("GetType", new
             {
                 id = type.Id,
@@ -76,7 +76,7 @@ namespace Cadmus.Biblio.Api.Controllers
         [HttpDelete("api/work-types/{id}")]
         public void DeleteType([FromRoute] string id)
         {
-            _repository.DeleteType(id);
+            _repository.DeleteWorkType(id);
         }
     }
 }

@@ -80,26 +80,26 @@ namespace Cadmus.Biblio.Core
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns>The types page.</returns>
-        DataPage<WorkType> GetTypes(WorkTypeFilter filter);
+        DataPage<WorkType> GetWorkTypes(WorkTypeFilter filter);
 
         /// <summary>
         /// Gets the type with the specified ID.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>The type, or null if not found.</returns>
-        WorkType GetType(string id);
+        WorkType GetWorkType(string id);
 
         /// <summary>
         /// Adds or updates the type with the specified ID and name.
         /// </summary>
         /// <param name="type">The type.</param>
-        void AddType(WorkType type);
+        void AddWorkType(WorkType type);
 
         /// <summary>
         /// Deletes the type with the specified ID.
         /// </summary>
         /// <param name="id">The ID.</param>
-        void DeleteType(string id);
+        void DeleteWorkType(string id);
 
         /// <summary>
         /// Gets the specified page of authors matching <paramref name="filter"/>.

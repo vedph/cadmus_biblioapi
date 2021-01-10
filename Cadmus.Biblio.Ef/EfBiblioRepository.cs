@@ -454,7 +454,7 @@ namespace Cadmus.Biblio.Ef
         /// <param name="id">The identifier.</param>
         /// <returns>The type, or null if not found.</returns>
         /// <exception cref="ArgumentNullException">id</exception>
-        public WorkType GetType(string id)
+        public WorkType GetWorkType(string id)
         {
             if (id == null)
                 throw new ArgumentNullException(nameof(id));
@@ -473,7 +473,7 @@ namespace Cadmus.Biblio.Ef
         /// <param name="filter">The filter.</param>
         /// <returns>The types page.</returns>
         /// <exception cref="ArgumentNullException">filter</exception>
-        public DataPage<WorkType> GetTypes(WorkTypeFilter filter)
+        public DataPage<WorkType> GetWorkTypes(WorkTypeFilter filter)
         {
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
@@ -514,7 +514,7 @@ namespace Cadmus.Biblio.Ef
         /// </summary>
         /// <param name="type">The type.</param>
         /// <exception cref="ArgumentNullException">type</exception>
-        public void AddType(WorkType type)
+        public void AddWorkType(WorkType type)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
@@ -530,7 +530,7 @@ namespace Cadmus.Biblio.Ef
         /// Deletes the type with the specified ID.
         /// </summary>
         /// <param name="id">The ID.</param>
-        public void DeleteType(string id)
+        public void DeleteWorkType(string id)
         {
             using (var db = GetContext())
             {
