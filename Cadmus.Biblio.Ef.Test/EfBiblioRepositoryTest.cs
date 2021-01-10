@@ -759,19 +759,63 @@ namespace Cadmus.Biblio.Ef.Test
             {
                 First = "John",
                 Last = "Doe",
+                Suffix = "jr.",
             };
             repository.AddAuthor(author);
             Container container = GetSampleContainer();
-            container.Authors.Add(new WorkAuthor
-            {
-                Id = author.Id
-            });
+            container.Authors[0].Id = author.Id;
 
             repository.AddContainer(container);
 
             // ID and key were updated
             Assert.NotEqual(Guid.Empty, container.Id);
             Assert.NotNull(container.Key);
+
+            var container2 = repository.GetContainer(container.Id);
+            Assert.NotNull(container2);
+            Assert.Equal(container.Key, container2.Key);
+            Assert.Equal(container.Type, container2.Type);
+            Assert.Equal(container.Title, container2.Title);
+            Assert.Equal(container.Language, container2.Language);
+            Assert.Equal(container.Edition, container2.Edition);
+            Assert.Equal(container.Publisher, container2.Publisher);
+            Assert.Equal(container.YearPub, container2.YearPub);
+            Assert.Equal(container.PlacePub, container2.PlacePub);
+            Assert.Equal(container.Location, container2.Location);
+            Assert.Equal(container.AccessDate, container2.AccessDate);
+            Assert.Equal(container.Number, container2.Number);
+            Assert.Equal(container.Note, container2.Note);
+            Assert.Equal(container.Authors.Count, container2.Authors.Count);
+            Assert.Equal(container.Keywords.Count, container2.Keywords.Count);
+        }
+
+        [Fact]
+        public void AddContainer_ExistingAuthorUpdated_Added()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Author author = new Author
+            {
+                First = "John",
+                Last = "Doe",
+            };
+            repository.AddAuthor(author);
+            Container container = GetSampleContainer();
+            // we are implicitly updating the author's suffix
+            container.Authors[0].Id = author.Id;
+
+            repository.AddContainer(container);
+
+            // ID and key were updated
+            Assert.NotEqual(Guid.Empty, container.Id);
+            Assert.NotNull(container.Key);
+
+            // author was updated
+            Author author2 = repository.GetAuthor(author.Id);
+            Assert.NotNull(author2);
+            Assert.Equal(author.First, author2.First);
+            Assert.Equal(author.Last, author2.Last);
+            Assert.NotEqual(author.Suffix, author2.Suffix);
 
             var container2 = repository.GetContainer(container.Id);
             Assert.NotNull(container2);
@@ -1136,19 +1180,64 @@ namespace Cadmus.Biblio.Ef.Test
             {
                 First = "John",
                 Last = "Doe",
+                Suffix = "jr."
             };
             repository.AddAuthor(author);
             Work work = GetSampleWork();
-            work.Authors.Add(new WorkAuthor
-            {
-                Id = author.Id
-            });
+            work.Authors[0].Id = author.Id;
 
             repository.AddWork(work);
 
             // ID and key were updated
             Assert.NotEqual(Guid.Empty, work.Id);
             Assert.NotNull(work.Key);
+
+            var work2 = repository.GetWork(work.Id);
+            Assert.NotNull(work2);
+            Assert.Equal(work.Key, work2.Key);
+            Assert.Equal(work.Type, work2.Type);
+            Assert.Equal(work.Title, work2.Title);
+            Assert.Equal(work.Language, work2.Language);
+            Assert.Equal(work.Edition, work2.Edition);
+            Assert.Equal(work.Publisher, work2.Publisher);
+            Assert.Equal(work.YearPub, work2.YearPub);
+            Assert.Equal(work.PlacePub, work2.PlacePub);
+            Assert.Equal(work.Location, work2.Location);
+            Assert.Equal(work.AccessDate, work2.AccessDate);
+            Assert.Equal(work.FirstPage, work2.FirstPage);
+            Assert.Equal(work.LastPage, work2.LastPage);
+            Assert.Equal(work.Note, work2.Note);
+            Assert.Equal(work.Authors.Count, work2.Authors.Count);
+            Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
+        }
+
+        [Fact]
+        public void AddWork_ExistingAuthorUpdated_Added()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Author author = new Author
+            {
+                First = "John",
+                Last = "Doe",
+            };
+            repository.AddAuthor(author);
+            Work work = GetSampleWork();
+            // we are implicitly updating the author's suffix
+            work.Authors[0].Id = author.Id;
+
+            repository.AddWork(work);
+
+            // ID and key were updated
+            Assert.NotEqual(Guid.Empty, work.Id);
+            Assert.NotNull(work.Key);
+
+            // author was updated
+            Author author2 = repository.GetAuthor(author.Id);
+            Assert.NotNull(author2);
+            Assert.Equal(author.First, author2.First);
+            Assert.Equal(author.Last, author2.Last);
+            Assert.NotEqual(author.Suffix, author2.Suffix);
 
             var work2 = repository.GetWork(work.Id);
             Assert.NotNull(work2);
