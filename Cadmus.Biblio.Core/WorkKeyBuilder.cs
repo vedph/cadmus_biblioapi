@@ -43,10 +43,9 @@ namespace Cadmus.Biblio.Core
 
         /// <summary>
         /// Picks the key by choosing between <paramref name="work"/>'s key
-        /// and a new incoming key. A new manual-key always wins. A null or
-        /// empty new key is calculated, and then it wins if the old key is
-        /// not manual; else the old key is picked.
-        /// the new 
+        /// and a new incoming key. A new manual-key always wins. Else, the
+        /// new key is calculated, and then it wins if the old key is not
+        /// manual; else the old key is picked.
         /// </summary>
         /// <param name="oldKey">The old key.</param>
         /// <param name="newWork">The new work/container; its key can be specified,
@@ -61,16 +60,12 @@ namespace Cadmus.Biblio.Core
             if (newWork.Key?.StartsWith(MAN_KEY_PREFIX) == true)
                 return newWork.Key;
 
-            // if new key is not specified, calculate it
-            string newKey = string.IsNullOrEmpty(newWork.Key)
-                ? Build(newWork) : newWork.Key;
+            // else calculate the new key
+            string newKey = Build(newWork);
 
-            // if the existing key is not specified/is not manual, the new key wins
-            if (oldKey?.StartsWith(MAN_KEY_PREFIX) != true)
-                return newKey;
-
+            // if the existing key is not specified/is not manual, the new key wins;
             // else keep the existing key
-            return oldKey;
+            return oldKey?.StartsWith(MAN_KEY_PREFIX) != true ? newKey : oldKey;
         }
     }
 }

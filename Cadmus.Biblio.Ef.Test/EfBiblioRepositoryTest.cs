@@ -783,7 +783,7 @@ namespace Cadmus.Biblio.Ef.Test
             repository.AddContainer(container);
 
             // ID is equal, key has changed
-            Assert.NotEqual(id, container.Id);
+            Assert.Equal(id, container.Id);
             Assert.NotNull(container.Key);
             Assert.NotEqual(key, container.Key);
 
