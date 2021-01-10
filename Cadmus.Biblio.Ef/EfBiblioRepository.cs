@@ -609,6 +609,8 @@ namespace Cadmus.Biblio.Ef
 
         /// <summary>
         /// Adds or updates the specified author.
+        /// If the ID is not specified, a new author will be created and
+        /// the <paramref name="author"/>'s ID will be updated.
         /// </summary>
         /// <param name="author">The author.</param>
         /// <exception cref="ArgumentNullException">author</exception>
@@ -621,6 +623,7 @@ namespace Cadmus.Biblio.Ef
             {
                 EfAuthor ef = EfHelper.GetEfAuthor(author, db);
                 db.SaveChanges();
+                author.Id = ef.Id;
             }
         }
 

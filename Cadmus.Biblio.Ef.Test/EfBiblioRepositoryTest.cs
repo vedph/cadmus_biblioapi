@@ -1,6 +1,7 @@
 ﻿using Cadmus.Biblio.Core;
 using Fusi.DbManager;
 using Fusi.DbManager.MySql;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -493,6 +494,189 @@ namespace Cadmus.Biblio.Ef.Test
 
             Assert.Equal(0, page.Total);
             Assert.Equal(0, page.Items.Count);
+        }
+        #endregion
+
+        #region Authors
+        [Fact]
+        public void AddAuthor_NotExisting_Added()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Author author = new Author
+            {
+                First = "John",
+                Last = "Doe",
+                Suffix = "jr."
+            };
+
+            repository.AddAuthor(author);
+
+            Assert.NotEqual(Guid.Empty, author.Id);
+            Author author2 = repository.GetAuthor(author.Id);
+            Assert.NotNull(author2);
+            Assert.Equal(author.First, author2.First);
+            Assert.Equal(author.Last, author2.Last);
+            Assert.Equal(author.Suffix, author2.Suffix);
+        }
+
+        [Fact]
+        public void AddAuthor_Existing_Updated()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Author author = new Author
+            {
+                First = "John",
+                Last = "Doe",
+            };
+            repository.AddAuthor(author);
+            Guid id = author.Id;
+
+            author.First = "Johnny";
+            author.Last = "Doherty";
+            author.Suffix = "jr.";
+            repository.AddAuthor(author);
+
+            Assert.Equal(id, author.Id);
+            Author author2 = repository.GetAuthor(author.Id);
+            Assert.NotNull(author2);
+            Assert.Equal(author.First, author2.First);
+            Assert.Equal(author.Last, author2.Last);
+            Assert.Equal(author.Suffix, author2.Suffix);
+        }
+
+        [Fact]
+        public void DeleteAuthor_NotExisting_Nope()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Author author = new Author
+            {
+                First = "John",
+                Last = "Doe",
+                Suffix = "jr."
+            };
+            repository.AddAuthor(author);
+
+            repository.DeleteAuthor(Guid.NewGuid());
+
+            Assert.NotNull(repository.GetAuthor(author.Id));
+        }
+
+        [Fact]
+        public void DeleteAuthor_Existing_Deleted()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Author author = new Author
+            {
+                First = "John",
+                Last = "Doe",
+                Suffix = "jr."
+            };
+            repository.AddAuthor(author);
+
+            repository.DeleteAuthor(author.Id);
+
+            Assert.Null(repository.GetAuthor(author.Id));
+        }
+
+        [Fact]
+        public void PruneAuthors_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+
+            Author orphan = new Author
+            {
+                First = "David",
+                Last = "Copperfield"
+            };
+            repository.AddAuthor(orphan);
+            Author frank = new Author
+            {
+                First = "Frank",
+                Last = "Ross"
+            };
+            repository.AddAuthor(frank);
+            // work with frank
+            repository.AddWork(new Work
+            {
+                Authors = new List<WorkAuthor>(new[] { new WorkAuthor(frank) }),
+                Key = "Frank 1963",
+                Title = "Title",
+                Language = "eng",
+                YearPub = 1963
+            });
+
+            repository.PruneAuthors();
+
+            Assert.Null(repository.GetAuthor(orphan.Id));
+            Assert.NotNull(repository.GetAuthor(frank.Id));
+        }
+
+        private static IList<Author> GetSampleAuthors()
+        {
+            return new List<Author>(new[]
+            {
+                new Author
+                {
+                    First = "John",
+                    Last = "Fairman"
+                },
+                new Author
+                {
+                    First = "David",
+                    Last = "Suñas"
+                },
+                new Author
+                {
+                    First = "Frank",
+                    Last = "Truman"
+                },
+            });
+        }
+
+        [Fact]
+        public void GetAuthors_Unfiltered_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            foreach (Author author in GetSampleAuthors())
+                repository.AddAuthor(author);
+
+            var page = repository.GetAuthors(new AuthorFilter
+            {
+                PageNumber = 1,
+                PageSize = 2
+            });
+
+            Assert.Equal(3, page.Total);
+            Assert.Equal(2, page.Items.Count);
+            Assert.Equal("Fairman", page.Items[0].Last);
+            Assert.Equal("Suñas", page.Items[1].Last);
+        }
+
+        [Fact]
+        public void GetAuthors_Filtered_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            foreach (Author author in GetSampleAuthors())
+                repository.AddAuthor(author);
+
+            var page = repository.GetAuthors(new AuthorFilter
+            {
+                PageNumber = 1,
+                PageSize = 2,
+                Last = "man"
+            });
+
+            Assert.Equal(2, page.Total);
+            Assert.Equal(2, page.Items.Count);
+            Assert.Equal("Fairman", page.Items[0].Last);
+            Assert.Equal("Truman", page.Items[1].Last);
         }
         #endregion
     }

@@ -1,4 +1,6 @@
-﻿namespace Cadmus.Biblio.Core
+﻿using System;
+
+namespace Cadmus.Biblio.Core
 {
     /// <summary>
     /// An <see cref="Author"/> related to a work.
@@ -16,5 +18,30 @@
         /// This defines the order in which several authors appear.
         /// </summary>
         public short Ordinal { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorkAuthor"/> class.
+        /// </summary>
+        public WorkAuthor()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorkAuthor"/> class.
+        /// </summary>
+        /// <param name="author">The author whose properties should be copied
+        /// into this new author.</param>
+        /// <exception cref="ArgumentNullException">author</exception>
+        public WorkAuthor(Author author)
+        {
+            if (author == null)
+                throw new System.ArgumentNullException(nameof(author));
+
+            Id = author.Id;
+            First = author.First;
+            Last = author.Last;
+            Suffix = author.Suffix;
+            Ordinal = 1;
+        }
     }
 }
