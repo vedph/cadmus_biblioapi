@@ -226,6 +226,8 @@ namespace Cadmus.Biblio.Ef
         /// not happen, as types are a predefined set. As for the container,
         /// you can specify only its ID to assign the work to it; otherwise,
         /// the container will be added or updated as required.
+        /// If new, <paramref name="work"/> ID gets updated; the key is
+        /// always updated.
         /// </summary>
         /// <param name="work">The work.</param>
         /// <exception cref="ArgumentNullException">work</exception>
@@ -237,6 +239,8 @@ namespace Cadmus.Biblio.Ef
             {
                 EfWork ef = EfHelper.GetEfWork(work, db);
                 db.SaveChanges();
+                work.Id = ef.Id;
+                work.Key = ef.Key;
             }
         }
 
@@ -415,6 +419,8 @@ namespace Cadmus.Biblio.Ef
         /// either added or updated as required. Keywords are added or
         /// updated as required. Type is added if not found, even this should
         /// not happen, as types are a predefined set.
+        /// If new, <paramref name="container"/> ID gets updated; the key is
+        /// always updated.
         /// </summary>
         /// <param name="container">The container.</param>
         /// <exception cref="ArgumentNullException">container</exception>
@@ -426,6 +432,8 @@ namespace Cadmus.Biblio.Ef
             {
                 EfContainer ef = EfHelper.GetEfContainer(container, db);
                 db.SaveChanges();
+                container.Id = ef.Id;
+                container.Key = ef.Key;
             }
         }
 

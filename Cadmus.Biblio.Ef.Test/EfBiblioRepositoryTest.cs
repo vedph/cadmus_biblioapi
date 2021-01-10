@@ -679,5 +679,167 @@ namespace Cadmus.Biblio.Ef.Test
             Assert.Equal("Truman", page.Items[1].Last);
         }
         #endregion
+
+        #region Containers
+        private static Container GetSampleContainer()
+        {
+            return new Container
+            {
+                Key = null,
+                Type = "journal",
+                Title = "The Journal of Samples",
+                Language = "eng",
+                Edition = 1,
+                Publisher = "Springer",
+                YearPub = 2020,
+                PlacePub = "Boston",
+                Location = "www.jsa.org/123",
+                AccessDate = new DateTime(2021, 1, 31),
+                Number = "1",
+                Note = "A note",
+                Authors = new List<WorkAuthor>(new[]
+                {
+                    new WorkAuthor
+                    {
+                        First = "John",
+                        Last = "Doe",
+                        Suffix = "jr.",
+                        Ordinal = 1,
+                        Role = "editor"
+                    }
+                }),
+                Keywords = new List<Keyword>(new[]
+                {
+                    new Keyword
+                    {
+                        Language = "eng",
+                        Value = "test"
+                    }
+                })
+            };
+        }
+
+        [Fact]
+        public void AddContainer_NotExisting_Added()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Container container = GetSampleContainer();
+
+            repository.AddContainer(container);
+
+            // ID and key were updated
+            Assert.NotEqual(Guid.Empty, container.Id);
+            Assert.NotNull(container.Key);
+
+            var container2 = repository.GetContainer(container.Id);
+            Assert.NotNull(container2);
+            Assert.Equal(container.Key, container2.Key);
+            Assert.Equal(container.Type, container2.Type);
+            Assert.Equal(container.Title, container2.Title);
+            Assert.Equal(container.Language, container2.Language);
+            Assert.Equal(container.Edition, container2.Edition);
+            Assert.Equal(container.Publisher, container2.Publisher);
+            Assert.Equal(container.YearPub, container2.YearPub);
+            Assert.Equal(container.PlacePub, container2.PlacePub);
+            Assert.Equal(container.Location, container2.Location);
+            Assert.Equal(container.AccessDate, container2.AccessDate);
+            Assert.Equal(container.Number, container2.Number);
+            Assert.Equal(container.Note, container2.Note);
+            Assert.Equal(container.Authors.Count, container2.Authors.Count);
+            Assert.Equal(container.Keywords.Count, container2.Keywords.Count);
+        }
+
+        [Fact]
+        public void AddContainer_NewAuthor_Added()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void AddContainer_NewType_Added()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void AddContainer_Existing_Updated()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            Container container = GetSampleContainer();
+            repository.AddContainer(container);
+            Guid id = container.Id;
+            string key = container.Key;
+
+            container.Title = "A new title";
+            container.YearPub = 2021;
+            repository.AddContainer(container);
+
+            // ID is equal, key has changed
+            Assert.NotEqual(id, container.Id);
+            Assert.NotNull(container.Key);
+            Assert.NotEqual(key, container.Key);
+
+            var container2 = repository.GetContainer(container.Id);
+            Assert.NotNull(container2);
+            Assert.Equal(container.Key, container2.Key);
+            Assert.Equal(container.Type, container2.Type);
+            Assert.Equal(container.Title, container2.Title);
+            Assert.Equal(container.Language, container2.Language);
+            Assert.Equal(container.Edition, container2.Edition);
+            Assert.Equal(container.Publisher, container2.Publisher);
+            Assert.Equal(container.YearPub, container2.YearPub);
+            Assert.Equal(container.PlacePub, container2.PlacePub);
+            Assert.Equal(container.Location, container2.Location);
+            Assert.Equal(container.AccessDate, container2.AccessDate);
+            Assert.Equal(container.Number, container2.Number);
+            Assert.Equal(container.Note, container2.Note);
+            Assert.Equal(container.Authors.Count, container2.Authors.Count);
+            Assert.Equal(container.Keywords.Count, container2.Keywords.Count);
+        }
+
+        [Fact]
+        public void DeleteContainer_NotExisting_Nope()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void DeleteContainer_Existing_Deleted()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void GetContainers_AndFiltered_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            // TODO
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void GetContainers_OrFiltered_Ok()
+        {
+            ResetDatabase();
+            var repository = GetRepository();
+            // TODO
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

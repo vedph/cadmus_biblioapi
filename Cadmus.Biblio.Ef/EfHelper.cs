@@ -15,12 +15,6 @@ namespace Cadmus.Biblio.Ef
     public static class EfHelper
     {
         /// <summary>
-        /// The manual-key prefix. When a work or container key starts with
-        /// this prefix, it is not automatically updated by the system.
-        /// </summary>
-        public const string MAN_KEY_PREFIX = "!";
-
-        /// <summary>
         /// Gets the MySql schema for the bibliographic database.
         /// </summary>
         /// <returns>SQL code.</returns>
@@ -545,11 +539,10 @@ namespace Cadmus.Biblio.Ef
                 if (container.Keywords?.Count > 0)
                     AddKeywords(container.Keywords, ef, context);
 
-                ef.Key = container.Key?.StartsWith(MAN_KEY_PREFIX) ?? false
-                    ? container.Key : WorkKeyBuilder.Build(GetContainer(ef));
-
+                // key
+                ef.Key = WorkKeyBuilder.PickKey(ef.Key, container);
                 // add key suffix if required and possible
-                if (!container.Key.StartsWith(MAN_KEY_PREFIX))
+                if (ef.Key?.StartsWith(WorkKeyBuilder.MAN_KEY_PREFIX) != true)
                 {
                     char c = GetSuffixForKey(ef.Key, context);
                     if (c != '\0') ef.Key += c;
@@ -729,11 +722,10 @@ namespace Cadmus.Biblio.Ef
             if (work.Keywords?.Count > 0)
                 AddKeywords(work.Keywords, ef, context);
 
-            ef.Key = work.Key?.StartsWith(MAN_KEY_PREFIX) ?? false
-                ? work.Key : WorkKeyBuilder.Build(GetWork(ef));
-
+            // key
+            ef.Key = WorkKeyBuilder.PickKey(ef.Key, work);
             // add key suffix if required and possible
-            if (!work.Key.StartsWith(MAN_KEY_PREFIX))
+            if (ef.Key?.StartsWith(WorkKeyBuilder.MAN_KEY_PREFIX) != true)
             {
                 char c = GetSuffixForKey(ef.Key, context);
                 if (c != '\0') ef.Key += c;

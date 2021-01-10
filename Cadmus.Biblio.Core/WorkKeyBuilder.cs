@@ -10,6 +10,12 @@ namespace Cadmus.Biblio.Core
     public static class WorkKeyBuilder
     {
         /// <summary>
+        /// The manual-key prefix. When a work or container key starts with
+        /// this prefix, it is not automatically updated by the system.
+        /// </summary>
+        public const string MAN_KEY_PREFIX = "!";
+
+        /// <summary>
         /// Builds the key for the specified work.
         /// </summary>
         /// <param name="work">The work.</param>
@@ -24,13 +30,44 @@ namespace Cadmus.Biblio.Core
             {
                 sb.Append(string.Join(" & ",
                     from a in work.Authors
-                    orderby a.Last
-                    select a.Last));
+                    orderby a.Ordinal, a.Last, a.Suffix
+                    select string.IsNullOrEmpty(a.Suffix)
+                        ? a.Last
+                        : $"{a.Last} {a.Suffix}"));
             }
 
             sb.Append(' ').Append(work.YearPub);
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Picks the key by choosing between <paramref name="work"/>'s key
+        /// and a new incoming key.
+        /// </summary>
+        /// <param name="oldKey">The old key.</param>
+        /// <param name="newWork">The new work/container; its key can be specified,
+        /// or just be null.</param>
+        /// <returns>Key.</returns>
+        /// <exception cref="ArgumentNullException">work</exception>
+        public static string PickKey(string oldKey, WorkBase newWork)
+        {
+            if (newWork == null) throw new ArgumentNullException(nameof(newWork));
+
+            // a new key with a manually-set value always wins
+            if (newWork.Key?.StartsWith(MAN_KEY_PREFIX) == true)
+                return newWork.Key;
+
+            // if new key is not specified, calculate it
+            string newKey = string.IsNullOrEmpty(newWork.Key)
+                ? Build(newWork) : newWork.Key;
+
+            // if the existing key is not specified/is not manual, the new key wins
+            if (oldKey?.StartsWith(MAN_KEY_PREFIX) != true)
+                return newKey;
+
+            // else keep the existing key
+            return oldKey;
         }
     }
 }
