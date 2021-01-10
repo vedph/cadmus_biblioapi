@@ -328,8 +328,12 @@ namespace Cadmus.Biblio.Ef
         /// <param name="author">The author or null.</param>
         /// <param name="context">The context.</param>
         /// <returns>The entity or null.</returns>
+        /// <exception cref="ArgumentNullException">context</exception>
         public static EfAuthor GetEfAuthor(Author author, BiblioDbContext context)
         {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
             if (author == null) return null;
 
             EfAuthor ef = author.Id != Guid.Empty
@@ -337,10 +341,7 @@ namespace Cadmus.Biblio.Ef
             if (ef == null)
             {
                 if (author.Last == null) return null;
-                ef = new EfAuthor
-                {
-                    Id = Guid.NewGuid()
-                };
+                ef = new EfAuthor();
                 context.Authors.Add(ef);
             }
 
@@ -359,63 +360,38 @@ namespace Cadmus.Biblio.Ef
             EfContainer container,
             BiblioDbContext context)
         {
-            // remove any author from the target work
-            var old = context.AuthorContainers
-                .Where(ac => ac.ContainerId == container.Id);
-            context.AuthorContainers.RemoveRange(old);
-
-            // add back the received authors
-            container.AuthorContainers = new List<EfAuthorContainer>();
-            short ordinal = 0;
-
+            // collect the authors to be assigned, adding the missing ones
+            List<EfAuthorContainer> requested = new List<EfAuthorContainer>();
             foreach (WorkAuthor author in authors)
             {
-                ordinal++;
-
-                // find the author unless new
-                EfAuthor efa = author.Id != Guid.Empty
-                    ? context.Authors.Find(author.Id)
-                    : null;
-
-                // if not found, add a new author
-                if (efa == null)
-                {
-                    // if an existing author was required but was not found,
-                    // just ignore him (defensive)
-                    if (author.Last == null) continue;
-
-                    // else we have a new author, add it
-                    efa = new EfAuthor();
-                    context.Authors.Add(efa);
-                }
-                else
-                {
-                    // if was found, supply data in the received author if empty
-                    if (author.Last == null)
-                    {
-                        author.First = efa.First;
-                        author.Last = efa.Last;
-                        author.Suffix = efa.Suffix;
-                    }
-                }
-
-                // update the author if data are available
-                // (we can consider an author empty if its Last property is empty)
-                if (author.Last != null)
-                {
-                    efa.First = author.First;
-                    efa.Last = author.Last;
-                    efa.Lastx = StandardFilter.Apply(author.Last, true);
-                }
-
-                // add the link
-                container.AuthorContainers.Add(new EfAuthorContainer
+                EfAuthor efa = GetEfAuthorFor(author, context);
+                if (efa == null) continue;
+                requested.Add(new EfAuthorContainer
                 {
                     Author = efa,
-                    Role = author.Role,
-                    Ordinal = ordinal,
                     Container = container
                 });
+            } // for
+
+            // remove all the no more requested authors
+            if (container.AuthorContainers != null)
+            {
+                foreach (EfAuthorContainer ac in container.AuthorContainers)
+                {
+                    if (requested.All(r => r.AuthorId != ac.AuthorId))
+                        context.AuthorContainers.Remove(ac);
+                }
+            }
+            else container.AuthorContainers = new List<EfAuthorContainer>();
+
+            // add all those which are not yet present
+            foreach (EfAuthorContainer ac in requested)
+            {
+                if (container.AuthorContainers.All(
+                    r => r.AuthorId != ac.AuthorId))
+                {
+                    container.AuthorContainers.Add(ac);
+                }
             }
         }
 
@@ -512,17 +488,16 @@ namespace Cadmus.Biblio.Ef
             // get the container unless it's new
             EfContainer ef = container.Id != Guid.Empty
                 ? context.Containers
+                    .Include(c => c.AuthorContainers)
                     .Include(c => c.KeywordContainers)
-                    .FirstOrDefault(c => c.Id == container.Id) : null;
+                    .FirstOrDefault(c => c.Id == container.Id)
+                : null;
 
             // if new or not found, add it with a new ID
             if (ef == null)
             {
                 if (container.Title == null) return null;
-                ef = new EfContainer
-                {
-                    Id = Guid.NewGuid()
-                };
+                ef = new EfContainer();
                 context.Containers.Add(ef);
             }
 
@@ -563,65 +538,88 @@ namespace Cadmus.Biblio.Ef
             return ef;
         }
 
-        private static void AddAuthors(IList<WorkAuthor> authors, EfWork work,
+        private static EfAuthor GetEfAuthorFor(WorkAuthor author,
             BiblioDbContext context)
         {
-            // remove any author from the target work
-            var old = context.AuthorWorks.Where(aw => aw.WorkId == work.Id);
-            context.AuthorWorks.RemoveRange(old);
+            // find the author
+            EfAuthor efa = author.Id != Guid.Empty
+                ? context.Authors.Find(author.Id) : null;
 
-            // add back the received authors
-            work.AuthorWorks = new List<EfAuthorWork>();
-
-            short ordinal = 0;
-            foreach (WorkAuthor author in authors)
+            // if not found, add a new author
+            if (efa == null)
             {
-                ordinal++;
+                // if an existing author was required but was not found,
+                // just ignore him (defensive)
+                if (author.Last == null) return null;
 
-                // find the author unless new
-                EfAuthor efa = author.Id != Guid.Empty
-                    ? context.Authors.Find(author.Id)
-                    : null;
-
-                // if not found, add a new author
-                if (efa == null)
+                // else we have a new author, add it
+                efa = new EfAuthor
                 {
-                    // if an existing author was required but was not found,
-                    // just ignore him (defensive)
-                    if (author.Last == null) continue;
-
-                    // else we have a new author, add it
-                    efa = new EfAuthor();
-                    context.Authors.Add(efa);
+                    First = author.First,
+                    Last = author.Last,
+                    Suffix = author.Suffix
+                };
+                author.Id = efa.Id;         // update the received ID
+                context.Authors.Add(efa);
+            }
+            else
+            {
+                // if found, supply data in the source author if empty
+                if (author.Last == null)
+                {
+                    author.First = efa.First;
+                    author.Last = efa.Last;
+                    author.Suffix = efa.Suffix;
                 }
+                // else update the target author
                 else
-                {
-                    // if was found, supply data in the received author if empty
-                    if (author.Last == null)
-                    {
-                        author.First = efa.First;
-                        author.Last = efa.Last;
-                        author.Suffix = efa.Suffix;
-                    }
-                }
-
-                // update the author if data are available
-                // (we can consider an author empty if its Last property is empty)
-                if (author.Last != null)
                 {
                     efa.First = author.First;
                     efa.Last = author.Last;
-                    efa.Lastx = StandardFilter.Apply(author.Last, true);
+                    efa.Suffix = author.Suffix;
                 }
+            }
+            // update indexed last
+            efa.Lastx = StandardFilter.Apply(efa.Last, true);
 
-                // add the link
-                work.AuthorWorks.Add(new EfAuthorWork
+            return efa;
+        }
+
+        private static void AddAuthors(IList<WorkAuthor> authors, EfWork work,
+            BiblioDbContext context)
+        {
+            // collect the authors to be assigned, adding the missing ones
+            List<EfAuthorWork> requested = new List<EfAuthorWork>();
+            foreach (WorkAuthor author in authors)
+            {
+                EfAuthor efa = GetEfAuthorFor(author, context);
+                if (efa == null) continue;
+                requested.Add(new EfAuthorWork
                 {
                     Author = efa,
-                    Role = author.Role,
-                    Ordinal = ordinal,
                     Work = work
                 });
+            } // for
+
+            // remove all the no more requested authors
+            if (work.AuthorWorks != null)
+            {
+                foreach (EfAuthorWork aw in work.AuthorWorks)
+                {
+                    if (requested.All(r => r.AuthorId != aw.AuthorId))
+                        context.AuthorWorks.Remove(aw);
+                }
+            }
+            else work.AuthorWorks = new List<EfAuthorWork>();
+
+            // add all those which are not yet present
+            foreach (EfAuthorWork aw in requested)
+            {
+                if (work.AuthorWorks.All(
+                    r => r.AuthorId != aw.AuthorId))
+                {
+                    work.AuthorWorks.Add(aw);
+                }
             }
         }
 
@@ -708,15 +706,17 @@ namespace Cadmus.Biblio.Ef
             if (work == null) return null;
 
             // find the work unless new
-            EfWork ef = work.Id != Guid.Empty ? context.Works.Find(work.Id) : null;
+            EfWork ef = work.Id != Guid.Empty
+                ? context.Works
+                    .Include(w => w.AuthorWorks)
+                    .Include(w => w.KeywordWorks)
+                    .FirstOrDefault(w => w.Id == work.Id)
+                : null;
 
             // if new or not found, add it with a new ID
             if (ef == null)
             {
-                ef = new EfWork
-                {
-                    Id = Guid.NewGuid()
-                };
+                ef = new EfWork();
                 context.Works.Add(ef);
             }
 

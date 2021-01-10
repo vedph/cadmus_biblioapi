@@ -1,4 +1,5 @@
 ﻿using Cadmus.Biblio.Core;
+using System;
 using System.Collections.Generic;
 
 namespace Cadmus.Biblio.Ef
@@ -18,5 +19,13 @@ namespace Cadmus.Biblio.Ef
         /// Gets or sets the author-works link.
         /// </summary>
         public List<EfAuthorWork> AuthorWorks { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EfAuthor"/> class.
+        /// </summary>
+        public EfAuthor()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }
