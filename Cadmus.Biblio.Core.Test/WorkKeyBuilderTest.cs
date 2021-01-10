@@ -93,5 +93,50 @@ namespace Cadmus.Biblio.Core.Test
 
             Assert.Equal("Aspen & Doe 2020", key);
         }
+
+        private static Work GetSampleWork()
+        {
+            return new Work
+            {
+                Authors = new List<WorkAuthor>(new[] { new WorkAuthor
+                {
+                    First = "John",
+                    Last = "Doe"
+                }
+                }),
+                YearPub = 2020
+            };
+        }
+
+        [Fact]
+        public void PickKey_NewManual_New()
+        {
+            Work work = GetSampleWork();
+            work.Key = "!new";
+
+            string key = WorkKeyBuilder.PickKey("old", work);
+
+            Assert.Equal("!new", key);
+        }
+
+        [Fact]
+        public void PickKey_NewNullVsManual_Old()
+        {
+            Work work = GetSampleWork();
+
+            string key = WorkKeyBuilder.PickKey("!old", work);
+
+            Assert.Equal("!old", key);
+        }
+
+        [Fact]
+        public void PickKey_NewNullVsNonManual_New()
+        {
+            Work work = GetSampleWork();
+
+            string key = WorkKeyBuilder.PickKey("old", work);
+
+            Assert.Equal("Doe 2020", key);
+        }
     }
 }

@@ -43,7 +43,10 @@ namespace Cadmus.Biblio.Core
 
         /// <summary>
         /// Picks the key by choosing between <paramref name="work"/>'s key
-        /// and a new incoming key.
+        /// and a new incoming key. A new manual-key always wins. A null or
+        /// empty new key is calculated, and then it wins if the old key is
+        /// not manual; else the old key is picked.
+        /// the new 
         /// </summary>
         /// <param name="oldKey">The old key.</param>
         /// <param name="newWork">The new work/container; its key can be specified,
