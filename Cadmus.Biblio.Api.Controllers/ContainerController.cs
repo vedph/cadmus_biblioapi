@@ -44,7 +44,8 @@ namespace Cadmus.Biblio.Api.Controllers
                 LastName = model.LastName,
                 Language = model.Language,
                 Title = model.Title,
-                ContainerTitle = model.ContainerTitle,
+                ContainerId = model.ContainerId.HasValue?
+                    model.ContainerId.Value : Guid.Empty,
                 Keyword = model.Keyword,
                 YearPubMin = model.YearPubMin ?? 0,
                 YearPubMax = model.YearPubMax ?? 0,

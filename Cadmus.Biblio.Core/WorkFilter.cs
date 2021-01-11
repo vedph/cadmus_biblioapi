@@ -1,4 +1,5 @@
 ﻿using Fusi.Tools.Data;
+using System;
 
 namespace Cadmus.Biblio.Core
 {
@@ -37,10 +38,9 @@ namespace Cadmus.Biblio.Core
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets any portion of the container's title to be matched
-        /// (filtered).
+        /// Gets or sets the container ID to be matched.
         /// </summary>
-        public string ContainerTitle { get; set; }
+        public Guid ContainerId { get; set; }
 
         /// <summary>
         /// Gets or sets a keyword value to be matched.

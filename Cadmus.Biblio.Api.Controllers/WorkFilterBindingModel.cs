@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cadmus.Biblio.Api.Controllers
 {
@@ -42,10 +43,10 @@ namespace Cadmus.Biblio.Api.Controllers
         public string Title { get; set; }
 
         /// <summary>
-        /// Any portion of the container's title to be matched (filtered).
+        /// The container ID to be matched.
         /// </summary>
         [MaxLength(200)]
-        public string ContainerTitle { get; set; }
+        public Guid? ContainerId { get; set; }
 
         /// <summary>
         /// A keyword value to be matched.
