@@ -10,7 +10,8 @@ namespace Cadmus.Biblio.Core
         public string Language { get; set; }
 
         /// <summary>
-        /// Any portion of the keyword's value.
+        /// Any portion of the keyword's value, eventually prefixed with
+        /// the 3-letters keyword's language code plus colon (e.g. <c>eng:test</c>).
         /// </summary>
         public string Value { get; set; }
     }

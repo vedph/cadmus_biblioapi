@@ -719,7 +719,21 @@ namespace Cadmus.Biblio.Ef
                     keywords = keywords.Where(k => k.Language == filter.Language);
 
                 if (!string.IsNullOrEmpty(filter.Value))
-                    keywords = keywords.Where(k => k.Valuex.Contains(filter.Value));
+                {
+                    // filter value for keyword can be language:value
+                    int i = filter.Value.IndexOf(':');
+                    if (i == 3)
+                    {
+                        string l = filter.Value.Substring(0, 3);
+                        keywords = keywords.Where(k => k.Language == l);
+                        if (filter.Value.Length > 4)
+                        {
+                            string v = filter.Value.Substring(4);
+                            keywords = keywords.Where(k => k.Valuex.Contains(v));
+                        }
+                    }
+                    else keywords = keywords.Where(k => k.Valuex.Contains(filter.Value));
+                }
 
                 int tot = keywords.Count();
 
