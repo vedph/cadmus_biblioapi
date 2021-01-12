@@ -27,7 +27,7 @@ using Cadmus.Biblio.Ef;
 using System.Globalization;
 using Microsoft.AspNetCore.HttpOverrides;
 
-namespace Cadmus.Biblio.Api
+namespace CadmusBiblioApi
 {
     /// <summary>
     /// Startup.

@@ -11,12 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Biblio.Ef.Test", "Ca
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4AF77BE9-3462-45E2-958E-DACAC3042F83}"
 	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
 		Readme.md = Readme.md
 		schema.png = schema.png
 		schema.svg = schema.svg
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Biblio.Api", "Cadmus.Biblio.Api\Cadmus.Biblio.Api.csproj", "{56502770-866D-4FD4-B6FF-9A529E6174BB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Biblio.Seed", "Cadmus.Biblio.Seed\Cadmus.Biblio.Seed.csproj", "{140EBF63-292F-4CAE-8821-C4487953B65C}"
 EndProject
@@ -24,7 +24,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cadmus-biblio", "cadmus-bib
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Biblio.Api.Controllers", "Cadmus.Biblio.Api.Controllers\Cadmus.Biblio.Api.Controllers.csproj", "{038AAD46-44CB-441E-8601-A7888BB58253}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadmus.Biblio.Core.Test", "Cadmus.Biblio.Core.Test\Cadmus.Biblio.Core.Test.csproj", "{09E9F1AC-2A90-43A5-AA58-E44540579C98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Biblio.Core.Test", "Cadmus.Biblio.Core.Test\Cadmus.Biblio.Core.Test.csproj", "{09E9F1AC-2A90-43A5-AA58-E44540579C98}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CadmusBiblioApi", "CadmusBiblioApi\CadmusBiblioApi.csproj", "{2EDA0AD7-328E-467C-8DF0-77B25FD79D1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,10 +46,6 @@ Global
 		{54EE1C8E-EDF0-4166-AA22-089859491E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54EE1C8E-EDF0-4166-AA22-089859491E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54EE1C8E-EDF0-4166-AA22-089859491E12}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56502770-866D-4FD4-B6FF-9A529E6174BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56502770-866D-4FD4-B6FF-9A529E6174BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56502770-866D-4FD4-B6FF-9A529E6174BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56502770-866D-4FD4-B6FF-9A529E6174BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{140EBF63-292F-4CAE-8821-C4487953B65C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{140EBF63-292F-4CAE-8821-C4487953B65C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{140EBF63-292F-4CAE-8821-C4487953B65C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -64,6 +62,10 @@ Global
 		{09E9F1AC-2A90-43A5-AA58-E44540579C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09E9F1AC-2A90-43A5-AA58-E44540579C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09E9F1AC-2A90-43A5-AA58-E44540579C98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EDA0AD7-328E-467C-8DF0-77B25FD79D1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EDA0AD7-328E-467C-8DF0-77B25FD79D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EDA0AD7-328E-467C-8DF0-77B25FD79D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EDA0AD7-328E-467C-8DF0-77B25FD79D1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

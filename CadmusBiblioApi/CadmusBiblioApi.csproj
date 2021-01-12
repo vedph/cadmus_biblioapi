@@ -2,19 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <Authors>Daniele Fusi</Authors>
-    <Company>Fusi</Company>
-    <Product>Cadmus</Product>
-    <Description>Cadmus bibliography API</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp3.1\Cadmus.Biblio.Api.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\net5.0\CadmusBiblioApi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cadmus.Api.Services" Version="1.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" NoWarn="NU1605" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" NoWarn="NU1605" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Cadmus.Api.Services" Version="1.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -36,6 +37,5 @@
     <ProjectReference Include="..\Cadmus.Biblio.Ef\Cadmus.Biblio.Ef.csproj" />
     <ProjectReference Include="..\Cadmus.Biblio.Seed\Cadmus.Biblio.Seed.csproj" />
   </ItemGroup>
-
 
 </Project>

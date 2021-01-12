@@ -11,7 +11,7 @@ using Cadmus.Api.Services.Seeding;
 using System.Threading.Tasks;
 using Cadmus.Biblio.Api.Services;
 
-namespace Cadmus.Biblio.Api
+namespace CadmusBiblioApi
 {
     /// <summary>
     /// Main program.

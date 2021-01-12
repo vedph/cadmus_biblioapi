@@ -1,6 +1,12 @@
 # Cadmus Bibliographic API
 
-Note: this is only an experimental STUB project. It will be fully implemented when it's required (deadlines...).
+Quick Docker image build:
+
+```bash
+docker build . -t vedph2020/cadmus_biblio_api:1.0.0 -t vedph2020/cadmus_biblio_api:latest
+```
+
+(replace with the current version).
 
 ## Overview
 
