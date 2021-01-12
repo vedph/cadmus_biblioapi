@@ -29,5 +29,27 @@ namespace Cadmus.Biblio.Api.Controllers
                 Value = model.Value
             };
         }
+
+        public static WorkFilter GetWorkFilter(WorkFilterBindingModel model)
+        {
+            if (model == null) return null;
+
+            return new WorkFilter
+            {
+                PageNumber = model.PageNumber,
+                PageSize = model.PageSize,
+                IsMatchAnyEnabled = model.MatchAny,
+                Type = model.Type,
+                AuthorId = model.AuthorId ?? Guid.Empty,
+                LastName = model.LastName,
+                Language = model.Language,
+                Title = model.Title,
+                ContainerId = model.ContainerId ?? Guid.Empty,
+                Keyword = model.Keyword,
+                YearPubMin = model.YearPubMin ?? 0,
+                YearPubMax = model.YearPubMax ?? 0,
+                Key = model.Key
+            };
+        }
     }
 }

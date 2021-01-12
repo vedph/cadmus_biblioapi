@@ -24,6 +24,11 @@ namespace Cadmus.Biblio.Api.Controllers
         public string Type { get; set; }
 
         /// <summary>
+        /// The author ID to be matched.
+        /// </summary>
+        public Guid? AuthorId { get; set; }
+
+        /// <summary>
         /// Any portion of the last name to be matched (filtered).
         /// </summary>
         [MaxLength(50)]
@@ -45,7 +50,6 @@ namespace Cadmus.Biblio.Api.Controllers
         /// <summary>
         /// The container ID to be matched.
         /// </summary>
-        [MaxLength(200)]
         public Guid? ContainerId { get; set; }
 
         /// <summary>

@@ -23,6 +23,11 @@ namespace Cadmus.Biblio.Core
         public string Type { get; set; }
 
         /// <summary>
+        /// Gets or sets the author identifier to be matched.
+        /// </summary>
+        public Guid AuthorId { get; set; }
+
+        /// <summary>
         /// Gets or sets any portion of the last name to be matched (filtered).
         /// </summary>
         public string LastName { get; set; }

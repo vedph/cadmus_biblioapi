@@ -85,6 +85,12 @@ namespace Cadmus.Biblio.Ef
                     if (!string.IsNullOrEmpty(filter.Type))
                         predicate.Or(w => w.Type.Equals(filter.Type));
 
+                    if (filter.AuthorId != Guid.Empty)
+                    {
+                        predicate.Or(w => w.AuthorWorks.Any(
+                            aw => aw.AuthorId == filter.AuthorId));
+                    }
+
                     if (!string.IsNullOrEmpty(filter.LastName))
                     {
                         predicate.Or(w =>
@@ -125,6 +131,13 @@ namespace Cadmus.Biblio.Ef
                     if (!string.IsNullOrEmpty(filter.Type))
                         works = works.Where(w => w.Type.Name == filter.Type);
 
+                    // author ID
+                    if (filter.AuthorId != Guid.Empty)
+                    {
+                        works = works.Where(w => w.AuthorWorks.Any(
+                            aw => aw.AuthorId == filter.AuthorId));
+                    }
+
                     // last
                     if (!string.IsNullOrEmpty(filter.LastName))
                     {
@@ -140,7 +153,7 @@ namespace Cadmus.Biblio.Ef
                     if (!string.IsNullOrEmpty(filter.Title))
                         works = works.Where(w => w.Titlex.Contains(filter.Title));
 
-                    // container
+                    // container ID
                     if (filter.ContainerId != Guid.Empty)
                     {
                         works = works.Where(w =>
@@ -293,6 +306,12 @@ namespace Cadmus.Biblio.Ef
                     if (!string.IsNullOrEmpty(filter.Type))
                         predicate.Or(c => c.Type.Equals(filter.Type));
 
+                    if (filter.AuthorId != Guid.Empty)
+                    {
+                        predicate.Or(c => c.AuthorContainers.Any(
+                            ac => ac.AuthorId == filter.AuthorId));
+                    }
+
                     if (!string.IsNullOrEmpty(filter.LastName))
                     {
                         predicate.Or(c =>
@@ -329,6 +348,13 @@ namespace Cadmus.Biblio.Ef
                     // type
                     if (!string.IsNullOrEmpty(filter.Type))
                         containers = containers.Where(w => w.Type.Name == filter.Type);
+
+                    // author ID
+                    if (filter.AuthorId != Guid.Empty)
+                    {
+                        containers = containers.Where(c => c.AuthorContainers.Any(
+                            ac => ac.AuthorId == filter.AuthorId));
+                    }
 
                     // last
                     if (!string.IsNullOrEmpty(filter.LastName))

@@ -35,22 +35,8 @@ namespace Cadmus.Biblio.Api.Controllers
         public ActionResult<DataPage<Container>> GetContainers(
             [FromQuery] WorkFilterBindingModel model)
         {
-            return Ok(_repository.GetContainers(new WorkFilter
-            {
-                PageNumber = model.PageNumber,
-                PageSize = model.PageSize,
-                IsMatchAnyEnabled = model.MatchAny,
-                Type = model.Type,
-                LastName = model.LastName,
-                Language = model.Language,
-                Title = model.Title,
-                ContainerId = model.ContainerId.HasValue?
-                    model.ContainerId.Value : Guid.Empty,
-                Keyword = model.Keyword,
-                YearPubMin = model.YearPubMin ?? 0,
-                YearPubMax = model.YearPubMax ?? 0,
-                Key = model.Key
-            }));
+            return Ok(_repository.GetContainers(
+                ModelHelper.GetWorkFilter(model)));
         }
 
         /// <summary>

@@ -35,20 +35,8 @@ namespace Cadmus.Biblio.Api.Controllers
         public ActionResult<DataPage<Work>> GetWorks(
             [FromQuery] WorkFilterBindingModel model)
         {
-            return Ok(_repository.GetWorks(new WorkFilter
-            {
-                PageNumber = model.PageNumber,
-                PageSize = model.PageSize,
-                IsMatchAnyEnabled = model.MatchAny,
-                Type = model.Type,
-                LastName = model.LastName,
-                Language = model.Language,
-                Title = model.Title,
-                Keyword = model.Keyword,
-                YearPubMin = model.YearPubMin ?? 0,
-                YearPubMax = model.YearPubMax ?? 0,
-                Key = model.Key
-            }));
+            return Ok(_repository.GetWorks(
+                ModelHelper.GetWorkFilter(model)));
         }
 
         /// <summary>
