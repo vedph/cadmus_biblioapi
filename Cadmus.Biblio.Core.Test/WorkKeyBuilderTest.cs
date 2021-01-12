@@ -91,6 +91,50 @@ namespace Cadmus.Biblio.Core.Test
         }
 
         [Fact]
+        public void Build_MoreThan3Authors_Ok()
+        {
+            string key = WorkKeyBuilder.Build(new Work
+            {
+                Authors = new List<WorkAuthor>(new[]
+                {
+                    new WorkAuthor
+                    {
+                        First = "John",
+                        Last = "Doe",
+                        Ordinal = 1
+                    },
+                    new WorkAuthor
+                    {
+                        First = "Mike",
+                        Last = "Aspen",
+                        Ordinal = 2
+                    },
+                    new WorkAuthor
+                    {
+                        First = "Josh",
+                        Last = "Williams",
+                        Ordinal = 3
+                    },
+                    new WorkAuthor
+                    {
+                        First = "Judy",
+                        Last = "Perth",
+                        Ordinal = 4
+                    },
+                    new WorkAuthor
+                    {
+                        First = "Zac",
+                        Last = "Neuman",
+                        Ordinal = 5
+                    },
+                }),
+                YearPub = 2020
+            });
+
+            Assert.Equal("Doe & Aspen & Williams & al. 2020", key);
+        }
+
+        [Fact]
         public void Build_MultiAuthorsNoOrdinals_Ok()
         {
             string key = WorkKeyBuilder.Build(new Work

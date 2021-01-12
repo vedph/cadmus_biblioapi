@@ -26,15 +26,17 @@ namespace Cadmus.Biblio.Core
 
             StringBuilder sb = new StringBuilder();
 
-            // authors
+            // authors (max 3)
             if (work.Authors?.Count > 0)
             {
                 sb.Append(string.Join(" & ",
-                    from a in work.Authors
+                    (from a in work.Authors
                     orderby a.Ordinal, a.Last, a.Suffix
                     select string.IsNullOrEmpty(a.Suffix)
                         ? a.Last
-                        : $"{a.Last} {a.Suffix}"));
+                        : $"{a.Last} {a.Suffix}").Take(3)));
+
+                if (work.Authors.Count > 3) sb.Append(" & al.");
             }
 
             // number if any
@@ -45,7 +47,8 @@ namespace Cadmus.Biblio.Core
             // year
             sb.Append(' ').Append(work.YearPub);
 
-            return sb.ToString();
+            // ensure we stay inside size limits
+            return sb.Length > 300? sb.ToString(0, 300) : sb.ToString();
         }
 
         /// <summary>
