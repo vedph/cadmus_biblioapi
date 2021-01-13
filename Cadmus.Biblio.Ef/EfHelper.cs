@@ -94,6 +94,7 @@ namespace Cadmus.Biblio.Ef
             if (ef == null) return null;
             WorkInfo info = new WorkInfo
             {
+                IsContainer = true,
                 Id = ef.Id,
                 Key = ef.Key,
                 Type = ef.Type?.Name,
@@ -149,6 +150,7 @@ namespace Cadmus.Biblio.Ef
             if (ef == null) return null;
             WorkInfo info = new WorkInfo
             {
+                IsContainer = false,
                 Id = ef.Id,
                 Key = ef.Key,
                 Type = ef.Type?.Name,

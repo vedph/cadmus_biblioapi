@@ -9,6 +9,12 @@ namespace Cadmus.Biblio.Core
     public class WorkInfo
     {
         /// <summary>
+        /// Gets or sets a value indicating whether this is a work or a
+        /// container.
+        /// </summary>
+        public bool IsContainer { get; set; }
+
+        /// <summary>
         /// Gets or sets the identifier (36-chars GUID).
         /// </summary>
         public Guid Id { get; set; }
