@@ -3,7 +3,7 @@
 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus_biblio_api:1.0.1 -t vedph2020/cadmus_biblio_api:latest
+docker build . -t vedph2020/cadmus_biblio_api:1.0.2 -t vedph2020/cadmus_biblio_api:latest
 ```
 
 (replace with the current version).
@@ -46,7 +46,7 @@ The bibliographic database here is a MySql database with a very simple schema, c
 - any number of _authors_, with different roles (authors proper have a default role of null; other may be translators, organizations, etc.);
 - any number of _keywords_.
 
-Also, works can be contained in a _container_ (e.g. journal, proceedings, books of articles, etc.), with a schema very similar to that of works.
+Also, works can be contained in another work, acting as a works _container_ (e.g. journal, proceedings, books of articles, etc.). Its schema is equal to that of a work, except that it lacks a container, and first and last page numbers.
 
 (Paste the following code in the box at [PlantUml website](https://plantuml.com/) if you cannot see it):
 
@@ -85,6 +85,7 @@ entity work {
     * placePub
     * location
     * accessDate
+    * number
     * note
 }
 
@@ -150,7 +151,7 @@ Some notes about fields:
   - only letters and digits and apostrophe (`'`) are preserved.
   - all the diacritics are removed, and uppercase letters are lowercased.
 
-- the `key` field is usually calculated, by concatenating all the author last names (unfiltered, sorted by their ordinal or -when ordinals are equal- alphabetically, and separated by an ampersand `&`) and the publication year. Note sorting is required to make the key predictable. This field is used to allow faster lookup by key: clients can thus find the full bibliographic record from its key. When adding/updating a work, if another work with the same key already exists (which is rarely the case, but may happen when the same author(s) publish more than a work in the same year), a letter will be appended to the year (e.g. `Allen 1970b`), up to `z`. Any key field starting with `!` is treated as a manually managed key, and as such is not automatically updated.
+- the `key` field is usually calculated, by concatenating all the first 3 author last names (unfiltered, sorted by their ordinal or -when ordinals are equal- alphabetically, and separated by an ampersand `&`), the number if any, and the publication year. Note sorting authors is required to make the key predictable. This field is used to allow faster lookup by key: clients can thus find the full bibliographic record from its key. When adding/updating a work, if another work with the same key already exists (which is rarely the case, but may happen when the same author(s) publish more than a work in the same year), a letter will be appended to the year (e.g. `Allen 1970b`), up to `z`. Any key field starting with `!` is treated as a manually managed key, and as such is not automatically updated.
 
 ### Repository
 
@@ -159,28 +160,11 @@ The database is managed by a repository, which provides these functionalities:
 - _works_ (and _containers_): get a filtered paged list, get a work from its ID, add or update a work with its full data graph (authors, keywords, type, container), delete a work.
 - _work types_: get a filtered paged list, get a type from its ID, add or update a type, delete a type.
 - _authors_: get a filtered paged list, get an author from its ID, add or update an author, delete an author, prune authors.
-- _keywords_: get a filtered paged list, add a keyword, prune keywords.
-
-The whole API is modeled on the requirements of a simple and mostly agnostic client, intended to operate in any of these typical ways:
-
-a) lookup:
-
-- lookup a list of _authors_ by typing any part of their last name.
-- lookup a list of _works_ (or _containers_) by filtering them according to 1 or more properties. There are two matching modes: in the default one, all the properties specified in the filter must be matched; in the other, it is enough to match any of them. You can use the latter when you want the user to find matches in any of the relevant work's fields: e.g. freely type something which could be the author's last name, the work's title, any of the work's keywords, etc. It is up to the client to pick the desired properties to match.
-- lookup a list of work _types_: get all of them, or only those containing the specified text in their name.
-
-b) edit:
-
-- _add_ a new work to the repository, together with its authors, type, keywords, and container.
-- add a container to the repository, together with its authors, type, and keywords.
-- _update_ an existing work, container, author, or work type.
-- _delete_ a work or a container from the repository.
-
-So for instance you might have a bibliographic references part, with a list of bibliographic references in the conventional form last name + publication year. In its editor, you might either type the reference directly if you remember it; or use a lookup to find the work by just typing a few characters, and then pick it from the results.
+- _keywords_: get a filtered paged list, get a keyword from its ID, add a keyword, delete a keyword, prune keywords.
 
 ## Integrating Resources
 
-This project thus provides a centralized and independent bibliographic repository, which gets filled by contributions in the Cadmus editor as the parts are edited. It might start empty, or from some imported data. In any case, this would provide a unified lookup system across several different parts.
+This project provides a centralized and independent bibliographic repository, which gets filled by contributions in the Cadmus editor as the parts are edited. It might start empty, or from some imported data. In any case, this would provide a unified lookup system across several different parts.
 
 The main tasks to integrate a service like this in Cadmus are:
 

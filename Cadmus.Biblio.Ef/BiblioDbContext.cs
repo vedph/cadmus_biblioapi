@@ -225,6 +225,9 @@ namespace Cadmus.Biblio.Ef
             modelBuilder.Entity<EfWork>().Property(w => w.Location)
                 .IsUnicode()
                 .HasMaxLength(500);
+            modelBuilder.Entity<EfWork>().Property(w => w.Number)
+                .IsUnicode()
+                .HasMaxLength(50);
             modelBuilder.Entity<EfWork>().Property(w => w.FirstPage)
                 .IsRequired();
             modelBuilder.Entity<EfWork>().Property(w => w.LastPage)

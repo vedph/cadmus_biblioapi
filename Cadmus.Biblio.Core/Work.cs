@@ -3,7 +3,7 @@
     /// <summary>
     /// A work.
     /// </summary>
-    public class Work : WorkBase
+    public class Work : Container
     {
         /// <summary>
         /// Gets or sets the optional work's container.

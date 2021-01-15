@@ -159,6 +159,7 @@ namespace Cadmus.Biblio.Ef
                 Edition = ef.Edition,
                 YearPub = ef.YearPub,
                 PlacePub = ef.PlacePub,
+                Number = ef.Number,
                 FirstPage = ef.FirstPage,
                 LastPage = ef.LastPage
             };
@@ -267,6 +268,7 @@ namespace Cadmus.Biblio.Ef
                 PlacePub = ef.PlacePub,
                 Location = ef.Location,
                 AccessDate = ef.AccessDate,
+                Number = ef.Number,
                 FirstPage = ef.FirstPage,
                 LastPage = ef.LastPage,
                 Key = ef.Key,
@@ -734,6 +736,7 @@ namespace Cadmus.Biblio.Ef
             ef.PlacePub = work.PlacePub;
             ef.Location = work.Location;
             ef.AccessDate = work.AccessDate;
+            ef.Number = work.Number;
             ef.FirstPage = work.FirstPage;
             ef.LastPage = work.LastPage;
             ef.Note = work.Note;

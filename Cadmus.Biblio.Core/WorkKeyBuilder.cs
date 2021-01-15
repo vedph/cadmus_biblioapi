@@ -20,7 +20,7 @@ namespace Cadmus.Biblio.Core
         /// </summary>
         /// <param name="work">The work.</param>
         /// <exception cref="ArgumentNullException">work</exception>
-        public static string Build(WorkBase work)
+        public static string Build(Container work)
         {
             if (work == null) throw new ArgumentNullException(nameof(work));
 
@@ -40,9 +40,8 @@ namespace Cadmus.Biblio.Core
             }
 
             // number if any
-            Container container = work as Container;
-            if (!string.IsNullOrEmpty(container?.Number))
-                sb.Append(' ').Append(container.Number);
+            if (!string.IsNullOrEmpty(work?.Number))
+                sb.Append(' ').Append(work.Number);
 
             // year
             sb.Append(' ').Append(work.YearPub);
@@ -62,7 +61,7 @@ namespace Cadmus.Biblio.Core
         /// or just be null.</param>
         /// <returns>Key.</returns>
         /// <exception cref="ArgumentNullException">work</exception>
-        public static string PickKey(string oldKey, WorkBase newWork)
+        public static string PickKey(string oldKey, Container newWork)
         {
             if (newWork == null) throw new ArgumentNullException(nameof(newWork));
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Cadmus.Biblio.Ef
 {
@@ -13,11 +12,6 @@ namespace Cadmus.Biblio.Ef
         /// Gets or sets the author-container links.
         /// </summary>
         public List<EfAuthorContainer> AuthorContainers { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number.
-        /// </summary>
-        public string Number { get; set; }
 
         /// <summary>
         /// Gets or sets the keyword-container links.

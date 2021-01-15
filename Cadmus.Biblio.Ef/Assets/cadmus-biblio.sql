@@ -176,6 +176,7 @@ CREATE TABLE `work` (
   `placePub` varchar(100) DEFAULT NULL,
   `location` varchar(500) DEFAULT NULL,
   `accessDate` datetime DEFAULT NULL,
+  `number` varchar(50) DEFAULT NULL,
   `firstPage` smallint NOT NULL,
   `lastPage` smallint NOT NULL,
   `note` varchar(500) DEFAULT NULL,

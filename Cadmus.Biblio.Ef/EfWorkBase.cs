@@ -54,6 +54,15 @@ namespace Cadmus.Biblio.Ef
         public string Publisher { get; set; }
 
         /// <summary>
+        /// Gets or sets the number. This can be either a container number
+        /// when we enter one record for each issue of a periodic publication,
+        /// or a work number, when the container (e.g. a journal) is treated
+        /// as a single record, valid for all its issues, and the issue number
+        /// is rather specified in the work. The choice is up to the user.
+        /// </summary>
+        public string Number { get; set; }
+
+        /// <summary>
         /// Gets or sets the year of publication.
         /// </summary>
         public short YearPub { get; set; }
