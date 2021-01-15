@@ -1,5 +1,6 @@
 ﻿using Cadmus.Biblio.Core;
 using Fusi.Tools.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cadmus.Biblio.Api.Controllers
@@ -7,6 +8,7 @@ namespace Cadmus.Biblio.Api.Controllers
     /// <summary>
     /// Work type controller.
     /// </summary>
+    [Authorize]
     [ApiController]
     public sealed class WorkTypeController : Controller
     {

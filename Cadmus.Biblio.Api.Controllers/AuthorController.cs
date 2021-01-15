@@ -1,5 +1,6 @@
 ﻿using Cadmus.Biblio.Core;
 using Fusi.Tools.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
@@ -8,6 +9,7 @@ namespace Cadmus.Biblio.Api.Controllers
     /// <summary>
     /// Authors.
     /// </summary>
+    [Authorize]
     [ApiController]
     public sealed class AuthorController : Controller
     {
@@ -94,6 +96,7 @@ namespace Cadmus.Biblio.Api.Controllers
         /// <summary>
         /// Prunes the unused authors.
         /// </summary>
+        [Authorize(Roles = "admin,editor")]
         [HttpDelete("api/unused/authors")]
         public void PruneAuthors()
         {

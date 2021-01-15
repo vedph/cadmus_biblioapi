@@ -1,5 +1,6 @@
 ﻿using Cadmus.Biblio.Core;
 using Fusi.Tools.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cadmus.Biblio.Api.Controllers
@@ -8,6 +9,7 @@ namespace Cadmus.Biblio.Api.Controllers
     /// Keywords.
     /// </summary>
     /// <seealso cref="Controller" />
+    [Authorize]
     [ApiController]
     public sealed class KeywordController : Controller
     {
@@ -88,6 +90,7 @@ namespace Cadmus.Biblio.Api.Controllers
         /// <summary>
         /// Prunes the unused keywords.
         /// </summary>
+        [Authorize(Roles = "admin,editor")]
         [HttpDelete("api/unused/keywords")]
         public void PruneKeywords()
         {
