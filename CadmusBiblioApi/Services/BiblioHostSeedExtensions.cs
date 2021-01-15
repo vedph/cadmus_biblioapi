@@ -10,6 +10,7 @@ using Polly;
 using System;
 using System.Data.Common;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Cadmus.Biblio.Api.Services
@@ -61,36 +62,53 @@ namespace Cadmus.Biblio.Api.Services
                 });
         }
 
-        /// <summary>
-        /// Seeds the database.
-        /// </summary>
-        /// <param name="host">The host.</param>
-        /// <returns>The received host, to allow concatenation.</returns>
-        /// <exception cref="ArgumentNullException">serviceProvider</exception>
-        public static async Task<IHost> SeedBiblioAsync(this IHost host)
+        private static async Task CreateBiblioAsync(IServiceProvider serviceProvider)
         {
-            using (var scope = host.Services.CreateScope())
-            {
-                IServiceProvider serviceProvider = scope.ServiceProvider;
-                ILogger logger = serviceProvider
-                    .GetService<ILoggerFactory>()
-                    .CreateLogger(typeof(BiblioHostSeedExtensions));
-
-                try
+            await Policy.Handle<DbException>()
+                .WaitAndRetry(new[]
                 {
-                    // get DB connection string template and name from config
+                    TimeSpan.FromSeconds(10),
+                    TimeSpan.FromSeconds(30),
+                    TimeSpan.FromSeconds(60)
+                }, (exception, timeSpan, _) =>
+                {
+                    // in case of DbException we must retry
+                    ILogger logger = serviceProvider
+                        .GetService<ILoggerFactory>()
+                        .CreateLogger(typeof(BiblioHostSeedExtensions));
+
+                    string message = "Unable to connect to DB" +
+                        $" (sleep {timeSpan}): {exception.Message}";
+                    Console.WriteLine(message);
+                    logger.LogError(exception, message);
+                }).Execute(async() =>
+                {
                     IConfiguration config =
                         serviceProvider.GetService<IConfiguration>();
 
+                    ILogger logger = serviceProvider
+                        .GetService<ILoggerFactory>()
+                        .CreateLogger(typeof(BiblioHostSeedExtensions));
+
+                    // delay if requested, to allow DB start
+                    int delay = config.GetValue<int>("Seed:BiblioDelay");
+                    if (delay > 0)
+                    {
+                        Console.WriteLine($"Waiting for {delay} seconds...");
+                        Thread.Sleep(delay * 1000);
+                    }
+                    else Console.WriteLine("No delay for seeding");
+
+                    // if the DB does not exist, create and seed it
                     string dbName = config.GetValue<string>("DatabaseNames:Biblio");
                     string cs = string.Format(
                         CultureInfo.InvariantCulture,
                         config.GetConnectionString("Biblio"),
                         dbName);
+                    Console.WriteLine($"Checking for database {dbName}...");
+                    Serilog.Log.Information($"Checking for database {dbName}...");
 
-                    // if the DB does not exist, create and seed it
                     MySqlDbManager manager = new MySqlDbManager(cs);
-
                     if (!manager.Exists(dbName))
                     {
                         // create
@@ -111,6 +129,29 @@ namespace Cadmus.Biblio.Api.Services
                         Console.WriteLine("Seeding completed.");
                         Serilog.Log.Information("Seeding completed.");
                     }
+                });
+        }
+
+        /// <summary>
+        /// Seeds the database.
+        /// </summary>
+        /// <param name="host">The host.</param>
+        /// <returns>The received host, to allow concatenation.</returns>
+        /// <exception cref="ArgumentNullException">serviceProvider</exception>
+        public static async Task<IHost> SeedBiblioAsync(this IHost host)
+        {
+            Console.WriteLine("Seeding biblio...");
+
+            using (var scope = host.Services.CreateScope())
+            {
+                IServiceProvider serviceProvider = scope.ServiceProvider;
+                ILogger logger = serviceProvider
+                    .GetService<ILoggerFactory>()
+                    .CreateLogger(typeof(BiblioHostSeedExtensions));
+
+                try
+                {
+                    await CreateBiblioAsync(serviceProvider);
                 }
                 catch (Exception ex)
                 {
