@@ -10,6 +10,8 @@ using Serilog.Events;
 using Cadmus.Api.Services.Seeding;
 using System.Threading.Tasks;
 using Cadmus.Biblio.Api.Services;
+using Microsoft.Extensions.Configuration;
+using Cadmus.Api.Services;
 
 namespace CadmusBiblioApi
 {
@@ -42,7 +44,7 @@ namespace CadmusBiblioApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseSerilog();
+                    // webBuilder.UseSerilog();
                 });
 
         /// <summary>
@@ -71,6 +73,26 @@ namespace CadmusBiblioApi
                 // see https://stackoverflow.com/questions/45148389/how-to-seed-in-entity-framework-core-2
                 // and https://docs.microsoft.com/en-us/aspnet/core/migration/1x-to-2x/?view=aspnetcore-2.1#move-database-initialization-code
                 var host = await CreateHostBuilder(args)
+                    // add in-memory config to override Serilog connection string
+                    // as there is no way of configuring it outside appsettings
+                    // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-5.0#in-memory-provider-and-binding-to-a-poco-class
+                    .ConfigureAppConfiguration((context, config) =>
+                    {
+                        IConfiguration cfg = AppConfigReader.Read();
+                        string csTemplate = cfg.GetValue<string>("Serilog:ConnectionString");
+                        string dbName = cfg.GetValue<string>("DatabaseNames:Data");
+                        string cs = string.Format(csTemplate, dbName);
+                        Debug.WriteLine($"Serilog:ConnectionString override = {cs}");
+                        Console.WriteLine($"Serilog:ConnectionString override = {cs}");
+
+                        Dictionary<string, string> dct = new Dictionary<string, string>
+                        {
+                            { "Serilog:ConnectionString", cs }
+                        };
+                        // (requires Microsoft.Extensions.Configuration package
+                        // to get the MemoryConfigurationProvider)
+                        config.AddInMemoryCollection(dct);
+                    })
                     .UseSerilog()
                     .Build()
                     // Cadmus seeder (authentication)
