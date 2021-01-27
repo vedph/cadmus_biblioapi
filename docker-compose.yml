@@ -36,7 +36,7 @@ services:
       - cadmus-biblio-network
 
   cadmus-api:
-    image: vedph2020/cadmus_biblio_api:1.0.3
+    image: vedph2020/cadmus_biblio_api:1.0.4
     ports:
       # https://stackoverflow.com/questions/48669548/why-does-aspnet-core-start-on-port-80-from-within-docker
       - 60058:80
@@ -51,7 +51,7 @@ services:
       - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-mongo:27017/{0}
       - CONNECTIONSTRINGS__INDEX=Server=cadmus-mysql;port=3306;Database={0};Uid=root;Pwd=mysql
       - SEED__INDEXDELAY=25
-      - SERILOG__CONNECTIONSTRING=mongodb://cadmus-mongo:27017/cadmus-biblio-log
+      - SERILOG__CONNECTIONSTRING=mongodb://cadmus-mongo:27017/{0}-log
       - STOCKUSERS__0__PASSWORD=P4ss-W0rd!
     networks:
       - cadmus-biblio-network
