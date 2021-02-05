@@ -281,6 +281,7 @@ namespace Cadmus.Biblio.Ef
                 work.Authors.AddRange(from ac in ef.AuthorWorks
                                       select new WorkAuthor
                                       {
+                                          Id = ac.AuthorId,
                                           Last = ac.Author.Last,
                                           First = ac.Author.First,
                                           Role = ac.Role,
