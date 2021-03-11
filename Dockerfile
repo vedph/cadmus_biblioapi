@@ -5,9 +5,8 @@ EXPOSE 80
 EXPOSE 443
 
 # Stage 2: build
-# TEMPFIX
-# FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
-FROM mcr.microsoft.com/dotnet/sdk:5.0.102-ca-patch-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+# FROM mcr.microsoft.com/dotnet/sdk:5.0.102-ca-patch-buster-slim AS build
 WORKDIR /src
 COPY ["CadmusBiblioApi/CadmusBiblioApi.csproj", "CadmusBiblioApi/"]
 # copy local packages to avoid using a NuGet custom feed, then restore
