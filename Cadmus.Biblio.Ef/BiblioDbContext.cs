@@ -89,7 +89,8 @@ namespace Cadmus.Biblio.Ef
             {
                 default:
                     return new DbContextOptionsBuilder<BiblioDbContext>()
-                        .UseMySql(ServerVersion.AutoDetect(connectionString))
+                        .UseMySql(connectionString,
+                            ServerVersion.AutoDetect(connectionString))
                         .Options;
                     //return new DbContextOptionsBuilder<BiblioDbContext>()
                     //    .UseSqlServer(connectionString)
@@ -123,8 +124,8 @@ namespace Cadmus.Biblio.Ef
                 // note that these are fake credentials for development.
                 // in production they would be replaced with environment data,
                 // but in any case in production we would not hit this code
-                optionsBuilder.UseMySql(ServerVersion.AutoDetect(
-                    "Server=localhost;Database=cadmus-biblio;Uid=root;Pwd=mysql;"));
+                const string cs = "Server=localhost;Database=cadmus-biblio;Uid=root;Pwd=mysql;";
+                optionsBuilder.UseMySql(cs, ServerVersion.AutoDetect(cs));
             }
             base.OnConfiguring(optionsBuilder);
         }
