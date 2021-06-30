@@ -288,9 +288,9 @@ namespace CadmusBiblioApi
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                // options.BooleanValues(new object[] { 0, 1 });
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
-                // options.ShowJsonEditor();
+                string url = Configuration.GetValue<string>("Swagger:Endpoint");
+                if (string.IsNullOrEmpty(url)) url = "v1/swagger.json";
+                options.SwaggerEndpoint(url, "V1 Docs");
             });
         }
     }
