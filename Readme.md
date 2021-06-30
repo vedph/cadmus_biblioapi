@@ -203,3 +203,95 @@ To fill only a subset of the tables, use the `-e` option with a string including
 - `A`=authors
 - `C`=containers
 - `W`=works
+
+## Adding Bibliography
+
+This section explains how to add the external bibliography services to a Cadmus solution.
+
+### Backend
+
+The only thing to change in the backend is the profile.
+
+1. add the part definition to your item's facets, e.g.:
+
+```json
+{
+  "typeId": "it.vedph.ext-bibliography",
+  "name": "bibliography",
+  "description": "Bibliography.",
+  "colorKey": "20B2AA",
+  "groupKey": "references",
+  "sortKey": "B"
+}
+```
+
+2. add the human-friendly name for that part type in the `model-types@en` thesaurus, e.g.:
+
+```json
+{
+  "id": "it.vedph.ext-bibliography",
+  "value": "bibliography"
+}       
+```
+
+### Frontend
+
+1. install packages: `npm i @myrmidon/cadmus-biblio-api @myrmidon/cadmus-biblio-core @myrmidon/cadmus-biblio-ui @myrmidon/cadmus-part-biblio-pg @myrmidon/cadmus-part-biblio-ui`.
+
+
+2. in app `part-editor-keys.ts`, add the mappings for the external bibliography part editor:
+
+```ts
+// ...
+import { EXT_BIBLIOGRAPHY_PART_TYPEID } from '@myrmidon/cadmus-part-biblio-ui';
+const BIBLIO = 'biblio';
+
+// ...
+export const PART_EDITOR_KEYS: PartEditorKeys = {
+  [EXT_BIBLIOGRAPHY_PART_TYPEID]: {
+    part: BIBLIO,
+  },
+  // ...
+}
+```
+
+3. in `app.module.ts`, import the biblio module and wire it in the routes:
+
+```ts
+RouterModule.forRoot(
+  [
+    // ...
+    {
+      path: 'items/:iid/biblio',
+      loadChildren: () =>
+        import('@myrmidon/cadmus-part-biblio-pg').then(
+          (module) => module.CadmusPartBiblioPgModule
+        ),
+      canActivate: [AuthGuardService],
+    },
+    // ...
+  ]
+```
+
+4. in the Docker compose script, insert a new layer for the bibliographic services, e.g.:
+
+```yml
+  cadmus-biblio-api:
+    image: vedph2020/cadmus_biblio_api:1.0.11
+    ports:
+      - 61691:80
+    depends_on:
+      - cadmus-mongo
+      - cadmus-mysql
+    environment:
+      - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-mongo:27017/{0}
+      - CONNECTIONSTRINGS__BIBLIO=Server=cadmus-mysql;port=3306;Database={0};Uid=root;Pwd=mysql
+      - SEED__BIBLIODELAY=50
+      - SEED__ENTITYCOUNT=3
+      - SERILOG__CONNECTIONSTRING=mongodb://cadmus-mongo:27017/{0}-log
+      - STOCKUSERS__0__PASSWORD=P4ss-W0rd!
+    networks:
+      - cadmus-network
+```
+
+Here we seed 3 items just for test. You should set the count to 0 in production.
