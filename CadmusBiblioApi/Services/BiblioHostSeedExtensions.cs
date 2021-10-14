@@ -1,7 +1,7 @@
 ﻿using Cadmus.Biblio.Core;
 using Cadmus.Biblio.Ef;
 using Cadmus.Biblio.Seed;
-using Cadmus.Index.Sql;
+using Fusi.DbManager.MySql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
