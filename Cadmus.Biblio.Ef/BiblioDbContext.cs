@@ -89,8 +89,7 @@ namespace Cadmus.Biblio.Ef
             {
                 default:
                     return new DbContextOptionsBuilder<BiblioDbContext>()
-                        .UseMySql(connectionString,
-                            ServerVersion.AutoDetect(connectionString))
+                        .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
                         .Options;
                     //return new DbContextOptionsBuilder<BiblioDbContext>()
                     //    .UseSqlServer(connectionString)
@@ -288,7 +287,7 @@ namespace Cadmus.Biblio.Ef
             modelBuilder.Entity<EfKeyword>().ToTable("keyword");
             modelBuilder.Entity<EfKeyword>().Property(k => k.Id)
                 .IsRequired()
-                .UseMySqlIdentityColumn();
+                .ValueGeneratedOnAdd();
             modelBuilder.Entity<EfKeyword>().Property(k => k.Language)
                 .IsRequired()
                 .IsUnicode(false)
