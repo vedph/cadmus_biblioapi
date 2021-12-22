@@ -3,7 +3,7 @@
 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus_biblio_api:2.0.0 -t vedph2020/cadmus_biblio_api:latest
+docker build . -t vedph2020/cadmus_biblio_api:2.0.1 -t vedph2020/cadmus_biblio_api:latest
 ```
 
 (replace with the current version).
@@ -312,5 +312,7 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+- 2021-12-22: updated packages. Docker version: 2.0.1.
 
 - 2021-11-09: upgraded to NET 6. This requires Pomelo RC.
