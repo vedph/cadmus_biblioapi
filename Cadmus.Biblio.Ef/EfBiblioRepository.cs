@@ -1,6 +1,7 @@
 ﻿using Cadmus.Biblio.Core;
 using Fusi.Tools.Data;
 using LinqKit;
+using LinqKit.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
