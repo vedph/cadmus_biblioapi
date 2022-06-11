@@ -66,7 +66,7 @@ namespace Cadmus.Biblio.Api.Controllers
         [ProducesResponseType(201)]
         public IActionResult AddWork([FromBody] WorkBindingModel model)
         {
-            Work work = new Work
+            Work work = new()
             {
                 Id = model.Id ?? Guid.Empty,
                 Key = model.Key,

@@ -66,7 +66,7 @@ namespace Cadmus.Biblio.Api.Controllers
         [ProducesResponseType(201)]
         public IActionResult AddContainer([FromBody] ContainerBindingModel model)
         {
-            Container container = new Container
+            Container container = new()
             {
                 Id = model.Id ?? Guid.Empty,
                 Key = model.Key,

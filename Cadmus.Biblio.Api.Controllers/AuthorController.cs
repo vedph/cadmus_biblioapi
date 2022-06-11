@@ -69,7 +69,7 @@ namespace Cadmus.Biblio.Api.Controllers
         [ProducesResponseType(201)]
         public IActionResult AddAuthor([FromBody] AuthorBindingModel model)
         {
-            Author author = new Author
+            Author author = new()
             {
                 Id = model.Id ?? Guid.Empty,
                 First = model.First,

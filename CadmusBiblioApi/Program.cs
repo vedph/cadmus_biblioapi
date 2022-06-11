@@ -24,7 +24,7 @@ namespace CadmusBiblioApi
         {
             Console.WriteLine("ENVIRONMENT VARIABLES:");
             IDictionary dct = Environment.GetEnvironmentVariables();
-            List<string> keys = new List<string>();
+            List<string> keys = new();
             var enumerator = dct.GetEnumerator();
             while (enumerator.MoveNext())
             {
@@ -44,7 +44,6 @@ namespace CadmusBiblioApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    // webBuilder.UseSerilog();
                 });
 
         /// <summary>
@@ -85,7 +84,7 @@ namespace CadmusBiblioApi
                         Debug.WriteLine($"Serilog:ConnectionString override = {cs}");
                         Console.WriteLine($"Serilog:ConnectionString override = {cs}");
 
-                        Dictionary<string, string> dct = new Dictionary<string, string>
+                        Dictionary<string, string> dct = new()
                         {
                             { "Serilog:ConnectionString", cs }
                         };

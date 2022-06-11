@@ -194,14 +194,13 @@ namespace CadmusBiblioApi
             services.AddMvc()
                 // https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30?view=aspnetcore-2.2&tabs=visual-studio#jsonnet-support
                 // Newtonsoft is required by MongoDB
-                // isntall-package Microsoft.AspNetCore.Mvc.NewtonsoftJson
+                // install-package Microsoft.AspNetCore.Mvc.NewtonsoftJson
                 .AddNewtonsoftJson()
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.PropertyNamingPolicy =
                         JsonNamingPolicy.CamelCase;
                 });
-                //.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             // authentication
             ConfigureAuthServices(services);
@@ -215,7 +214,7 @@ namespace CadmusBiblioApi
                 ApplicationUserRepository>();
 
             // messaging
-            // TODO: you can use another mailer service here. In this case,
+            // you can use another mailer service here. In this case,
             // also change the types in ConfigureOptionsServices.
             services.AddTransient<IMailerService, DotNetMailerService>();
             services.AddTransient<IMessageBuilderService,

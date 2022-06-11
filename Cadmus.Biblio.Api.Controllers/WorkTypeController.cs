@@ -63,7 +63,7 @@ namespace Cadmus.Biblio.Api.Controllers
         [ProducesResponseType(201)]
         public IActionResult AddWorkType([FromBody] WorkTypeBindingModel model)
         {
-            WorkType type = new WorkType
+            WorkType type = new()
             {
                 Id = model.Id,
                 Name = model.Name

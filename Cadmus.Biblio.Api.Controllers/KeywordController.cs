@@ -65,7 +65,7 @@ namespace Cadmus.Biblio.Api.Controllers
         [ProducesResponseType(201)]
         public IActionResult AddKeyword([FromBody] KeywordBindingModel model)
         {
-            Keyword keyword = new Keyword
+            Keyword keyword = new()
             {
                 Language = model.Language,
                 Value = model.Value

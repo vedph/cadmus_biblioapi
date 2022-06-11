@@ -51,7 +51,7 @@ namespace Cadmus.Biblio.Api.Services
                     IBiblioRepository repository =
                         serviceProvider.GetService<IBiblioRepository>();
 
-                    BiblioSeeder seeder = new BiblioSeeder(repository)
+                    BiblioSeeder seeder = new(repository)
                     {
                         Logger = logger
                     };
@@ -86,9 +86,9 @@ namespace Cadmus.Biblio.Api.Services
                     IConfiguration config =
                         serviceProvider.GetService<IConfiguration>();
 
-                    ILogger logger = serviceProvider
-                        .GetService<ILoggerFactory>()
-                        .CreateLogger(typeof(BiblioHostSeedExtensions));
+                    //ILogger logger = serviceProvider
+                    //    .GetService<ILoggerFactory>()
+                    //    .CreateLogger(typeof(BiblioHostSeedExtensions));
 
                     // delay if requested, to allow DB start
                     int delay = config.GetValue<int>("Seed:BiblioDelay");
@@ -108,7 +108,7 @@ namespace Cadmus.Biblio.Api.Services
                     Console.WriteLine($"Checking for database {dbName}...");
                     Serilog.Log.Information($"Checking for database {dbName}...");
 
-                    MySqlDbManager manager = new MySqlDbManager(cs);
+                    MySqlDbManager manager = new(cs);
                     if (!manager.Exists(dbName))
                     {
                         // create
