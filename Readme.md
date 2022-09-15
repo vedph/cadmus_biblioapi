@@ -3,7 +3,7 @@
 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus_biblio_api:2.1.2 -t vedph2020/cadmus_biblio_api:latest
+docker build . -t vedph2020/cadmus_biblio_api:2.1.3 -t vedph2020/cadmus_biblio_api:latest
 ```
 
 (replace with the current version).
@@ -313,6 +313,7 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2022-09-15: updated packages.
 - 2022-07-14: updated packages.
 
 ### 2.1.2
