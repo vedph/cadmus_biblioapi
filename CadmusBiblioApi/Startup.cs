@@ -6,7 +6,6 @@ using MessagingApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +25,7 @@ using Cadmus.Biblio.Core;
 using Cadmus.Biblio.Ef;
 using System.Globalization;
 using Microsoft.AspNetCore.HttpOverrides;
+using System.Linq;
 
 namespace CadmusBiblioApi
 {
@@ -58,17 +58,25 @@ namespace CadmusBiblioApi
                 resolver.GetRequiredService<IOptions<DotNetMailerOptions>>().Value);
         }
 
-        private static void ConfigureCorsServices(IServiceCollection services)
+        private void ConfigureCorsServices(IServiceCollection services)
         {
+            string[] origins = new[] { "http://localhost:4200" };
+
+            IConfigurationSection section = Configuration.GetSection("AllowedOrigins");
+            if (section.Exists())
+            {
+                origins = section.AsEnumerable()
+                    .Where(p => !string.IsNullOrEmpty(p.Value))
+                    .Select(p => p.Value).ToArray();
+            }
+
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
             {
                 builder.AllowAnyMethod()
                     .AllowAnyHeader()
                     // https://github.com/aspnet/SignalR/issues/2110 for AllowCredentials
                     .AllowCredentials()
-                    .WithOrigins("http://localhost:4200",
-                                 "http://www.fusisoft.it/",
-                                 "https://www.fusisoft.it/");
+                    .WithOrigins(origins);
             }));
         }
 
@@ -101,7 +109,7 @@ namespace CadmusBiblioApi
                    IConfigurationSection jwtSection = Configuration.GetSection("Jwt");
                    string key = jwtSection["SecureKey"];
                    if (string.IsNullOrEmpty(key))
-                       throw new ApplicationException("Required JWT SecureKey not found");
+                       throw new InvalidOperationException("Required JWT SecureKey not found");
 
                    options.SaveToken = true;
                    options.RequireHttpsMetadata = false;
