@@ -313,6 +313,7 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2022-09-24: added preview infrastructure to demo API (just to avoid annoying console logs).
 - 2022-09-19: configurable allowed origins in startup.
 - 2022-09-15: updated packages.
 - 2022-07-14: updated packages.
