@@ -3,7 +3,7 @@
 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus_biblio_api:2.1.4 -t vedph2020/cadmus_biblio_api:latest
+docker build . -t vedph2020/cadmus_biblio_api:2.1.5 -t vedph2020/cadmus_biblio_api:latest
 ```
 
 (replace with the current version).
@@ -313,7 +313,11 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
-- 2022-09-24: added preview infrastructure to demo API (just to avoid annoying console logs).
+### 2.1.5
+
+- 2022-09-24:
+  - fixes to EF repository.
+  - added preview infrastructure to demo API (just to avoid annoying console logs).
 - 2022-09-19: configurable allowed origins in startup.
 - 2022-09-15: updated packages.
 - 2022-07-14: updated packages.

@@ -531,8 +531,7 @@ namespace Cadmus.Biblio.Ef
                 throw new ArgumentNullException(nameof(type));
 
             using var db = GetContext();
-            EfWorkType ef = EfHelper.GetEfWorkType(type, db);
-            db.WorkTypes.Add(ef);
+            EfHelper.EnsureEfWorkType(type, db);
             db.SaveChanges();
         }
 

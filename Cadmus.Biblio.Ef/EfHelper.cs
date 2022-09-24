@@ -300,12 +300,12 @@ namespace Cadmus.Biblio.Ef
 
         #region POCO to Entity
         /// <summary>
-        /// Gets the work entity corresponding to the specified type.
+        /// Ensures that the entity corresponding to the specified type exists.
         /// </summary>
         /// <param name="type">The type or null.</param>
         /// <param name="context">The context.</param>
-        /// <returns>The entity or null.</returns>
-        public static EfWorkType GetEfWorkType(WorkType type,
+        /// <returns>The entity (or null for a null type).</returns>
+        public static EfWorkType EnsureEfWorkType(WorkType type,
             BiblioDbContext context)
         {
             if (type == null) return null;
