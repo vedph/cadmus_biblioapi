@@ -37,10 +37,10 @@ namespace Cadmus.Biblio.Ef
         }
 
         private BiblioDbContext GetContext() =>
-            new BiblioDbContext(_connectionString, DatabaseType);
+            new(_connectionString, DatabaseType);
 
         #region Works
-        private void PrepareWorkFilter(WorkFilter filter)
+        private static void PrepareWorkFilter(WorkFilter filter)
         {
             if (!string.IsNullOrEmpty(filter.LastName))
                 filter.LastName = StandardFilter.Apply(filter.LastName, true);
@@ -61,143 +61,142 @@ namespace Cadmus.Biblio.Ef
 
             PrepareWorkFilter(filter);
 
-            using (var db = GetContext())
+            using var db = GetContext();
+            IQueryable<EfWork> works = db.Works
+                .AsNoTracking()
+                .Include(w => w.Type)
+                .Include(w => w.Container)
+                .ThenInclude(w => w.Type)
+                .Include(w => w.AuthorWorks)
+                .ThenInclude(aw => aw.Author)
+                .Include(w => w.KeywordWorks)
+                .ThenInclude(kw => kw.Keyword);
+
+            if (filter.IsMatchAnyEnabled)
             {
-                IQueryable<EfWork> works = db.Works
-                    .AsNoTracking()
-                    .Include(w => w.Type)
-                    .Include(w => w.Container)
-                    .Include(w => w.AuthorWorks)
-                    .ThenInclude(aw => aw.Author)
-                    .Include(w => w.KeywordWorks)
-                    .ThenInclude(kw => kw.Keyword);
+                // we need a predicate builder to chain clauses with OR
+                // (note: this requires package LinqKit.Core)
+                // http://www.albahari.com/nutshell/predicatebuilder.aspx
 
-                if (filter.IsMatchAnyEnabled)
+                var predicate = PredicateBuilder.New<EfWork>();
+
+                if (!string.IsNullOrEmpty(filter.Key))
+                    predicate.Or(w => w.Key.Equals(filter.Key));
+
+                if (!string.IsNullOrEmpty(filter.Type))
+                    predicate.Or(w => w.Type.Equals(filter.Type));
+
+                if (filter.AuthorId != Guid.Empty)
                 {
-                    // we need a predicate builder to chain clauses with OR
-                    // (note: this requires package LinqKit.Core)
-                    // http://www.albahari.com/nutshell/predicatebuilder.aspx
-
-                    var predicate = PredicateBuilder.New<EfWork>();
-
-                    if (!string.IsNullOrEmpty(filter.Key))
-                        predicate.Or(w => w.Key.Equals(filter.Key));
-
-                    if (!string.IsNullOrEmpty(filter.Type))
-                        predicate.Or(w => w.Type.Equals(filter.Type));
-
-                    if (filter.AuthorId != Guid.Empty)
-                    {
-                        predicate.Or(w => w.AuthorWorks.Any(
-                            aw => aw.AuthorId == filter.AuthorId));
-                    }
-
-                    if (!string.IsNullOrEmpty(filter.LastName))
-                    {
-                        predicate.Or(w =>
-                            w.AuthorWorks.Any(aw =>
-                                aw.Author.Lastx.Contains(filter.LastName)));
-                    }
-
-                    if (!string.IsNullOrEmpty(filter.Language))
-                        predicate.Or(w => w.Language.Equals(filter.Language));
-
-                    if (!string.IsNullOrEmpty(filter.Title))
-                        predicate.Or(w => w.Titlex.Contains(filter.Title));
-
-                    if (filter.ContainerId != Guid.Empty)
-                        predicate.Or(w => w.Container.Id.Equals(filter.ContainerId));
-
-                    if (!string.IsNullOrEmpty(filter.Keyword))
-                    {
-                        predicate.Or(w => w.KeywordWorks.Any(
-                            kw => kw.Keyword.Valuex.Equals(filter.Keyword)));
-                    }
-
-                    if (filter.YearPubMin > 0)
-                        predicate.Or(w => w.YearPub >= filter.YearPubMin);
-
-                    if (filter.YearPubMax > 0)
-                        predicate.Or(w => w.YearPub <= filter.YearPubMax);
-
-                    works = works.AsExpandable().Where(predicate);
-                }
-                else
-                {
-                    // key
-                    if (!string.IsNullOrEmpty(filter.Key))
-                        works = works.Where(w => w.Key == filter.Key);
-
-                    // type
-                    if (!string.IsNullOrEmpty(filter.Type))
-                        works = works.Where(w => w.Type.Name == filter.Type);
-
-                    // author ID
-                    if (filter.AuthorId != Guid.Empty)
-                    {
-                        works = works.Where(w => w.AuthorWorks.Any(
-                            aw => aw.AuthorId == filter.AuthorId));
-                    }
-
-                    // last
-                    if (!string.IsNullOrEmpty(filter.LastName))
-                    {
-                        works = works.Where(w => w.AuthorWorks.Any(
-                            aw => aw.Author.Lastx.Contains(filter.LastName)));
-                    }
-
-                    // language
-                    if (!string.IsNullOrEmpty(filter.Language))
-                        works = works.Where(w => w.Language == filter.Language);
-
-                    // title
-                    if (!string.IsNullOrEmpty(filter.Title))
-                        works = works.Where(w => w.Titlex.Contains(filter.Title));
-
-                    // container ID
-                    if (filter.ContainerId != Guid.Empty)
-                    {
-                        works = works.Where(w =>
-                            w.ContainerId.Equals(filter.ContainerId));
-                    }
-
-                    // keyword
-                    if (!string.IsNullOrEmpty(filter.Keyword))
-                    {
-                        works = works.Where(w => w.KeywordWorks.Any(
-                            kw => kw.Keyword.Valuex.Equals(filter.Keyword)));
-                    }
-
-                    // yearpubmin
-                    if (filter.YearPubMin > 0)
-                        works = works.Where(w => w.YearPub >= filter.YearPubMin);
-
-                    // yearpubmax
-                    if (filter.YearPubMax > 0)
-                        works = works.Where(w => w.YearPub <= filter.YearPubMax);
+                    predicate.Or(w => w.AuthorWorks.Any(
+                        aw => aw.AuthorId == filter.AuthorId));
                 }
 
-                int tot = works.Count();
+                if (!string.IsNullOrEmpty(filter.LastName))
+                {
+                    predicate.Or(w =>
+                        w.AuthorWorks.Any(aw =>
+                            aw.Author.Lastx.Contains(filter.LastName)));
+                }
 
-                // sort and page
-                works = works
-                    .OrderBy(w => w.AuthorWorks.Select(aw => aw.Author)
-                        .First().Lastx)
-                    .ThenBy(w => w.AuthorWorks.Select(aw => aw.Author)
-                        .First().First)
-                    .ThenBy(w => w.Titlex)
-                    .ThenBy(w => w.Key)
-                    .ThenBy(w => w.Id);
-                var pgWorks = works.Skip(filter.GetSkipCount())
-                    .Take(filter.PageSize)
-                    .ToList();
+                if (!string.IsNullOrEmpty(filter.Language))
+                    predicate.Or(w => w.Language.Equals(filter.Language));
 
-                return new DataPage<WorkInfo>(
-                    filter.PageNumber,
-                    filter.PageSize,
-                    tot,
-                    (from w in pgWorks select EfHelper.GetWorkInfo(w, db)).ToList());
+                if (!string.IsNullOrEmpty(filter.Title))
+                    predicate.Or(w => w.Titlex.Contains(filter.Title));
+
+                if (filter.ContainerId != Guid.Empty)
+                    predicate.Or(w => w.Container.Id.Equals(filter.ContainerId));
+
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    predicate.Or(w => w.KeywordWorks.Any(
+                        kw => kw.Keyword.Valuex.Equals(filter.Keyword)));
+                }
+
+                if (filter.YearPubMin > 0)
+                    predicate.Or(w => w.YearPub >= filter.YearPubMin);
+
+                if (filter.YearPubMax > 0)
+                    predicate.Or(w => w.YearPub <= filter.YearPubMax);
+
+                works = works.AsExpandable().Where(predicate);
             }
+            else
+            {
+                // key
+                if (!string.IsNullOrEmpty(filter.Key))
+                    works = works.Where(w => w.Key == filter.Key);
+
+                // type
+                if (!string.IsNullOrEmpty(filter.Type))
+                    works = works.Where(w => w.Type.Name == filter.Type);
+
+                // author ID
+                if (filter.AuthorId != Guid.Empty)
+                {
+                    works = works.Where(w => w.AuthorWorks.Any(
+                        aw => aw.AuthorId == filter.AuthorId));
+                }
+
+                // last
+                if (!string.IsNullOrEmpty(filter.LastName))
+                {
+                    works = works.Where(w => w.AuthorWorks.Any(
+                        aw => aw.Author.Lastx.Contains(filter.LastName)));
+                }
+
+                // language
+                if (!string.IsNullOrEmpty(filter.Language))
+                    works = works.Where(w => w.Language == filter.Language);
+
+                // title
+                if (!string.IsNullOrEmpty(filter.Title))
+                    works = works.Where(w => w.Titlex.Contains(filter.Title));
+
+                // container ID
+                if (filter.ContainerId != Guid.Empty)
+                {
+                    works = works.Where(w =>
+                        w.ContainerId.Equals(filter.ContainerId));
+                }
+
+                // keyword
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    works = works.Where(w => w.KeywordWorks.Any(
+                        kw => kw.Keyword.Valuex.Equals(filter.Keyword)));
+                }
+
+                // yearpubmin
+                if (filter.YearPubMin > 0)
+                    works = works.Where(w => w.YearPub >= filter.YearPubMin);
+
+                // yearpubmax
+                if (filter.YearPubMax > 0)
+                    works = works.Where(w => w.YearPub <= filter.YearPubMax);
+            }
+
+            int tot = works.Count();
+
+            // sort and page
+            works = works
+                .OrderBy(w => w.AuthorWorks.Select(aw => aw.Author)
+                    .First().Lastx)
+                .ThenBy(w => w.AuthorWorks.Select(aw => aw.Author)
+                    .First().First)
+                .ThenBy(w => w.Titlex)
+                .ThenBy(w => w.Key)
+                .ThenBy(w => w.Id);
+            var pgWorks = works.Skip(filter.GetSkipCount())
+                .Take(filter.PageSize)
+                .ToList();
+
+            return new DataPage<WorkInfo>(
+                filter.PageNumber,
+                filter.PageSize,
+                tot,
+                (from w in pgWorks select EfHelper.GetWorkInfo(w, db)).ToList());
         }
 
         /// <summary>
@@ -209,19 +208,18 @@ namespace Cadmus.Biblio.Ef
         /// </returns>
         public Work GetWork(Guid id)
         {
-            using (var db = GetContext())
-            {
-                EfWork work = db.Works
-                    .AsNoTracking()
-                    .Include(w => w.Type)
-                    .Include(w => w.Container)
-                    .Include(w => w.AuthorWorks)
-                    .ThenInclude(aw => aw.Author)
-                    .Include(w => w.KeywordWorks)
-                    .ThenInclude(kw => kw.Keyword)
-                    .FirstOrDefault(w => w.Id == id);
-                return EfHelper.GetWork(work);
-            }
+            using var db = GetContext();
+            EfWork work = db.Works
+                .AsNoTracking()
+                .Include(w => w.Type)
+                .Include(w => w.Container)
+                .ThenInclude(w => w.Type)
+                .Include(w => w.AuthorWorks)
+                .ThenInclude(aw => aw.Author)
+                .Include(w => w.KeywordWorks)
+                .ThenInclude(kw => kw.Keyword)
+                .FirstOrDefault(w => w.Id == id);
+            return EfHelper.GetWork(work);
         }
 
         /// <summary>
@@ -243,13 +241,11 @@ namespace Cadmus.Biblio.Ef
         {
             if (work == null) throw new ArgumentNullException(nameof(work));
 
-            using (var db = GetContext())
-            {
-                EfWork ef = EfHelper.GetEfWork(work, db);
-                db.SaveChanges();
-                work.Id = ef.Id;
-                work.Key = ef.Key;
-            }
+            using var db = GetContext();
+            EfWork ef = EfHelper.GetEfWork(work, db);
+            db.SaveChanges();
+            work.Id = ef.Id;
+            work.Key = ef.Key;
         }
 
         /// <summary>
@@ -258,14 +254,12 @@ namespace Cadmus.Biblio.Ef
         /// <param name="id">The work's identifier.</param>
         public void DeleteWork(Guid id)
         {
-            using (var db = GetContext())
+            using var db = GetContext();
+            EfWork work = db.Works.Find(id);
+            if (work != null)
             {
-                EfWork work = db.Works.Find(id);
-                if (work != null)
-                {
-                    db.Works.Remove(work);
-                    db.SaveChanges();
-                }
+                db.Works.Remove(work);
+                db.SaveChanges();
             }
         }
         #endregion
@@ -283,130 +277,128 @@ namespace Cadmus.Biblio.Ef
 
             PrepareWorkFilter(filter);
 
-            using (var db = GetContext())
+            using var db = GetContext();
+            IQueryable<EfContainer> containers = db.Containers
+                .AsNoTracking()
+                .Include(w => w.Type)
+                .Include(w => w.AuthorContainers)
+                .ThenInclude(aw => aw.Author)
+                .Include(w => w.KeywordContainers)
+                .ThenInclude(kw => kw.Keyword);
+
+            if (filter.IsMatchAnyEnabled)
             {
-                IQueryable<EfContainer> containers = db.Containers
-                    .AsNoTracking()
-                    .Include(w => w.Type)
-                    .Include(w => w.AuthorContainers)
-                    .ThenInclude(aw => aw.Author)
-                    .Include(w => w.KeywordContainers)
-                    .ThenInclude(kw => kw.Keyword);
+                // we need a predicate builder to chain clauses with OR
+                // (note: this requires package LinqKit.Core)
+                // http://www.albahari.com/nutshell/predicatebuilder.aspx
 
-                if (filter.IsMatchAnyEnabled)
+                var predicate = PredicateBuilder.New<EfContainer>();
+
+                if (!string.IsNullOrEmpty(filter.Key))
+                    predicate.Or(c => c.Key.Equals(filter.Key));
+
+                if (!string.IsNullOrEmpty(filter.Type))
+                    predicate.Or(c => c.Type.Equals(filter.Type));
+
+                if (filter.AuthorId != Guid.Empty)
                 {
-                    // we need a predicate builder to chain clauses with OR
-                    // (note: this requires package LinqKit.Core)
-                    // http://www.albahari.com/nutshell/predicatebuilder.aspx
-
-                    var predicate = PredicateBuilder.New<EfContainer>();
-
-                    if (!string.IsNullOrEmpty(filter.Key))
-                        predicate.Or(c => c.Key.Equals(filter.Key));
-
-                    if (!string.IsNullOrEmpty(filter.Type))
-                        predicate.Or(c => c.Type.Equals(filter.Type));
-
-                    if (filter.AuthorId != Guid.Empty)
-                    {
-                        predicate.Or(c => c.AuthorContainers.Any(
-                            ac => ac.AuthorId == filter.AuthorId));
-                    }
-
-                    if (!string.IsNullOrEmpty(filter.LastName))
-                    {
-                        predicate.Or(c =>
-                            c.AuthorContainers.Any(ac =>
-                                ac.Author.Lastx.Contains(filter.LastName)));
-                    }
-
-                    if (!string.IsNullOrEmpty(filter.Language))
-                        predicate.Or(c => c.Language.Equals(filter.Language));
-
-                    if (!string.IsNullOrEmpty(filter.Title))
-                        predicate.Or(c => c.Titlex.Contains(filter.Title));
-
-                    if (!string.IsNullOrEmpty(filter.Keyword))
-                    {
-                        predicate.Or(c => c.KeywordContainers.Any(
-                            kc => kc.Keyword.Valuex.Equals(filter.Keyword)));
-                    }
-
-                    if (filter.YearPubMin > 0)
-                        predicate.Or(c => c.YearPub >= filter.YearPubMin);
-
-                    if (filter.YearPubMax > 0)
-                        predicate.Or(c => c.YearPub <= filter.YearPubMax);
-
-                    containers = containers.AsExpandable().Where(predicate);
-                }
-                else
-                {
-                    // key
-                    if (!string.IsNullOrEmpty(filter.Key))
-                        containers = containers.Where(w => w.Key == filter.Key);
-
-                    // type
-                    if (!string.IsNullOrEmpty(filter.Type))
-                        containers = containers.Where(w => w.Type.Name == filter.Type);
-
-                    // author ID
-                    if (filter.AuthorId != Guid.Empty)
-                    {
-                        containers = containers.Where(c => c.AuthorContainers.Any(
-                            ac => ac.AuthorId == filter.AuthorId));
-                    }
-
-                    // last
-                    if (!string.IsNullOrEmpty(filter.LastName))
-                    {
-                        containers = containers.Where(w => w.AuthorContainers.Any(
-                            aw => aw.Author.Lastx.Contains(filter.LastName)));
-                    }
-
-                    // language
-                    if (!string.IsNullOrEmpty(filter.Language))
-                        containers = containers.Where(w => w.Language == filter.Language);
-
-                    // title
-                    if (!string.IsNullOrEmpty(filter.Title))
-                        containers = containers.Where(w => w.Titlex.Contains(filter.Title));
-
-                    // keyword
-                    if (!string.IsNullOrEmpty(filter.Keyword))
-                    {
-                        containers = containers.Where(w => w.KeywordContainers.Any(
-                            kw => kw.Keyword.Valuex.Equals(filter.Keyword)));
-                    }
-
-                    // yearpubmin
-                    if (filter.YearPubMin > 0)
-                        containers = containers.Where(w => w.YearPub >= filter.YearPubMin);
-
-                    // yearpubmax
-                    if (filter.YearPubMax > 0)
-                        containers = containers.Where(w => w.YearPub <= filter.YearPubMax);
+                    predicate.Or(c => c.AuthorContainers.Any(
+                        ac => ac.AuthorId == filter.AuthorId));
                 }
 
-                int tot = containers.Count();
+                if (!string.IsNullOrEmpty(filter.LastName))
+                {
+                    predicate.Or(c =>
+                        c.AuthorContainers.Any(ac =>
+                            ac.Author.Lastx.Contains(filter.LastName)));
+                }
 
-                // sort and page
-                containers = containers
-                    .OrderBy(c => c.AuthorContainers.Select(ac => ac.Author).First().Lastx)
-                    .ThenBy(c => c.AuthorContainers.Select(ac => ac.Author).First().First)
-                    .ThenBy(c => c.Titlex)
-                    .ThenBy(c => c.Key)
-                    .ThenBy(c => c.Id);
-                var pgContainers = containers.Skip(filter.GetSkipCount())
-                    .Take(filter.PageSize)
-                    .ToList();
+                if (!string.IsNullOrEmpty(filter.Language))
+                    predicate.Or(c => c.Language.Equals(filter.Language));
 
-                return new DataPage<WorkInfo>(
-                    filter.PageNumber,
-                    filter.PageSize,
-                    tot,
-                    (from w in pgContainers select EfHelper.GetWorkInfo(w, db)).ToList());
+                if (!string.IsNullOrEmpty(filter.Title))
+                    predicate.Or(c => c.Titlex.Contains(filter.Title));
+
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    predicate.Or(c => c.KeywordContainers.Any(
+                        kc => kc.Keyword.Valuex.Equals(filter.Keyword)));
+                }
+
+                if (filter.YearPubMin > 0)
+                    predicate.Or(c => c.YearPub >= filter.YearPubMin);
+
+                if (filter.YearPubMax > 0)
+                    predicate.Or(c => c.YearPub <= filter.YearPubMax);
+
+                containers = containers.AsExpandable().Where(predicate);
             }
+            else
+            {
+                // key
+                if (!string.IsNullOrEmpty(filter.Key))
+                    containers = containers.Where(w => w.Key == filter.Key);
+
+                // type
+                if (!string.IsNullOrEmpty(filter.Type))
+                    containers = containers.Where(w => w.Type.Name == filter.Type);
+
+                // author ID
+                if (filter.AuthorId != Guid.Empty)
+                {
+                    containers = containers.Where(c => c.AuthorContainers.Any(
+                        ac => ac.AuthorId == filter.AuthorId));
+                }
+
+                // last
+                if (!string.IsNullOrEmpty(filter.LastName))
+                {
+                    containers = containers.Where(w => w.AuthorContainers.Any(
+                        aw => aw.Author.Lastx.Contains(filter.LastName)));
+                }
+
+                // language
+                if (!string.IsNullOrEmpty(filter.Language))
+                    containers = containers.Where(w => w.Language == filter.Language);
+
+                // title
+                if (!string.IsNullOrEmpty(filter.Title))
+                    containers = containers.Where(w => w.Titlex.Contains(filter.Title));
+
+                // keyword
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    containers = containers.Where(w => w.KeywordContainers.Any(
+                        kw => kw.Keyword.Valuex.Equals(filter.Keyword)));
+                }
+
+                // yearpubmin
+                if (filter.YearPubMin > 0)
+                    containers = containers.Where(w => w.YearPub >= filter.YearPubMin);
+
+                // yearpubmax
+                if (filter.YearPubMax > 0)
+                    containers = containers.Where(w => w.YearPub <= filter.YearPubMax);
+            }
+
+            int tot = containers.Count();
+
+            // sort and page
+            containers = containers
+                .OrderBy(c => c.AuthorContainers.Select(ac => ac.Author).First().Lastx)
+                .ThenBy(c => c.AuthorContainers.Select(ac => ac.Author).First().First)
+                .ThenBy(c => c.Titlex)
+                .ThenBy(c => c.Key)
+                .ThenBy(c => c.Id);
+            var pgContainers = containers.Skip(filter.GetSkipCount())
+                .Take(filter.PageSize)
+                .ToList();
+
+            return new DataPage<WorkInfo>(
+                filter.PageNumber,
+                filter.PageSize,
+                tot,
+                (from w in pgContainers select EfHelper.GetWorkInfo(w, db)).ToList());
         }
 
         /// <summary>
@@ -418,18 +410,16 @@ namespace Cadmus.Biblio.Ef
         /// </returns>
         public Container GetContainer(Guid id)
         {
-            using (var db = GetContext())
-            {
-                EfContainer container = db.Containers
-                    .AsNoTracking()
-                    .Include(w => w.Type)
-                    .Include(w => w.AuthorContainers)
-                    .ThenInclude(aw => aw.Author)
-                    .Include(w => w.KeywordContainers)
-                    .ThenInclude(kw => kw.Keyword)
-                    .FirstOrDefault(w => w.Id == id);
-                return EfHelper.GetContainer(container);
-            }
+            using var db = GetContext();
+            EfContainer container = db.Containers
+                .AsNoTracking()
+                .Include(w => w.Type)
+                .Include(w => w.AuthorContainers)
+                .ThenInclude(aw => aw.Author)
+                .Include(w => w.KeywordContainers)
+                .ThenInclude(kw => kw.Keyword)
+                .FirstOrDefault(w => w.Id == id);
+            return EfHelper.GetContainer(container);
         }
 
         /// <summary>
@@ -449,13 +439,11 @@ namespace Cadmus.Biblio.Ef
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 
-            using (var db = GetContext())
-            {
-                EfContainer ef = EfHelper.GetEfContainer(container, db);
-                db.SaveChanges();
-                container.Id = ef.Id;
-                container.Key = ef.Key;
-            }
+            using var db = GetContext();
+            EfContainer ef = EfHelper.GetEfContainer(container, db);
+            db.SaveChanges();
+            container.Id = ef.Id;
+            container.Key = ef.Key;
         }
 
         /// <summary>
@@ -464,14 +452,12 @@ namespace Cadmus.Biblio.Ef
         /// <param name="id">The identifier.</param>
         public void DeleteContainer(Guid id)
         {
-            using (var db = GetContext())
+            using var db = GetContext();
+            EfContainer container = db.Containers.Find(id);
+            if (container != null)
             {
-                EfContainer container = db.Containers.Find(id);
-                if (container != null)
-                {
-                    db.Containers.Remove(container);
-                    db.SaveChanges();
-                }
+                db.Containers.Remove(container);
+                db.SaveChanges();
             }
         }
         #endregion
@@ -488,11 +474,9 @@ namespace Cadmus.Biblio.Ef
             if (id == null)
                 throw new ArgumentNullException(nameof(id));
 
-            using (var db = GetContext())
-            {
-                EfWorkType ef = db.WorkTypes.Find(id);
-                return EfHelper.GetWorkType(ef);
-            }
+            using var db = GetContext();
+            EfWorkType ef = db.WorkTypes.Find(id);
+            return EfHelper.GetWorkType(ef);
         }
 
         /// <summary>
@@ -507,35 +491,33 @@ namespace Cadmus.Biblio.Ef
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
 
-            using (var db = GetContext())
+            using var db = GetContext();
+            IQueryable<EfWorkType> types = db.WorkTypes.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.Name))
+                types = types.Where(t => t.Name.Contains(filter.Name));
+
+            int tot = types.Count();
+
+            // sort and page
+            types = types.OrderBy(t => t.Name).ThenBy(t => t.Id);
+            List<EfWorkType> pgTypes;
+            if (filter.PageSize > 0)
             {
-                IQueryable<EfWorkType> types = db.WorkTypes.AsQueryable();
-
-                if (!string.IsNullOrEmpty(filter.Name))
-                    types = types.Where(t => t.Name.Contains(filter.Name));
-
-                int tot = types.Count();
-
-                // sort and page
-                types = types.OrderBy(t => t.Name).ThenBy(t => t.Id);
-                List<EfWorkType> pgTypes;
-                if (filter.PageSize > 0)
-                {
-                    pgTypes = types.Skip(filter.GetSkipCount())
-                        .Take(filter.PageSize)
-                        .ToList();
-                }
-                else
-                {
-                    pgTypes = types.Skip(filter.GetSkipCount()).ToList();
-                }
-
-                return new DataPage<WorkType>(
-                    filter.PageNumber,
-                    filter.PageSize,
-                    tot,
-                    (from t in pgTypes select EfHelper.GetWorkType(t)).ToList());
+                pgTypes = types.Skip(filter.GetSkipCount())
+                    .Take(filter.PageSize)
+                    .ToList();
             }
+            else
+            {
+                pgTypes = types.Skip(filter.GetSkipCount()).ToList();
+            }
+
+            return new DataPage<WorkType>(
+                filter.PageNumber,
+                filter.PageSize,
+                tot,
+                (from t in pgTypes select EfHelper.GetWorkType(t)).ToList());
         }
 
         /// <summary>
@@ -548,11 +530,10 @@ namespace Cadmus.Biblio.Ef
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
 
-            using (var db = GetContext())
-            {
-                EfWorkType ef = EfHelper.GetEfWorkType(type, db);
-                db.SaveChanges();
-            }
+            using var db = GetContext();
+            EfWorkType ef = EfHelper.GetEfWorkType(type, db);
+            db.WorkTypes.Add(ef);
+            db.SaveChanges();
         }
 
         /// <summary>
@@ -561,14 +542,12 @@ namespace Cadmus.Biblio.Ef
         /// <param name="id">The ID.</param>
         public void DeleteWorkType(string id)
         {
-            using (var db = GetContext())
+            using var db = GetContext();
+            EfWorkType ef = db.WorkTypes.Find(id);
+            if (ef != null)
             {
-                EfWorkType ef = db.WorkTypes.Find(id);
-                if (ef != null)
-                {
-                    db.WorkTypes.Remove(ef);
-                    db.SaveChanges();
-                }
+                db.WorkTypes.Remove(ef);
+                db.SaveChanges();
             }
         }
         #endregion
@@ -595,29 +574,27 @@ namespace Cadmus.Biblio.Ef
 
             PrepareAuthorFilter(filter);
 
-            using (var db = GetContext())
-            {
-                var authors = db.Authors.AsQueryable();
-                if (!string.IsNullOrEmpty(filter.Last))
-                    authors = authors.Where(a => a.Lastx.Contains(filter.Last));
+            using var db = GetContext();
+            var authors = db.Authors.AsQueryable();
+            if (!string.IsNullOrEmpty(filter.Last))
+                authors = authors.Where(a => a.Lastx.Contains(filter.Last));
 
-                int tot = authors.Count();
+            int tot = authors.Count();
 
-                // sort and page
-                authors = authors.OrderBy(a => a.Last)
-                    .ThenBy(a => a.First)
-                    .ThenBy(a => a.Suffix)
-                    .ThenBy(a => a.Id);
-                var pgAuthors = authors.Skip(filter.GetSkipCount())
-                    .Take(filter.PageSize)
-                    .ToList();
+            // sort and page
+            authors = authors.OrderBy(a => a.Last)
+                .ThenBy(a => a.First)
+                .ThenBy(a => a.Suffix)
+                .ThenBy(a => a.Id);
+            var pgAuthors = authors.Skip(filter.GetSkipCount())
+                .Take(filter.PageSize)
+                .ToList();
 
-                return new DataPage<Author>(
-                    filter.PageNumber,
-                    filter.PageSize,
-                    tot,
-                    (from a in pgAuthors select EfHelper.GetAuthor(a)).ToList());
-            }
+            return new DataPage<Author>(
+                filter.PageNumber,
+                filter.PageSize,
+                tot,
+                (from a in pgAuthors select EfHelper.GetAuthor(a)).ToList());
         }
 
         /// <summary>
@@ -629,11 +606,9 @@ namespace Cadmus.Biblio.Ef
         /// </returns>
         public Author GetAuthor(Guid id)
         {
-            using (var db = GetContext())
-            {
-                EfAuthor ef = db.Authors.Find(id);
-                return EfHelper.GetAuthor(ef);
-            }
+            using var db = GetContext();
+            EfAuthor ef = db.Authors.Find(id);
+            return EfHelper.GetAuthor(ef);
         }
 
         /// <summary>
@@ -648,12 +623,10 @@ namespace Cadmus.Biblio.Ef
             if (author == null)
                 throw new ArgumentNullException(nameof(author));
 
-            using (var db = GetContext())
-            {
-                EfAuthor ef = EfHelper.GetEfAuthor(author, db);
-                db.SaveChanges();
-                author.Id = ef.Id;
-            }
+            using var db = GetContext();
+            EfAuthor ef = EfHelper.GetEfAuthor(author, db);
+            db.SaveChanges();
+            author.Id = ef.Id;
         }
 
         /// <summary>
@@ -662,14 +635,12 @@ namespace Cadmus.Biblio.Ef
         /// <param name="id">The identifier.</param>
         public void DeleteAuthor(Guid id)
         {
-            using (var db = GetContext())
+            using var db = GetContext();
+            EfAuthor ef = db.Authors.Find(id);
+            if (ef != null)
             {
-                EfAuthor ef = db.Authors.Find(id);
-                if (ef != null)
-                {
-                    db.Authors.Remove(ef);
-                    db.SaveChanges();
-                }
+                db.Authors.Remove(ef);
+                db.SaveChanges();
             }
         }
 
@@ -679,15 +650,13 @@ namespace Cadmus.Biblio.Ef
         /// </summary>
         public void PruneAuthors()
         {
-            using (var db = GetContext())
-            {
-                var authors = from a in db.Authors
-                              where db.AuthorWorks.All(aw => aw.AuthorId != a.Id)
-                                && db.AuthorContainers.All(ac => ac.AuthorId != a.Id)
-                              select a;
-                db.Authors.RemoveRange(authors);
-                db.SaveChanges();
-            }
+            using var db = GetContext();
+            var authors = from a in db.Authors
+                          where db.AuthorWorks.All(aw => aw.AuthorId != a.Id)
+                            && db.AuthorContainers.All(ac => ac.AuthorId != a.Id)
+                          select a;
+            db.Authors.RemoveRange(authors);
+            db.SaveChanges();
         }
         #endregion
 
@@ -705,11 +674,9 @@ namespace Cadmus.Biblio.Ef
         /// <returns>The keyword or null if not found.</returns>
         public Keyword GetKeyword(int id)
         {
-            using (var db = GetContext())
-            {
-                EfKeyword ef = db.Keywords.Find(id);
-                return ef != null ? EfHelper.GetKeyword(ef) : null;
-            }
+            using var db = GetContext();
+            EfKeyword ef = db.Keywords.Find(id);
+            return ef != null ? EfHelper.GetKeyword(ef) : null;
         }
 
         /// <summary>
@@ -718,14 +685,12 @@ namespace Cadmus.Biblio.Ef
         /// <param name="id">The identifier.</param>
         public void DeleteKeyword(int id)
         {
-            using (var db = GetContext())
+            using var db = GetContext();
+            EfKeyword ef = db.Keywords.Find(id);
+            if (ef != null)
             {
-                EfKeyword ef = db.Keywords.Find(id);
-                if (ef != null)
-                {
-                    db.Keywords.Remove(ef);
-                    db.SaveChanges();
-                }
+                db.Keywords.Remove(ef);
+                db.SaveChanges();
             }
         }
 
@@ -738,44 +703,45 @@ namespace Cadmus.Biblio.Ef
         {
             PrepareKeywordFilter(filter);
 
-            using (var db = GetContext())
+            using var db = GetContext();
+            var keywords = db.Keywords.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter.Language))
+                keywords = keywords.Where(k => k.Language == filter.Language);
+
+            if (!string.IsNullOrEmpty(filter.Value))
             {
-                var keywords = db.Keywords.AsQueryable();
-
-                if (!string.IsNullOrEmpty(filter.Language))
-                    keywords = keywords.Where(k => k.Language == filter.Language);
-
-                if (!string.IsNullOrEmpty(filter.Value))
+                // filter value for keyword can be language:value
+                int i = filter.Value.IndexOf(':');
+                if (i == 3)
                 {
-                    // filter value for keyword can be language:value
-                    int i = filter.Value.IndexOf(':');
-                    if (i == 3)
+                    string l = filter.Value[..3];
+                    keywords = keywords.Where(k => k.Language == l);
+                    if (filter.Value.Length > 4)
                     {
-                        string l = filter.Value.Substring(0, 3);
-                        keywords = keywords.Where(k => k.Language == l);
-                        if (filter.Value.Length > 4)
-                        {
-                            string v = filter.Value.Substring(4);
-                            keywords = keywords.Where(k => k.Valuex.Contains(v));
-                        }
+                        string v = filter.Value[4..];
+                        keywords = keywords.Where(k => k.Valuex.Contains(v));
                     }
-                    else keywords = keywords.Where(k => k.Valuex.Contains(filter.Value));
                 }
-
-                int tot = keywords.Count();
-
-                // sort and page
-                keywords = keywords.OrderBy(k => k.Language)
-                    .ThenBy(k => k.Value)
-                    .ThenBy(k => k.Id);
-                keywords = keywords.Skip(filter.GetSkipCount()).Take(filter.PageSize);
-
-                return new DataPage<Keyword>(
-                    filter.PageNumber,
-                    filter.PageSize,
-                    tot,
-                    (from k in keywords select EfHelper.GetKeyword(k)).ToList());
+                else
+                {
+                    keywords = keywords.Where(k => k.Valuex.Contains(filter.Value));
+                }
             }
+
+            int tot = keywords.Count();
+
+            // sort and page
+            keywords = keywords.OrderBy(k => k.Language)
+                .ThenBy(k => k.Value)
+                .ThenBy(k => k.Id);
+            keywords = keywords.Skip(filter.GetSkipCount()).Take(filter.PageSize);
+
+            return new DataPage<Keyword>(
+                filter.PageNumber,
+                filter.PageSize,
+                tot,
+                (from k in keywords select EfHelper.GetKeyword(k)).ToList());
         }
 
         /// <summary>
@@ -789,12 +755,10 @@ namespace Cadmus.Biblio.Ef
             if (keyword == null)
                 throw new ArgumentNullException(nameof(keyword));
 
-            using (var db = GetContext())
-            {
-                EfKeyword ef = EfHelper.GetEfKeyword(keyword, db);
-                db.SaveChanges();
-                return ef.Id;
-            }
+            using var db = GetContext();
+            EfKeyword ef = EfHelper.GetEfKeyword(keyword, db);
+            db.SaveChanges();
+            return ef.Id;
         }
 
         /// <summary>
@@ -803,15 +767,13 @@ namespace Cadmus.Biblio.Ef
         /// </summary>
         public void PruneKeywords()
         {
-            using (var db = GetContext())
-            {
-                var keywords = from k in db.Keywords
-                              where db.KeywordWorks.All(kw => kw.KeywordId != k.Id)
-                                && db.KeywordContainers.All(kc => kc.KeywordId != k.Id)
-                              select k;
-                db.Keywords.RemoveRange(keywords);
-                db.SaveChanges();
-            }
+            using var db = GetContext();
+            var keywords = from k in db.Keywords
+                           where db.KeywordWorks.All(kw => kw.KeywordId != k.Id)
+                             && db.KeywordContainers.All(kc => kc.KeywordId != k.Id)
+                           select k;
+            db.Keywords.RemoveRange(keywords);
+            db.SaveChanges();
         }
         #endregion
     }

@@ -37,7 +37,7 @@ namespace Cadmus.Biblio.Core
         /// </returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             if (!string.IsNullOrEmpty(Last)) sb.Append(Last);
             if (!string.IsNullOrEmpty(Suffix))

@@ -12,8 +12,8 @@ namespace Cadmus.Biblio.Seed
             if (repository == null)
                 throw new ArgumentNullException(nameof(repository));
 
-            Faker faker = new Faker();
-            HashSet<Tuple<string, string>> names = new HashSet<Tuple<string, string>>();
+            Faker faker = new();
+            HashSet<Tuple<string, string>> names = new();
             int repeat = 0;
 
             for (int n = 1; n <= count; n++)

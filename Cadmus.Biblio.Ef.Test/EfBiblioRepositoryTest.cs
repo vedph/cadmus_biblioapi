@@ -46,7 +46,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            WorkType type = new WorkType
+            WorkType type = new()
             {
                 Id = "book",
                 Name = "Book"
@@ -65,7 +65,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            WorkType type = new WorkType
+            WorkType type = new()
             {
                 Id = "book",
                 Name = "Book"
@@ -86,7 +86,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            WorkType type = new WorkType
+            WorkType type = new()
             {
                 Id = "book",
                 Name = "Book"
@@ -103,7 +103,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            WorkType type = new WorkType
+            WorkType type = new()
             {
                 Id = "book",
                 Name = "Book"
@@ -276,7 +276,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Keyword keyword = new Keyword
+            Keyword keyword = new()
             {
                 Language = "eng",
                 Value = "test"
@@ -295,7 +295,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Keyword keyword = new Keyword
+            Keyword keyword = new()
             {
                 Language = "eng",
                 Value = "test"
@@ -312,7 +312,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Keyword keyword = new Keyword
+            Keyword keyword = new()
             {
                 Language = "eng",
                 Value = "test"
@@ -329,7 +329,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Keyword keyword = new Keyword
+            Keyword keyword = new()
             {
                 Language = "eng",
                 Value = "test"
@@ -351,13 +351,13 @@ namespace Cadmus.Biblio.Ef.Test
                 Language = "eng",
                 Value = "orphan"
             });
-            Keyword kw = new Keyword
+            Keyword kw = new()
             {
                 Language = "eng",
                 Value = "work"
             };
             int kwid = repository.AddKeyword(kw);
-            Keyword kc = new Keyword
+            Keyword kc = new()
             {
                 Language = "eng",
                 Value = "container"
@@ -503,7 +503,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Author author = new Author
+            Author author = new()
             {
                 First = "John",
                 Last = "Doe",
@@ -525,7 +525,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Author author = new Author
+            Author author = new()
             {
                 First = "John",
                 Last = "Doe",
@@ -551,7 +551,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Author author = new Author
+            Author author = new()
             {
                 First = "John",
                 Last = "Doe",
@@ -569,7 +569,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Author author = new Author
+            Author author = new()
             {
                 First = "John",
                 Last = "Doe",
@@ -588,13 +588,13 @@ namespace Cadmus.Biblio.Ef.Test
             ResetDatabase();
             var repository = GetRepository();
 
-            Author orphan = new Author
+            Author orphan = new()
             {
                 First = "David",
                 Last = "Copperfield"
             };
             repository.AddAuthor(orphan);
-            Author frank = new Author
+            Author frank = new()
             {
                 First = "Frank",
                 Last = "Ross"
@@ -755,7 +755,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Author author = new Author
+            Author author = new()
             {
                 First = "John",
                 Last = "Doe",
@@ -794,7 +794,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Author author = new Author
+            Author author = new()
             {
                 First = "John",
                 Last = "Doe",
@@ -840,7 +840,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            WorkType type = new WorkType
+            WorkType type = new()
             {
                 Id = "journal",
                 Name = "Journal"
@@ -1176,7 +1176,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Author author = new Author
+            Author author = new()
             {
                 First = "John",
                 Last = "Doe",
@@ -1216,7 +1216,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            Author author = new Author
+            Author author = new()
             {
                 First = "John",
                 Last = "Doe",
@@ -1263,7 +1263,7 @@ namespace Cadmus.Biblio.Ef.Test
         {
             ResetDatabase();
             var repository = GetRepository();
-            WorkType type = new WorkType
+            WorkType type = new()
             {
                 Id = "journal",
                 Name = "Journal"

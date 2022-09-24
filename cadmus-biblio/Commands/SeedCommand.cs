@@ -76,7 +76,7 @@ namespace Cadmus.Biblio.Commands
                 _config.GetConnectionString("Default"),
                 _database);
 
-            MySqlDbManager manager = new MySqlDbManager(connection);
+            MySqlDbManager manager = new(connection);
 
             if (!manager.Exists(_database))
             {
@@ -92,7 +92,7 @@ namespace Cadmus.Biblio.Commands
             Console.Write("Seeding...");
             IBiblioRepository repository =
                 new EfBiblioRepository(connection, "mysql");
-            BiblioSeeder seeder = new BiblioSeeder(repository);
+            BiblioSeeder seeder = new(repository);
 
             seeder.Seed(_count, _entities);
 

@@ -43,7 +43,6 @@ namespace Cadmus.Biblio.Ef
         /// </summary>
         public DbSet<EfKeyword> Keywords { get; set; }
 
-
         /// <summary>
         /// Gets or sets the keyword-work links.
         /// </summary>
@@ -85,16 +84,12 @@ namespace Cadmus.Biblio.Ef
         public static DbContextOptions<BiblioDbContext> GetOptions(
             string connectionString, string databaseType)
         {
-            switch (databaseType?.ToLowerInvariant())
+            return (databaseType?.ToLowerInvariant()) switch
             {
-                default:
-                    return new DbContextOptionsBuilder<BiblioDbContext>()
-                        .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                        .Options;
-                    //return new DbContextOptionsBuilder<BiblioDbContext>()
-                    //    .UseSqlServer(connectionString)
-                    //    .Options;
-            }
+                _ => new DbContextOptionsBuilder<BiblioDbContext>()
+                  .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+                  .Options,
+            };
         }
 
         /// <summary>

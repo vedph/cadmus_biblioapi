@@ -12,7 +12,7 @@ namespace Cadmus.Biblio.Core
     /// </summary>
     public static class StandardFilter
     {
-        private static readonly UniData _ud = new UniData();
+        private static readonly UniData _ud = new();
 
         /// <summary>
         /// Apply this filter to the specified text, by keeping only
@@ -28,7 +28,7 @@ namespace Cadmus.Biblio.Core
         {
             if (string.IsNullOrEmpty(text)) return text;
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             bool prevWS = true;
 
             foreach (char c in text)

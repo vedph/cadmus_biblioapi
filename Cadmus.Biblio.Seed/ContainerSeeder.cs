@@ -23,7 +23,7 @@ namespace Cadmus.Biblio.Seed
                 PageSize = 20
             });
 
-            Faker faker = new Faker();
+            Faker faker = new();
 
             for (int n = 1; n <= count; n++)
             {

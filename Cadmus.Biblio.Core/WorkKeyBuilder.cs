@@ -24,7 +24,7 @@ namespace Cadmus.Biblio.Core
         {
             if (work == null) throw new ArgumentNullException(nameof(work));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             // authors (max 3)
             if (work.Authors?.Count > 0)

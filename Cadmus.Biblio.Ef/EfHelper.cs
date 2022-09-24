@@ -20,13 +20,11 @@ namespace Cadmus.Biblio.Ef
         /// <returns>SQL code.</returns>
         public static string GetSchema()
         {
-            using (StreamReader reader = new StreamReader(
+            using StreamReader reader = new(
                 Assembly.GetExecutingAssembly()
                 .GetManifestResourceStream(
-                    "Cadmus.Biblio.Ef.Assets.cadmus-biblio.sql")))
-            {
-                return reader.ReadToEnd();
-            }
+                    "Cadmus.Biblio.Ef.Assets.cadmus-biblio.sql"));
+            return reader.ReadToEnd();
         }
 
         #region Entity to POCO        
@@ -92,12 +90,12 @@ namespace Cadmus.Biblio.Ef
                 throw new ArgumentNullException(nameof(context));
 
             if (ef == null) return null;
-            WorkInfo info = new WorkInfo
+            WorkInfo info = new()
             {
                 IsContainer = true,
                 Id = ef.Id,
                 Key = ef.Key,
-                Type = ef.Type?.Name,
+                Type = ef.Type?.Id,
                 Title = ef.Title,
                 Language = ef.Language,
                 Edition = ef.Edition,
@@ -148,12 +146,12 @@ namespace Cadmus.Biblio.Ef
                 throw new ArgumentNullException(nameof(context));
 
             if (ef == null) return null;
-            WorkInfo info = new WorkInfo
+            WorkInfo info = new()
             {
                 IsContainer = false,
                 Id = ef.Id,
                 Key = ef.Key,
-                Type = ef.Type?.Name,
+                Type = ef.Type?.Id,
                 Title = ef.Title,
                 Language = ef.Language,
                 Edition = ef.Edition,
@@ -206,7 +204,7 @@ namespace Cadmus.Biblio.Ef
         {
             if (ef == null) return null;
 
-            Container container = new Container
+            Container container = new()
             {
                 Id = ef.Id,
                 Key = ef.Key,
@@ -255,10 +253,10 @@ namespace Cadmus.Biblio.Ef
         {
             if (ef == null) return null;
 
-            Work work = new Work
+            Work work = new()
             {
                 Id = ef.Id,
-                Type = ef.Type?.Name,
+                Type = ef.Type?.Id,
                 Title = ef.Title,
                 Language = ef.Language,
                 Container = GetContainer(ef.Container),
@@ -366,7 +364,7 @@ namespace Cadmus.Biblio.Ef
             BiblioDbContext context)
         {
             // collect the authors to be assigned, adding the missing ones
-            List<EfAuthorContainer> requested = new List<EfAuthorContainer>();
+            List<EfAuthorContainer> requested = new();
             foreach (WorkAuthor author in authors)
             {
                 EfAuthor efa = GetEfAuthorFor(author, context);
@@ -404,7 +402,7 @@ namespace Cadmus.Biblio.Ef
             EfContainer container, BiblioDbContext context)
         {
             // collect the keywords to be assigned, adding the missing ones
-            List<EfKeywordContainer> requested = new List<EfKeywordContainer>();
+            List<EfKeywordContainer> requested = new();
             foreach (Keyword keyword in keywords)
             {
                 // find the keyword by its content, as we have no ID
@@ -470,7 +468,7 @@ namespace Cadmus.Biblio.Ef
                 };
                 context.WorkTypes.Add(ef);
             }
-            else if (name != null) ef.Name = name;
+            else if (name is not null) ef.Name = name;
 
             return ef;
         }
@@ -594,7 +592,7 @@ namespace Cadmus.Biblio.Ef
             BiblioDbContext context)
         {
             // collect the authors to be assigned, adding the missing ones
-            List<EfAuthorWork> requested = new List<EfAuthorWork>();
+            List<EfAuthorWork> requested = new();
             foreach (WorkAuthor author in authors)
             {
                 EfAuthor efa = GetEfAuthorFor(author, context);
@@ -632,7 +630,7 @@ namespace Cadmus.Biblio.Ef
             BiblioDbContext context)
         {
             // collect the keywords to be assigned, adding the missing ones
-            List<EfKeywordWork> requested = new List<EfKeywordWork>();
+            List<EfKeywordWork> requested = new();
             foreach (Keyword keyword in keywords)
             {
                 // find the keyword by its content, as we have no ID
