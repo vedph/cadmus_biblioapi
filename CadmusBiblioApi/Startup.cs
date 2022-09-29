@@ -327,9 +327,27 @@ namespace CadmusBiblioApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                // https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-5.0&tabs=visual-studio
+                app.UseExceptionHandler("/Error");
+                if (Configuration.GetValue<bool>("Server:UseHSTS"))
+                {
+                    Console.WriteLine("HSTS: yes");
+                    app.UseHsts();
+                }
+                else Console.WriteLine("HSTS: no");
+            }
 
-            app.UseHttpsRedirection();
+            if (Configuration.GetValue<bool>("Server:UseHttpsRedirection"))
+            {
+                Console.WriteLine("HttpsRedirection: yes");
+                app.UseHttpsRedirection();
+            }
+            else Console.WriteLine("HttpsRedirection: no");
+
             app.UseRouting();
+
             // CORS
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
