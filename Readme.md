@@ -313,6 +313,8 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2022-10-10: updated packages for new `IRepositoryProvider`.
+
 ### 2.1.6
 
 - 2022-09-29: optional HTTPS.

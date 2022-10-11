@@ -200,8 +200,8 @@ namespace CadmusBiblioApi
             if (!Configuration.GetSection("Preview").GetSection("IsEnabled")
                 .Get<bool>())
             {
-                return new CadmusPreviewer(repository,
-                    factoryProvider.GetFactory("{}"));
+                return new CadmusPreviewer(factoryProvider.GetFactory("{}"),
+                    repository);
             }
 
             // get profile source
@@ -213,8 +213,8 @@ namespace CadmusBiblioApi
             {
                 Console.WriteLine($"Preview profile expected at {path} not found");
                 logger.Error($"Preview profile expected at {path} not found");
-                return new CadmusPreviewer(repository,
-                    factoryProvider.GetFactory("{}"));
+                return new CadmusPreviewer(factoryProvider.GetFactory("{}"),
+                    repository);
             }
 
             // load profile
@@ -228,7 +228,7 @@ namespace CadmusBiblioApi
             }
             CadmusPreviewFactory factory = factoryProvider.GetFactory(profile);
 
-            return new CadmusPreviewer(repository, factory);
+            return new CadmusPreviewer(factory, repository);
         }
 
         /// <summary>
@@ -302,7 +302,6 @@ namespace CadmusBiblioApi
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.WithExceptionDetails()
                 .WriteTo.Console()
-                /*.WriteTo.MSSqlServer(Configuration["Serilog:ConnectionString"],*/
                 .WriteTo.MongoDBCapped(Configuration["Serilog:ConnectionString"],
                     cappedMaxSizeMb: !string.IsNullOrEmpty(maxSize) &&
                         int.TryParse(maxSize, out int n) && n > 0 ? n : 10)

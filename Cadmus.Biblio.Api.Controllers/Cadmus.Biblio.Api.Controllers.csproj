@@ -19,8 +19,8 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Identity.Mongo" Version="8.3.3" />
-    <PackageReference Include="Cadmus.Api.Models" Version="4.1.3" />
-    <PackageReference Include="Cadmus.Api.Services" Version="4.1.3" />
+    <PackageReference Include="Cadmus.Api.Models" Version="4.2.0" />
+    <PackageReference Include="Cadmus.Api.Services" Version="4.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="6.0.0" />
