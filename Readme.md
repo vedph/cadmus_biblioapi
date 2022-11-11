@@ -8,6 +8,8 @@ docker build . -t vedph2020/cadmus_biblio_api:2.1.6 -t vedph2020/cadmus_biblio_a
 
 (replace with the current version).
 
+This API is independent from Cadmus, but it is designed to integrate with it. You can find frontend components for both this independent API and Cadmus in [this repository](https://github.com/vedph/cadmus_biblio_shell).
+
 ## Overview
 
 This is an API used to expose a minimalist bibliographic database to Cadmus part editors.
@@ -313,6 +315,7 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2022-11-10: upgraded to NET 7 advancing version to 3.0.0 (NET Framework still to 6 while waiting for the release of [Pomelo EF](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/pull/1717)).
 - 2022-10-10: updated packages for new `IRepositoryProvider`.
 
 ### 2.1.6
