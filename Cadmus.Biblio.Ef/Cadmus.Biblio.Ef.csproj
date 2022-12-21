@@ -8,9 +8,9 @@
     <Description>Cadmus bibliography API Entity Framework components</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
-    <Version>3.0.0</Version>
-    <FileVersion>3.0.0</FileVersion>
-    <AssemblyVersion>3.0.0</AssemblyVersion>
+    <Version>3.0.1</Version>
+    <FileVersion>3.0.1</FileVersion>
+    <AssemblyVersion>3.0.1</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,8 +23,8 @@
 
   <ItemGroup>
     <PackageReference Include="LinqKit.Core" Version="1.2.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.11" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0-silver.1" />
   </ItemGroup>
 
   <ItemGroup>

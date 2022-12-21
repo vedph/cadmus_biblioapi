@@ -315,6 +315,7 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2022-12-21: updated Pomelo EF MySql to 7.0.0-silver.1 (prerelease).
 - 2022-11-10: upgraded to NET 7 advancing version to 3.0.0 (NET Framework still to 6 while waiting for the release of [Pomelo EF](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/pull/1717)).
 - 2022-10-10: updated packages for new `IRepositoryProvider`.
 
