@@ -3,7 +3,7 @@
 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus_biblio_api:2.1.6 -t vedph2020/cadmus_biblio_api:latest
+docker build . -t vedph2020/cadmus_biblio_api:2.1.7 -t vedph2020/cadmus_biblio_api:latest
 ```
 
 (replace with the current version).
@@ -314,6 +314,8 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+### 2.1.7
 
 - 2022-12-21: updated Pomelo EF MySql to 7.0.0-silver.1 (prerelease).
 - 2022-11-10: upgraded to NET 7 advancing version to 3.0.0 (NET Framework still to 6 while waiting for the release of [Pomelo EF](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql/pull/1717)).
