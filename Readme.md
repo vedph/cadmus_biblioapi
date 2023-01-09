@@ -315,6 +315,8 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2023-01-09: refactored CLI tool infrastructure.
+
 ### 2.1.7
 
 - 2022-12-21: updated Pomelo EF MySql to 7.0.0-silver.1 (prerelease).
