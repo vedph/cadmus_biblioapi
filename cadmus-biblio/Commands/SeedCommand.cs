@@ -53,7 +53,7 @@ internal sealed class SeedCommand : ICommand
         });
     }
 
-    public Task Run()
+    public Task<int> Run()
     {
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("SEED DATABASE\n");
@@ -89,7 +89,7 @@ internal sealed class SeedCommand : ICommand
 
         Console.WriteLine(" completed");
 
-        return Task.CompletedTask;
+        return Task.FromResult(0);
     }
 }
 

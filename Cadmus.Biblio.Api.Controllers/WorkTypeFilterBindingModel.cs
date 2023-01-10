@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Cadmus.Biblio.Api.Controllers
+namespace Cadmus.Biblio.Api.Controllers;
+
+public sealed class WorkTypeFilterBindingModel : PagingOptionsBindingModel
 {
-    public sealed class WorkTypeFilterBindingModel : PagingOptionsBindingModel
-    {
-        [MaxLength(50)]
-        public string Name { get; set; }
-    }
+    [MaxLength(50)]
+    public string Name { get; set; }
 }

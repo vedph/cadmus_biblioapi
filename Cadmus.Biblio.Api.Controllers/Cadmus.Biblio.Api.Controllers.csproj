@@ -7,9 +7,9 @@
     <Product>Cadmus</Product>
     <Description>Cadmus bibliographic API controllers.</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>3.0.1</Version>
-    <FileVersion>3.0.1</FileVersion>
-    <AssemblyVersion>3.0.1</AssemblyVersion>
+    <Version>3.0.2</Version>
+    <FileVersion>3.0.2</FileVersion>
+    <AssemblyVersion>3.0.2</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

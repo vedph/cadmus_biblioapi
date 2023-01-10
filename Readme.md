@@ -3,7 +3,7 @@
 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus_biblio_api:2.1.7 -t vedph2020/cadmus_biblio_api:latest
+docker build . -t vedph2020/cadmus_biblio_api:2.1.8 -t vedph2020/cadmus_biblio_api:latest
 ```
 
 (replace with the current version).
@@ -294,7 +294,7 @@ RouterModule.forRoot(
 
 ```yml
   cadmus-biblio-api:
-    image: vedph2020/cadmus_biblio_api:1.0.11
+    image: vedph2020/cadmus_biblio_api:2.1.8
     ports:
       - 61691:80
     depends_on:
@@ -315,6 +315,12 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+### 2.1.8
+
+- 2023-01-10:
+  - fix to work controller AddWork (container not set).
+  - updated packages.
+  - reformatted code.
 - 2023-01-09: refactored CLI tool infrastructure.
 
 ### 2.1.7

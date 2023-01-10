@@ -1,28 +1,27 @@
 ﻿using Cadmus.Biblio.Core;
 using System;
 
-namespace Cadmus.Biblio.Seed
+namespace Cadmus.Biblio.Seed;
+
+public sealed class WorkTypeSeeder : IBiblioSeeder
 {
-    public sealed class WorkTypeSeeder : IBiblioSeeder
+    public static string[] TypeIds =
+        new[] { "book", "journal", "procs", "article" };
+
+    public void Seed(IBiblioRepository repository, int count)
     {
-        public static string[] TypeIds =
-            new[] { "book", "journal", "procs", "article" };
+        if (repository == null)
+            throw new ArgumentNullException(nameof(repository));
 
-        public void Seed(IBiblioRepository repository, int count)
+        foreach (WorkType type in new[]
         {
-            if (repository == null)
-                throw new ArgumentNullException(nameof(repository));
-
-            foreach (WorkType type in new[]
-            {
-                new WorkType{ Id = "book", Name = "Book" },
-                new WorkType{ Id = "journal", Name = "Journal" },
-                new WorkType{ Id = "procs", Name = "Proceedings" },
-                new WorkType{ Id = "article", Name = "Article" }
-            })
-            {
-                repository.AddWorkType(type);
-            }
+            new WorkType{ Id = "book", Name = "Book" },
+            new WorkType{ Id = "journal", Name = "Journal" },
+            new WorkType{ Id = "procs", Name = "Proceedings" },
+            new WorkType{ Id = "article", Name = "Article" }
+        })
+        {
+            repository.AddWorkType(type);
         }
     }
 }

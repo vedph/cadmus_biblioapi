@@ -1,37 +1,36 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Cadmus.Biblio.Api.Controllers
+namespace Cadmus.Biblio.Api.Controllers;
+
+/// <summary>
+/// Author model.
+/// </summary>
+public class AuthorBindingModel
 {
     /// <summary>
-    /// Author model.
+    /// The ID.
     /// </summary>
-    public class AuthorBindingModel
-    {
-        /// <summary>
-        /// The ID.
-        /// </summary>
-        public Guid? Id { get; set; }
+    public Guid? Id { get; set; }
 
-        /// <summary>
-        /// First name.
-        /// </summary>
-        [Required]
-        [MaxLength(50)]
-        public string First { get; set; }
+    /// <summary>
+    /// First name.
+    /// </summary>
+    [Required]
+    [MaxLength(50)]
+    public string First { get; set; }
 
-        /// <summary>
-        /// Last name.
-        /// </summary>
-        [Required]
-        [MaxLength(50)]
-        public string Last { get; set; }
+    /// <summary>
+    /// Last name.
+    /// </summary>
+    [Required]
+    [MaxLength(50)]
+    public string Last { get; set; }
 
-        /// <summary>
-        /// An optional, arbitrary suffix which can be appended
-        /// to the name to disambiguate two authors with the same name.
-        /// </summary>
-        [MaxLength(50)]
-        public string Suffix { get; set; }
-    }
+    /// <summary>
+    /// An optional, arbitrary suffix which can be appended
+    /// to the name to disambiguate two authors with the same name.
+    /// </summary>
+    [MaxLength(50)]
+    public string Suffix { get; set; }
 }

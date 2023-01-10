@@ -9,9 +9,9 @@
     <Product>Cadmus</Product>
     <Description>Cadmus bibliography API CLI tool.</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>3.0.1</Version>
-    <FileVersion>3.0.1</FileVersion>
-    <AssemblyVersion>3.0.1</AssemblyVersion>
+    <Version>3.0.2</Version>
+    <FileVersion>3.0.2</FileVersion>
+    <AssemblyVersion>3.0.2</AssemblyVersion>
 	<Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fusi.Cli.Commands" Version="2.0.0" />
+    <PackageReference Include="Fusi.Cli.Commands" Version="2.1.1" />
     <PackageReference Include="Fusi.DbManager.MySql" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
