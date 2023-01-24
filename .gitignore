@@ -36,4 +36,4 @@ $tf*/
 packages/
 !Lib/**/*.dll
 *.scgdat
-cadmus-biblio-log*.txt
+cadmus-*log*.txt
