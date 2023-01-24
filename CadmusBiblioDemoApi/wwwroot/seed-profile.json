@@ -1,0 +1,115 @@
+{
+  "facets": [
+    {
+      "id": "default",
+      "label": "default",
+      "description": "The default facet",
+      "colorKey": "86ACEB",
+      "partDefinitions": [
+        {
+          "typeId": "it.vedph.metadata",
+          "name": "metadata",
+          "description": "Item's metadata.",
+          "isRequired": true,
+          "colorKey": "F8C0C0",
+          "groupKey": "general",
+          "sortKey": "a"
+        },
+        {
+          "typeId": "it.vedph.note",
+          "name": "note",
+          "description": "A free text note.",
+          "colorKey": "B0A0F8",
+          "groupKey": "general",
+          "sortKey": "b"
+        },
+        {
+          "typeId": "it.vedph.ext-bibliography",
+          "name": "ext-bibliography",
+          "description": "External bibliography.",
+          "colorKey": "82B0AD",
+          "groupKey": "references",
+          "sortKey": "c"
+        }
+      ]
+    }
+  ],
+  "flags": [
+    {
+      "id": 1,
+      "label": "complete",
+      "description": "The item is complete.",
+      "colorKey": "F0B880"
+    },
+    {
+      "id": 2,
+      "label": "revised",
+      "description": "The item has been revised.",
+      "colorKey": "60CF60"
+    }
+  ],
+  "index": {
+    "writer": {
+      "id": "item-index-writer.mysql"
+    },
+    "reader": {
+      "id": "item-index-reader.mysql"
+    }
+  },
+  "graph": {
+    "repository": {
+      "id": "graph-repository.sql-my"
+    }
+  },
+  "browsers": [
+    {
+      "id": "it.vedph.item-browser.mongo.hierarchy"
+    }
+  ],
+  "thesauri": [
+    {
+      "id": "model-types@en",
+      "entries": [
+        {
+          "id": "it.vedph.metadata",
+          "value": "metadata"
+        },
+        {
+          "id": "it.vedph.note",
+          "value": "note"
+        },
+        {
+          "id": "it.vedph.ext-bibliography",
+          "value": "ext-bibliography"
+        }
+      ]
+    }
+  ],
+  "seed": {
+    "options": {
+      "seed": 1,
+      "users": [ "zeus" ],
+      "partRoles": [],
+      "fragmentRoles": []
+    },
+    "partSeeders": [
+      {
+        "id": "seed.it.vedph.metadata"
+      },
+      {
+        "id": "seed.it.vedph.ext-bibliography"
+      },
+      {
+        "id": "seed.it.vedph.note",
+        "options": {
+          "tags": [
+            "language",
+            "history",
+            "geography"
+          ]
+        }
+      }
+    ],
+    "fragmentSeeders": []
+  }
+}
