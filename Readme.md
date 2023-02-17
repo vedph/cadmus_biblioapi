@@ -10,7 +10,11 @@ docker build . -t vedph2020/cadmus_biblio_api:3.0.3 -t vedph2020/cadmus_biblio_a
 
 This API is independent from Cadmus, but it is designed to integrate with it. You can find frontend components for both this independent API and Cadmus in [this repository](https://github.com/vedph/cadmus_biblio_shell).
 
-The `CadmusBiblioDemoApi` project is provided to test a Cadmus-based editor consuming the bibliography API. So, to play with it you should start both the API projects, and then the [frontend app](https://github.com/vedph/cadmus_biblio_shell).
+The `CadmusBiblioDemoApi` project is provided to test a Cadmus-based editor consuming the bibliography API. So, to play with it you should start both the API projects, and then the [frontend app](https://github.com/vedph/cadmus_biblio_shell). To build the image of the demo:
+
+```bash
+docker build . -f Dockerfile-demo -t vedph2020/cadmus-biblio-demo-api:0.0.1 -t vedph2020/cadmus-biblio-demo-api:latest
+```
 
 ## Overview
 

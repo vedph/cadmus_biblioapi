@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
+		Dockerfile-demo = Dockerfile-demo
 		Readme.md = Readme.md
 		schema.png = schema.png
 		schema.svg = schema.svg
@@ -28,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cadmus.Biblio.Core.Test", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CadmusBiblioApi", "CadmusBiblioApi\CadmusBiblioApi.csproj", "{2EDA0AD7-328E-467C-8DF0-77B25FD79D1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadmusBiblioDemoApi", "CadmusBiblioDemoApi\CadmusBiblioDemoApi.csproj", "{8A003A01-9D9B-4C00-AE79-4C2F24326D39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CadmusBiblioDemoApi", "CadmusBiblioDemoApi\CadmusBiblioDemoApi.csproj", "{8A003A01-9D9B-4C00-AE79-4C2F24326D39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
