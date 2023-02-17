@@ -1,6 +1,6 @@
 # Cadmus Bibliographic API
 
-Quick Docker image build:
+🐋 Quick Docker image build:
 
 ```bash
 docker build . -t vedph2020/cadmus_biblio_api:2.1.8 -t vedph2020/cadmus_biblio_api:latest
@@ -10,7 +10,7 @@ docker build . -t vedph2020/cadmus_biblio_api:2.1.8 -t vedph2020/cadmus_biblio_a
 
 This API is independent from Cadmus, but it is designed to integrate with it. You can find frontend components for both this independent API and Cadmus in [this repository](https://github.com/vedph/cadmus_biblio_shell).
 
-The CadmusBiblioDemoApi project is provided to test a Cadmus-based editor consuming the bibliography API. So, to play with it you should start both the API projects, and then the [frontend app](https://github.com/vedph/cadmus_biblio_shell).
+The `CadmusBiblioDemoApi` project is provided to test a Cadmus-based editor consuming the bibliography API. So, to play with it you should start both the API projects, and then the [frontend app](https://github.com/vedph/cadmus_biblio_shell).
 
 ## Overview
 
@@ -317,6 +317,7 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2023-02-17: updated packages.
 - 2023-02-02: migrated to new components factory. This is a breaking change for backend components, please see [this page](https://myrmex.github.io/overview/cadmus/dev/history/#2023-02-01---backend-infrastructure-upgrade). Anyway, in the end you just have to update your libraries and a single namespace reference. Benefits include:
   - more streamlined component instantiation.
   - more functionality in components factory, including DI.
