@@ -44,7 +44,7 @@ public static class WorkKeyBuilder
             sb.Append(' ').Append(work.Number);
 
         // year
-        sb.Append(' ').Append(work.YearPub);
+        if (work != null) sb.Append(' ').Append(work.YearPub);
 
         // ensure we stay inside size limits
         return sb.Length > 300? sb.ToString(0, 300) : sb.ToString();
@@ -72,7 +72,7 @@ public static class WorkKeyBuilder
         // else calculate the new key
         string newKey = Build(newWork);
 
-        // if the existing key is not specified/is not manual, the new key wins;
+        // if the existing key is not specified/is not manual, the new key wins,
         // else keep the existing key
         return oldKey?.StartsWith(MAN_KEY_PREFIX) != true ? newKey : oldKey;
     }

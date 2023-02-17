@@ -66,10 +66,10 @@ public sealed class EfBiblioRepository : IBiblioRepository
             .AsNoTracking()
             .Include(w => w.Type)
             .Include(w => w.Container)
-            .ThenInclude(w => w.Type)
-            .Include(w => w.AuthorWorks)
+            .ThenInclude(w => w!.Type)
+            .Include(w => w.AuthorWorks!)
             .ThenInclude(aw => aw.Author)
-            .Include(w => w.KeywordWorks)
+            .Include(w => w.KeywordWorks!)
             .ThenInclude(kw => kw.Keyword);
 
         if (filter.IsMatchAnyEnabled)
@@ -81,37 +81,37 @@ public sealed class EfBiblioRepository : IBiblioRepository
             var predicate = PredicateBuilder.New<EfWork>();
 
             if (!string.IsNullOrEmpty(filter.Key))
-                predicate.Or(w => w.Key.Equals(filter.Key));
+                predicate.Or(w => w.Key!.Equals(filter.Key));
 
             if (!string.IsNullOrEmpty(filter.Type))
-                predicate.Or(w => w.Type.Equals(filter.Type));
+                predicate.Or(w => w.Type!.Equals(filter.Type));
 
             if (filter.AuthorId != Guid.Empty)
             {
-                predicate.Or(w => w.AuthorWorks.Any(
+                predicate.Or(w => w.AuthorWorks!.Any(
                     aw => aw.AuthorId == filter.AuthorId));
             }
 
             if (!string.IsNullOrEmpty(filter.LastName))
             {
                 predicate.Or(w =>
-                    w.AuthorWorks.Any(aw =>
-                        aw.Author.Lastx.Contains(filter.LastName)));
+                    w.AuthorWorks!.Any(aw =>
+                        aw.Author!.Lastx!.Contains(filter.LastName)));
             }
 
             if (!string.IsNullOrEmpty(filter.Language))
-                predicate.Or(w => w.Language.Equals(filter.Language));
+                predicate.Or(w => w.Language!.Equals(filter.Language));
 
             if (!string.IsNullOrEmpty(filter.Title))
-                predicate.Or(w => w.Titlex.Contains(filter.Title));
+                predicate.Or(w => w.Titlex!.Contains(filter.Title));
 
             if (filter.ContainerId != Guid.Empty)
-                predicate.Or(w => w.Container.Id.Equals(filter.ContainerId));
+                predicate.Or(w => w.Container!.Id.Equals(filter.ContainerId));
 
             if (!string.IsNullOrEmpty(filter.Keyword))
             {
-                predicate.Or(w => w.KeywordWorks.Any(
-                    kw => kw.Keyword.Valuex.Equals(filter.Keyword)));
+                predicate.Or(w => w.KeywordWorks!.Any(
+                    kw => kw.Keyword!.Valuex!.Equals(filter.Keyword)));
             }
 
             if (filter.YearPubMin > 0)
@@ -130,20 +130,20 @@ public sealed class EfBiblioRepository : IBiblioRepository
 
             // type
             if (!string.IsNullOrEmpty(filter.Type))
-                works = works.Where(w => w.Type.Name == filter.Type);
+                works = works.Where(w => w.Type!.Name == filter.Type);
 
             // author ID
             if (filter.AuthorId != Guid.Empty)
             {
-                works = works.Where(w => w.AuthorWorks.Any(
+                works = works.Where(w => w.AuthorWorks!.Any(
                     aw => aw.AuthorId == filter.AuthorId));
             }
 
             // last
             if (!string.IsNullOrEmpty(filter.LastName))
             {
-                works = works.Where(w => w.AuthorWorks.Any(
-                    aw => aw.Author.Lastx.Contains(filter.LastName)));
+                works = works.Where(w => w.AuthorWorks!.Any(aw =>
+                    aw.Author!.Lastx!.Contains(filter.LastName)));
             }
 
             // language
@@ -152,7 +152,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
 
             // title
             if (!string.IsNullOrEmpty(filter.Title))
-                works = works.Where(w => w.Titlex.Contains(filter.Title));
+                works = works.Where(w => w.Titlex!.Contains(filter.Title));
 
             // container ID
             if (filter.ContainerId != Guid.Empty)
@@ -164,8 +164,8 @@ public sealed class EfBiblioRepository : IBiblioRepository
             // keyword
             if (!string.IsNullOrEmpty(filter.Keyword))
             {
-                works = works.Where(w => w.KeywordWorks.Any(
-                    kw => kw.Keyword.Valuex.Equals(filter.Keyword)));
+                works = works.Where(w => w.KeywordWorks!.Any(
+                    kw => kw.Keyword!.Valuex!.Equals(filter.Keyword)));
             }
 
             // yearpubmin
@@ -181,10 +181,10 @@ public sealed class EfBiblioRepository : IBiblioRepository
 
         // sort and page
         works = works
-            .OrderBy(w => w.AuthorWorks.Select(aw => aw.Author)
-                .First().Lastx)
-            .ThenBy(w => w.AuthorWorks.Select(aw => aw.Author)
-                .First().First)
+            .OrderBy(w => w.AuthorWorks!.Select(aw => aw.Author)
+                .First()!.Lastx)
+            .ThenBy(w => w.AuthorWorks!.Select(aw => aw.Author)
+                .First()!.First)
             .ThenBy(w => w.Titlex)
             .ThenBy(w => w.Key)
             .ThenBy(w => w.Id);
@@ -206,17 +206,17 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <returns>
     /// Work, or null if not found
     /// </returns>
-    public Work GetWork(Guid id)
+    public Work? GetWork(Guid id)
     {
         using var db = GetContext();
-        EfWork work = db.Works
+        EfWork? work = db.Works
             .AsNoTracking()
             .Include(w => w.Type)
             .Include(w => w.Container)
-            .ThenInclude(w => w.Type)
-            .Include(w => w.AuthorWorks)
+            .ThenInclude(w => w!.Type)
+            .Include(w => w.AuthorWorks!)
             .ThenInclude(aw => aw.Author)
-            .Include(w => w.KeywordWorks)
+            .Include(w => w.KeywordWorks!)
             .ThenInclude(kw => kw.Keyword)
             .FirstOrDefault(w => w.Id == id);
         return EfHelper.GetWork(work);
@@ -242,10 +242,13 @@ public sealed class EfBiblioRepository : IBiblioRepository
         if (work == null) throw new ArgumentNullException(nameof(work));
 
         using var db = GetContext();
-        EfWork ef = EfHelper.GetEfWork(work, db);
+        EfWork? ef = EfHelper.GetEfWork(work, db);
         db.SaveChanges();
-        work.Id = ef.Id;
-        work.Key = ef.Key;
+        if (ef != null)
+        {
+            work.Id = ef.Id;
+            work.Key = ef.Key;
+        }
     }
 
     /// <summary>
@@ -255,7 +258,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     public void DeleteWork(Guid id)
     {
         using var db = GetContext();
-        EfWork work = db.Works.Find(id);
+        EfWork? work = db.Works.Find(id);
         if (work != null)
         {
             db.Works.Remove(work);
@@ -281,9 +284,9 @@ public sealed class EfBiblioRepository : IBiblioRepository
         IQueryable<EfContainer> containers = db.Containers
             .AsNoTracking()
             .Include(w => w.Type)
-            .Include(w => w.AuthorContainers)
+            .Include(w => w.AuthorContainers!)
             .ThenInclude(aw => aw.Author)
-            .Include(w => w.KeywordContainers)
+            .Include(w => w.KeywordContainers!)
             .ThenInclude(kw => kw.Keyword);
 
         if (filter.IsMatchAnyEnabled)
@@ -295,34 +298,34 @@ public sealed class EfBiblioRepository : IBiblioRepository
             var predicate = PredicateBuilder.New<EfContainer>();
 
             if (!string.IsNullOrEmpty(filter.Key))
-                predicate.Or(c => c.Key.Equals(filter.Key));
+                predicate.Or(c => c.Key!.Equals(filter.Key));
 
             if (!string.IsNullOrEmpty(filter.Type))
-                predicate.Or(c => c.Type.Equals(filter.Type));
+                predicate.Or(c => c.Type!.Equals(filter.Type));
 
             if (filter.AuthorId != Guid.Empty)
             {
-                predicate.Or(c => c.AuthorContainers.Any(
+                predicate.Or(c => c.AuthorContainers!.Any(
                     ac => ac.AuthorId == filter.AuthorId));
             }
 
             if (!string.IsNullOrEmpty(filter.LastName))
             {
                 predicate.Or(c =>
-                    c.AuthorContainers.Any(ac =>
-                        ac.Author.Lastx.Contains(filter.LastName)));
+                    c.AuthorContainers!.Any(ac =>
+                        ac.Author!.Lastx!.Contains(filter.LastName)));
             }
 
             if (!string.IsNullOrEmpty(filter.Language))
-                predicate.Or(c => c.Language.Equals(filter.Language));
+                predicate.Or(c => c.Language!.Equals(filter.Language));
 
             if (!string.IsNullOrEmpty(filter.Title))
-                predicate.Or(c => c.Titlex.Contains(filter.Title));
+                predicate.Or(c => c.Titlex!.Contains(filter.Title));
 
             if (!string.IsNullOrEmpty(filter.Keyword))
             {
-                predicate.Or(c => c.KeywordContainers.Any(
-                    kc => kc.Keyword.Valuex.Equals(filter.Keyword)));
+                predicate.Or(c => c.KeywordContainers!.Any(
+                    kc => kc.Keyword!.Valuex!.Equals(filter.Keyword)));
             }
 
             if (filter.YearPubMin > 0)
@@ -341,20 +344,20 @@ public sealed class EfBiblioRepository : IBiblioRepository
 
             // type
             if (!string.IsNullOrEmpty(filter.Type))
-                containers = containers.Where(w => w.Type.Name == filter.Type);
+                containers = containers.Where(w => w.Type!.Name == filter.Type);
 
             // author ID
             if (filter.AuthorId != Guid.Empty)
             {
-                containers = containers.Where(c => c.AuthorContainers.Any(
+                containers = containers.Where(c => c.AuthorContainers!.Any(
                     ac => ac.AuthorId == filter.AuthorId));
             }
 
             // last
             if (!string.IsNullOrEmpty(filter.LastName))
             {
-                containers = containers.Where(w => w.AuthorContainers.Any(
-                    aw => aw.Author.Lastx.Contains(filter.LastName)));
+                containers = containers.Where(w => w.AuthorContainers!.Any(aw =>
+                   aw.Author != null && aw.Author.Lastx!.Contains(filter.LastName)));
             }
 
             // language
@@ -363,13 +366,13 @@ public sealed class EfBiblioRepository : IBiblioRepository
 
             // title
             if (!string.IsNullOrEmpty(filter.Title))
-                containers = containers.Where(w => w.Titlex.Contains(filter.Title));
+                containers = containers.Where(w => w.Titlex!.Contains(filter.Title));
 
             // keyword
             if (!string.IsNullOrEmpty(filter.Keyword))
             {
-                containers = containers.Where(w => w.KeywordContainers.Any(
-                    kw => kw.Keyword.Valuex.Equals(filter.Keyword)));
+                containers = containers.Where(w => w.KeywordContainers!.Any(
+                    kw => kw.Keyword!.Valuex!.Equals(filter.Keyword)));
             }
 
             // yearpubmin
@@ -385,8 +388,8 @@ public sealed class EfBiblioRepository : IBiblioRepository
 
         // sort and page
         containers = containers
-            .OrderBy(c => c.AuthorContainers.Select(ac => ac.Author).First().Lastx)
-            .ThenBy(c => c.AuthorContainers.Select(ac => ac.Author).First().First)
+            .OrderBy(c => c.AuthorContainers!.Select(ac => ac.Author).First()!.Lastx)
+            .ThenBy(c => c.AuthorContainers!.Select(ac => ac.Author).First()!.First)
             .ThenBy(c => c.Titlex)
             .ThenBy(c => c.Key)
             .ThenBy(c => c.Id);
@@ -408,15 +411,15 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <returns>
     /// Container, or null if not found
     /// </returns>
-    public Container GetContainer(Guid id)
+    public Container? GetContainer(Guid id)
     {
         using var db = GetContext();
-        EfContainer container = db.Containers
+        EfContainer? container = db.Containers
             .AsNoTracking()
             .Include(w => w.Type)
-            .Include(w => w.AuthorContainers)
+            .Include(w => w.AuthorContainers!)
             .ThenInclude(aw => aw.Author)
-            .Include(w => w.KeywordContainers)
+            .Include(w => w.KeywordContainers!)
             .ThenInclude(kw => kw.Keyword)
             .FirstOrDefault(w => w.Id == id);
         return EfHelper.GetContainer(container);
@@ -440,10 +443,13 @@ public sealed class EfBiblioRepository : IBiblioRepository
         if (container == null) throw new ArgumentNullException(nameof(container));
 
         using var db = GetContext();
-        EfContainer ef = EfHelper.GetEfContainer(container, db);
+        EfContainer? ef = EfHelper.GetEfContainer(container, db);
         db.SaveChanges();
-        container.Id = ef.Id;
-        container.Key = ef.Key;
+        if (ef != null)
+        {
+            container.Id = ef.Id;
+            container.Key = ef.Key;
+        }
     }
 
     /// <summary>
@@ -453,7 +459,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     public void DeleteContainer(Guid id)
     {
         using var db = GetContext();
-        EfContainer container = db.Containers.Find(id);
+        EfContainer? container = db.Containers.Find(id);
         if (container != null)
         {
             db.Containers.Remove(container);
@@ -469,13 +475,13 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <param name="id">The identifier.</param>
     /// <returns>The type, or null if not found.</returns>
     /// <exception cref="ArgumentNullException">id</exception>
-    public WorkType GetWorkType(string id)
+    public WorkType? GetWorkType(string id)
     {
         if (id == null)
             throw new ArgumentNullException(nameof(id));
 
         using var db = GetContext();
-        EfWorkType ef = db.WorkTypes.Find(id);
+        EfWorkType? ef = db.WorkTypes.Find(id);
         return EfHelper.GetWorkType(ef);
     }
 
@@ -495,7 +501,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
         IQueryable<EfWorkType> types = db.WorkTypes.AsQueryable();
 
         if (!string.IsNullOrEmpty(filter.Name))
-            types = types.Where(t => t.Name.Contains(filter.Name));
+            types = types.Where(t => t.Name!.Contains(filter.Name));
 
         int tot = types.Count();
 
@@ -542,7 +548,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     public void DeleteWorkType(string id)
     {
         using var db = GetContext();
-        EfWorkType ef = db.WorkTypes.Find(id);
+        EfWorkType? ef = db.WorkTypes.Find(id);
         if (ef != null)
         {
             db.WorkTypes.Remove(ef);
@@ -555,7 +561,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     private static void PrepareAuthorFilter(AuthorFilter filter)
     {
         if (string.IsNullOrEmpty(filter.Last))
-            filter.Last = StandardFilter.Apply(filter.Last, true);
+            filter.Last = StandardFilter.Apply(filter.Last!, true);
     }
 
     /// <summary>
@@ -576,7 +582,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
         using var db = GetContext();
         var authors = db.Authors.AsQueryable();
         if (!string.IsNullOrEmpty(filter.Last))
-            authors = authors.Where(a => a.Lastx.Contains(filter.Last));
+            authors = authors.Where(a => a.Lastx!.Contains(filter.Last));
 
         int tot = authors.Count();
 
@@ -603,10 +609,10 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <returns>
     /// The author, or null if not found.
     /// </returns>
-    public Author GetAuthor(Guid id)
+    public Author? GetAuthor(Guid id)
     {
         using var db = GetContext();
-        EfAuthor ef = db.Authors.Find(id);
+        EfAuthor? ef = db.Authors.Find(id);
         return EfHelper.GetAuthor(ef);
     }
 
@@ -623,9 +629,12 @@ public sealed class EfBiblioRepository : IBiblioRepository
             throw new ArgumentNullException(nameof(author));
 
         using var db = GetContext();
-        EfAuthor ef = EfHelper.GetEfAuthor(author, db);
+        EfAuthor? ef = EfHelper.GetEfAuthor(author, db);
         db.SaveChanges();
-        author.Id = ef.Id;
+        if (ef != null)
+        {
+            author.Id = ef.Id;
+        }
     }
 
     /// <summary>
@@ -635,7 +644,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     public void DeleteAuthor(Guid id)
     {
         using var db = GetContext();
-        EfAuthor ef = db.Authors.Find(id);
+        EfAuthor? ef = db.Authors.Find(id);
         if (ef != null)
         {
             db.Authors.Remove(ef);
@@ -671,10 +680,10 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <returns>The keyword or null if not found.</returns>
-    public Keyword GetKeyword(int id)
+    public Keyword? GetKeyword(int id)
     {
         using var db = GetContext();
-        EfKeyword ef = db.Keywords.Find(id);
+        EfKeyword? ef = db.Keywords.Find(id);
         return ef != null ? EfHelper.GetKeyword(ef) : null;
     }
 
@@ -685,7 +694,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     public void DeleteKeyword(int id)
     {
         using var db = GetContext();
-        EfKeyword ef = db.Keywords.Find(id);
+        EfKeyword? ef = db.Keywords.Find(id);
         if (ef != null)
         {
             db.Keywords.Remove(ef);
@@ -719,12 +728,12 @@ public sealed class EfBiblioRepository : IBiblioRepository
                 if (filter.Value.Length > 4)
                 {
                     string v = filter.Value[4..];
-                    keywords = keywords.Where(k => k.Valuex.Contains(v));
+                    keywords = keywords.Where(k => k.Valuex!.Contains(v));
                 }
             }
             else
             {
-                keywords = keywords.Where(k => k.Valuex.Contains(filter.Value));
+                keywords = keywords.Where(k => k.Valuex!.Contains(filter.Value));
             }
         }
 
@@ -755,9 +764,9 @@ public sealed class EfBiblioRepository : IBiblioRepository
             throw new ArgumentNullException(nameof(keyword));
 
         using var db = GetContext();
-        EfKeyword ef = EfHelper.GetEfKeyword(keyword, db);
+        EfKeyword? ef = EfHelper.GetEfKeyword(keyword, db);
         db.SaveChanges();
-        return ef.Id;
+        return ef!.Id;
     }
 
     /// <summary>

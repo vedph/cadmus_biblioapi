@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+	<Nullable>enable</Nullable>
     <Version>3.0.2</Version>
     <FileVersion>3.0.2</FileVersion>
     <AssemblyVersion>3.0.2</AssemblyVersion>

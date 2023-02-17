@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
+	<Nullable>enable</Nullable>
     <RootNamespace>Cadmus.Biblio.Cli</RootNamespace>
     <Authors>Daniele Fusi</Authors>
     <Company>Fusi</Company>

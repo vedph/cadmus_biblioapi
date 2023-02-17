@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+	<Nullable>enable</Nullable>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>Daniele Fusi</Authors>
     <Company>Fusi</Company>

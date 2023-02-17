@@ -19,7 +19,7 @@ public abstract class WorkBaseBindingModel
     /// this work (e.g. Rossi 1963).
     /// </summary>
     [MaxLength(300)]
-    public string Key { get; set; }
+    public string? Key { get; set; }
 
     /// <summary>
     /// Gets or sets the authors and/or contributors.
@@ -33,14 +33,14 @@ public abstract class WorkBaseBindingModel
     /// </summary>
     [Required]
     [MaxLength(20)]
-    public string Type { get; set; }
+    public string? Type { get; set; }
 
     /// <summary>
     /// Gets or sets the work's title.
     /// </summary>
     [Required]
     [MaxLength(200)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     /// <summary>
     /// Gets or sets the work's language.
@@ -48,7 +48,7 @@ public abstract class WorkBaseBindingModel
     [Required]
     [MaxLength(3)]
     [RegularExpression("^[a-z]{3}$")]
-    public string Language { get; set; }
+    public string? Language { get; set; }
 
     /// <summary>
     /// Gets or sets the work's edition number (0 if not applicable).
@@ -59,7 +59,7 @@ public abstract class WorkBaseBindingModel
     /// Gets or sets the publisher(s).
     /// </summary>
     [MaxLength(50)]
-    public string Publisher { get; set; }
+    public string? Publisher { get; set; }
 
     /// <summary>
     /// Gets or sets the year of publication.
@@ -70,14 +70,14 @@ public abstract class WorkBaseBindingModel
     /// Gets or sets the place(s) of publication.
     /// </summary>
     [MaxLength(100)]
-    public string PlacePub { get; set; }
+    public string? PlacePub { get; set; }
 
     /// <summary>
     /// Gets or sets the location ID for this bibliographic item, e.g.
     /// a URL or a DOI.
     /// </summary>
     [MaxLength(500)]
-    public string Location { get; set; }
+    public string? Location { get; set; }
 
     /// <summary>
     /// Gets or sets the last access date. Used for web resources.
@@ -88,7 +88,7 @@ public abstract class WorkBaseBindingModel
     /// Gets or sets some optional notes.
     /// </summary>
     [MaxLength(500)]
-    public string Note { get; set; }
+    public string? Note { get; set; }
 
     /// <summary>
     /// Gets or sets the optional keywords linked to this work.

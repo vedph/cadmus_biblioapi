@@ -20,7 +20,7 @@ public class WorkFilter : PagingOptions
     /// <summary>
     /// Gets or sets the work's type.
     /// </summary>
-    public string Type { get; set; }
+    public string? Type { get; set; }
 
     /// <summary>
     /// Gets or sets the author identifier to be matched.
@@ -30,17 +30,17 @@ public class WorkFilter : PagingOptions
     /// <summary>
     /// Gets or sets any portion of the last name to be matched (filtered).
     /// </summary>
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
     /// <summary>
     /// Gets or sets the language to be matched.
     /// </summary>
-    public string Language { get; set; }
+    public string? Language { get; set; }
 
     /// <summary>
     /// Gets or sets any portion of the title to be matched (filtered).
     /// </summary>
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     /// <summary>
     /// Gets or sets the container ID to be matched.
@@ -50,7 +50,7 @@ public class WorkFilter : PagingOptions
     /// <summary>
     /// Gets or sets a keyword value to be matched.
     /// </summary>
-    public string Keyword { get; set; }
+    public string? Keyword { get; set; }
 
     /// <summary>
     /// Gets or sets the minimum year of publication.
@@ -65,5 +65,5 @@ public class WorkFilter : PagingOptions
     /// <summary>
     /// Gets or sets the citation key to be matched.
     /// </summary>
-    public string Key { get; set; }
+    public string? Key { get; set; }
 }

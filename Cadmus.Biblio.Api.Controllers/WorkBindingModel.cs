@@ -11,7 +11,7 @@ public sealed class WorkBindingModel : WorkBaseBindingModel
     /// To reference an existing author just set the
     /// <see cref="ContainerBindingModel.Id"/> property.
     /// </summary>
-    public ContainerBindingModel Container { get; set; }
+    public ContainerBindingModel? Container { get; set; }
 
     /// <summary>
     /// Gets or sets the first page number in the container (0 if not

@@ -20,7 +20,7 @@ public interface IBiblioRepository
     /// </summary>
     /// <param name="id">The work's identifier.</param>
     /// <returns>Work, or null if not found</returns>
-    Work GetWork(Guid id);
+    Work? GetWork(Guid id);
 
     /// <summary>
     /// Adds or updates the specified work.
@@ -54,7 +54,7 @@ public interface IBiblioRepository
     /// </summary>
     /// <param name="id">The container's identifier.</param>
     /// <returns>Container, or null if not found</returns>
-    Container GetContainer(Guid id);
+    Container? GetContainer(Guid id);
 
     /// <summary>
     /// Adds or updates the specified container.
@@ -87,7 +87,7 @@ public interface IBiblioRepository
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <returns>The type, or null if not found.</returns>
-    WorkType GetWorkType(string id);
+    WorkType? GetWorkType(string id);
 
     /// <summary>
     /// Adds or updates the type with the specified ID and name.
@@ -113,7 +113,7 @@ public interface IBiblioRepository
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <returns>The author, or null if not found.</returns>
-    Author GetAuthor(Guid id);
+    Author? GetAuthor(Guid id);
 
     /// <summary>
     /// Adds or updates the specified author.
@@ -138,7 +138,7 @@ public interface IBiblioRepository
     /// </summary>
     /// <param name="id">The identifier.</param>
     /// <returns>The keyword or null if not found.</returns>
-    Keyword GetKeyword(int id);
+    Keyword? GetKeyword(int id);
 
     /// <summary>
     /// Gets the specified page of keywords.

@@ -12,7 +12,7 @@ public sealed class EfKeywordContainer
     /// <summary>
     /// Gets or sets the keyword.
     /// </summary>
-    public EfKeyword Keyword { get; set; }
+    public EfKeyword? Keyword { get; set; }
 
     /// <summary>
     /// Gets or sets the work identifier.
@@ -22,7 +22,7 @@ public sealed class EfKeywordContainer
     /// <summary>
     /// Gets or sets the work.
     /// </summary>
-    public EfContainer Container { get; set; }
+    public EfContainer? Container { get; set; }
 
     /// <summary>
     /// Converts to string.

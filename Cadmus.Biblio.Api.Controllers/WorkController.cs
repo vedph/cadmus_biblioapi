@@ -3,6 +3,7 @@ using Fusi.Tools.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 
 namespace Cadmus.Biblio.Api.Controllers;
 
@@ -38,7 +39,7 @@ public sealed class WorkController : Controller
         [FromQuery] WorkFilterBindingModel model)
     {
         return Ok(_repository.GetWorks(
-            ModelHelper.GetWorkFilter(model)));
+            ModelHelper.GetWorkFilter(model)!));
     }
 
     /// <summary>
@@ -52,7 +53,7 @@ public sealed class WorkController : Controller
     [ProducesResponseType(404)]
     public ActionResult<Work> GetWork([FromRoute] Guid id)
     {
-        Work work = _repository.GetWork(id);
+        Work? work = _repository.GetWork(id);
         if (work == null) return NotFound();
         return Ok(work);
     }
@@ -71,8 +72,8 @@ public sealed class WorkController : Controller
             Id = model.Id ?? Guid.Empty,
             Key = model.Key,
             Authors = model.Authors?.Count > 0
-                ? model.Authors.ConvertAll(m => ModelHelper.GetAuthor(m))
-                : null,
+                ? model.Authors.ConvertAll(m => ModelHelper.GetAuthor(m)!)
+                : new List<WorkAuthor>(),
             Container = model.Container?.ToContainer(),
             Type = model.Type,
             Title = model.Title,
@@ -87,8 +88,8 @@ public sealed class WorkController : Controller
             AccessDate = model.AccessDate,
             Note = model.Note,
             Keywords = model.Keywords?.Count > 0
-                ? model.Keywords.ConvertAll(m => ModelHelper.GetKeyword(m))
-                : null
+                ? model.Keywords.ConvertAll(m => ModelHelper.GetKeyword(m)!)
+                : new List<Keyword>(),
         };
         _repository.AddWork(work);
         return CreatedAtRoute("GetWork", new

@@ -23,7 +23,7 @@ public static class EfHelper
         using StreamReader reader = new(
             Assembly.GetExecutingAssembly()
             .GetManifestResourceStream(
-                "Cadmus.Biblio.Ef.Assets.cadmus-biblio.sql"));
+                "Cadmus.Biblio.Ef.Assets.cadmus-biblio.sql")!);
         return reader.ReadToEnd();
     }
 
@@ -33,7 +33,7 @@ public static class EfHelper
     /// </summary>
     /// <param name="ef">The entity or null.</param>
     /// <returns>The work type or null.</returns>
-    public static WorkType GetWorkType(EfWorkType ef)
+    public static WorkType? GetWorkType(EfWorkType? ef)
     {
         if (ef == null) return null;
         return new WorkType
@@ -48,7 +48,7 @@ public static class EfHelper
     /// </summary>
     /// <param name="ef">The keyword or null.</param>
     /// <returns>The keyword or null.</returns>
-    public static Keyword GetKeyword(EfKeyword ef)
+    public static Keyword? GetKeyword(EfKeyword? ef)
     {
         if (ef == null) return null;
         return new Keyword
@@ -63,7 +63,7 @@ public static class EfHelper
     /// </summary>
     /// <param name="ef">The author or null.</param>
     /// <returns>The author or null.</returns>
-    public static Author GetAuthor(EfAuthor ef)
+    public static Author? GetAuthor(EfAuthor? ef)
     {
         if (ef == null) return null;
 
@@ -84,7 +84,7 @@ public static class EfHelper
     /// <param name="context">The context.</param>
     /// <returns>The object or null.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
-    public static WorkInfo GetWorkInfo(EfContainer ef, BiblioDbContext context)
+    public static WorkInfo? GetWorkInfo(EfContainer? ef, BiblioDbContext? context)
     {
         if (context == null)
             throw new ArgumentNullException(nameof(context));
@@ -140,7 +140,7 @@ public static class EfHelper
     /// <param name="context">The context.</param>
     /// <returns>The object or null.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
-    public static WorkInfo GetWorkInfo(EfWork ef, BiblioDbContext context)
+    public static WorkInfo? GetWorkInfo(EfWork? ef, BiblioDbContext? context)
     {
         if (context == null)
             throw new ArgumentNullException(nameof(context));
@@ -182,8 +182,8 @@ public static class EfHelper
             info.Keywords = (from kw in ef.KeywordWorks
                              select new Keyword
                              {
-                                 Language = kw.Keyword?.Language,
-                                 Value = kw.Keyword?.Value
+                                 Language = kw.Keyword?.Language!,
+                                 Value = kw.Keyword?.Value!
                              }).ToList();
         }
 
@@ -200,7 +200,7 @@ public static class EfHelper
     /// </summary>
     /// <param name="ef">The entity or null.</param>
     /// <returns>The container or null.</returns>
-    public static Container GetContainer(EfContainer ef)
+    public static Container? GetContainer(EfContainer? ef)
     {
         if (ef == null) return null;
 
@@ -227,8 +227,8 @@ public static class EfHelper
             container.Authors.AddRange(from ac in ef.AuthorContainers
                                        select new WorkAuthor
                                        {
-                                           Last = ac.Author.Last,
-                                           First = ac.Author.First,
+                                           Last = ac.Author?.Last,
+                                           First = ac.Author?.First,
                                            Role = ac.Role,
                                            Ordinal = ac.Ordinal
                                        });
@@ -249,7 +249,7 @@ public static class EfHelper
     /// </summary>
     /// <param name="ef">The entity or null.</param>
     /// <returns>The work.</returns>
-    public static Work GetWork(EfWork ef)
+    public static Work? GetWork(EfWork? ef)
     {
         if (ef == null) return null;
 
@@ -280,8 +280,8 @@ public static class EfHelper
                                   select new WorkAuthor
                                   {
                                       Id = ac.AuthorId,
-                                      Last = ac.Author.Last,
-                                      First = ac.Author.First,
+                                      Last = ac.Author?.Last,
+                                      First = ac.Author?.First,
                                       Role = ac.Role,
                                       Ordinal = ac.Ordinal
                                   });
@@ -305,22 +305,22 @@ public static class EfHelper
     /// <param name="type">The type or null.</param>
     /// <param name="context">The context.</param>
     /// <returns>The entity (or null for a null type).</returns>
-    public static EfWorkType EnsureEfWorkType(WorkType type,
+    public static EfWorkType? EnsureEfWorkType(WorkType? type,
         BiblioDbContext context)
     {
         if (type == null) return null;
 
-        EfWorkType ef = type.Id != null
+        EfWorkType? ef = type.Id != null
             ? context.WorkTypes.Find(type.Id) : null;
         if (ef == null)
         {
             ef = new EfWorkType
             {
-                Id = type.Id
+                Id = type.Id!
             };
-            context.WorkTypes.Add(ef);
+            context?.WorkTypes.Add(ef);
         }
-        ef.Name = type.Name;
+        ef.Name = type.Name!;
 
         return ef;
     }
@@ -332,14 +332,14 @@ public static class EfHelper
     /// <param name="context">The context.</param>
     /// <returns>The entity or null.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
-    public static EfAuthor GetEfAuthor(Author author, BiblioDbContext context)
+    public static EfAuthor? GetEfAuthor(Author? author, BiblioDbContext context)
     {
         if (context == null)
             throw new ArgumentNullException(nameof(context));
 
         if (author == null) return null;
 
-        EfAuthor ef = author.Id != Guid.Empty
+        EfAuthor? ef = author.Id != Guid.Empty
             ? context.Authors.Find(author.Id) : null;
         if (ef == null)
         {
@@ -367,7 +367,7 @@ public static class EfHelper
         List<EfAuthorContainer> requested = new();
         foreach (WorkAuthor author in authors)
         {
-            EfAuthor efa = GetEfAuthorFor(author, context);
+            EfAuthor? efa = GetEfAuthorFor(author, context);
             if (efa == null) continue;
             requested.Add(new EfAuthorContainer
             {
@@ -406,7 +406,7 @@ public static class EfHelper
         foreach (Keyword keyword in keywords)
         {
             // find the keyword by its content, as we have no ID
-            EfKeyword efk = context.Keywords.FirstOrDefault(k =>
+            EfKeyword? efk = context.Keywords.FirstOrDefault(k =>
                 k.Value == keyword.Value && k.Language == keyword.Language);
 
             // if not found, add it
@@ -414,9 +414,9 @@ public static class EfHelper
             {
                 efk = new EfKeyword
                 {
-                    Language = keyword.Language,
-                    Value = keyword.Value,
-                    Valuex = StandardFilter.Apply(keyword.Value, true)
+                    Language = keyword.Language!,
+                    Value = keyword.Value!,
+                    Valuex = StandardFilter.Apply(keyword.Value!, true)
                 };
                 context.Keywords.Add(efk);
             }
@@ -450,15 +450,15 @@ public static class EfHelper
         }
     }
 
-    private static EfWorkType GetOrCreateWorkType(string id, string name,
+    private static EfWorkType GetOrCreateWorkType(string? id, string? name,
         BiblioDbContext context)
     {
         // force a valid type
-        if (id == null) id = "-";
-        if (name == null) name = id;
+        id ??= "-";
+        name ??= id;
 
         // get it
-        EfWorkType ef = context.WorkTypes.Find(id);
+        EfWorkType? ef = context.WorkTypes.Find(id);
         if (ef == null)
         {
             ef = new EfWorkType
@@ -468,7 +468,10 @@ public static class EfHelper
             };
             context.WorkTypes.Add(ef);
         }
-        else if (name is not null) ef.Name = name;
+        else if (name is not null)
+        {
+            ef.Name = name;
+        }
 
         return ef;
     }
@@ -480,16 +483,14 @@ public static class EfHelper
     /// <param name="context">The context.</param>
     /// <returns>The entity or null.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
-    public static EfContainer GetEfContainer(Container container,
+    public static EfContainer? GetEfContainer(Container? container,
         BiblioDbContext context)
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
-
+        if (context == null) throw new ArgumentNullException(nameof(context));
         if (container == null) return null;
 
         // get the container unless it's new
-        EfContainer ef = container.Id != Guid.Empty
+        EfContainer? ef = container.Id != Guid.Empty
             ? context.Containers
                 .Include(c => c.AuthorContainers)
                 .Include(c => c.KeywordContainers)
@@ -510,15 +511,15 @@ public static class EfHelper
             ef.Type = GetOrCreateWorkType(container.Type, null, context);
             ef.Title = container.Title;
             ef.Titlex = StandardFilter.Apply(container.Title, true);
-            ef.Language = container.Language;
+            ef.Language = container.Language!;
             ef.Edition = container.Edition;
-            ef.Publisher = container.Publisher;
+            ef.Publisher = container.Publisher!;
             ef.YearPub = container.YearPub;
-            ef.PlacePub = container.PlacePub;
-            ef.Location = container.Location;
+            ef.PlacePub = container.PlacePub!;
+            ef.Location = container.Location!;
             ef.AccessDate = container.AccessDate;
-            ef.Number = container.Number;
-            ef.Note = container.Note;
+            ef.Number = container.Number!;
+            ef.Note = container.Note!;
 
             // authors
             if (container.Authors?.Count > 0)
@@ -529,11 +530,11 @@ public static class EfHelper
                 AddKeywords(container.Keywords, ef, context);
 
             // key
-            ef.Key = WorkKeyBuilder.PickKey(ef.Key, container);
+            ef.Key = WorkKeyBuilder.PickKey(ef.Key!, container);
             // add key suffix if required and possible
             if (ef.Key?.StartsWith(WorkKeyBuilder.MAN_KEY_PREFIX) != true)
             {
-                char c = GetSuffixForKey(ef.Key, context);
+                char c = GetSuffixForKey(ef.Key!, context);
                 if (c != '\0') ef.Key += c;
             }
         }
@@ -541,11 +542,11 @@ public static class EfHelper
         return ef;
     }
 
-    private static EfAuthor GetEfAuthorFor(WorkAuthor author,
+    private static EfAuthor? GetEfAuthorFor(WorkAuthor author,
         BiblioDbContext context)
     {
         // find the author
-        EfAuthor efa = author.Id != Guid.Empty
+        EfAuthor? efa = author.Id != Guid.Empty
             ? context.Authors.Find(author.Id) : null;
 
         // if not found, add a new author
@@ -583,7 +584,7 @@ public static class EfHelper
             }
         }
         // update indexed last
-        efa.Lastx = StandardFilter.Apply(efa.Last, true);
+        efa.Lastx = StandardFilter.Apply(efa.Last!, true);
 
         return efa;
     }
@@ -595,14 +596,16 @@ public static class EfHelper
         List<EfAuthorWork> requested = new();
         foreach (WorkAuthor author in authors)
         {
-            EfAuthor efa = GetEfAuthorFor(author, context);
+            EfAuthor? efa = GetEfAuthorFor(author, context);
             if (efa == null) continue;
             requested.Add(new EfAuthorWork
             {
                 Author = efa,
-                Work = work
+                AuthorId = efa.Id,
+                Work = work,
+                WorkId = work.Id,
             });
-        } // for
+        }
 
         // remove all the no more requested authors
         if (work.AuthorWorks != null)
@@ -613,7 +616,10 @@ public static class EfHelper
                     context.AuthorWorks.Remove(aw);
             }
         }
-        else work.AuthorWorks = new List<EfAuthorWork>();
+        else
+        {
+            work.AuthorWorks = new List<EfAuthorWork>();
+        }
 
         // add all those which are not yet present
         foreach (EfAuthorWork aw in requested)
@@ -634,7 +640,7 @@ public static class EfHelper
         foreach (Keyword keyword in keywords)
         {
             // find the keyword by its content, as we have no ID
-            EfKeyword efk = context.Keywords.FirstOrDefault(k =>
+            EfKeyword? efk = context.Keywords.FirstOrDefault(k =>
                 k.Value == keyword.Value && k.Language == keyword.Language);
 
             // if not found, add it
@@ -642,9 +648,9 @@ public static class EfHelper
             {
                 efk = new EfKeyword
                 {
-                    Language = keyword.Language,
-                    Value = keyword.Value,
-                    Valuex = StandardFilter.Apply(keyword.Value, true)
+                    Language = keyword.Language!,
+                    Value = keyword.Value!,
+                    Valuex = StandardFilter.Apply(keyword.Value!, true)
                 };
                 context.Keywords.Add(efk);
             }
@@ -683,7 +689,7 @@ public static class EfHelper
         var existing = context.Works.FirstOrDefault(w => w.Key == key);
         if (existing != null)
         {
-            Match m = Regex.Match(existing.Key, @"\d+([a-z])?$");
+            Match m = Regex.Match(existing.Key ?? "", @"\d+([a-z])?$");
             if (m.Success && m.Groups[1].Value.Length > 0)
             {
                 char c = m.Groups[1].Value[0];
@@ -701,7 +707,7 @@ public static class EfHelper
     /// <param name="context">The context.</param>
     /// <returns>The entity or null.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
-    public static EfWork GetEfWork(Work work, BiblioDbContext context)
+    public static EfWork? GetEfWork(Work? work, BiblioDbContext context)
     {
         if (context == null)
             throw new ArgumentNullException(nameof(context));
@@ -709,7 +715,7 @@ public static class EfHelper
         if (work == null) return null;
 
         // find the work unless new
-        EfWork ef = work.Id != Guid.Empty
+        EfWork? ef = work.Id != Guid.Empty
             ? context.Works
                 .Include(w => w.AuthorWorks)
                 .Include(w => w.KeywordWorks)
@@ -725,9 +731,9 @@ public static class EfHelper
 
         // update the work
         ef.Type = GetOrCreateWorkType(work.Type, null, context);
-        ef.Title = work.Title;
-        ef.Titlex = StandardFilter.Apply(work.Title, true);
-        ef.Language = work.Language;
+        ef.Title = work.Title!;
+        ef.Titlex = StandardFilter.Apply(work.Title!, true);
+        ef.Language = work.Language!;
         ef.Container = GetEfContainer(work.Container, context);
         ef.Edition = work.Edition;
         ef.Publisher = work.Publisher;
@@ -749,11 +755,11 @@ public static class EfHelper
             AddKeywords(work.Keywords, ef, context);
 
         // key
-        ef.Key = WorkKeyBuilder.PickKey(ef.Key, work);
+        ef.Key = WorkKeyBuilder.PickKey(ef.Key!, work);
         // add key suffix if required and possible
         if (ef.Key?.StartsWith(WorkKeyBuilder.MAN_KEY_PREFIX) != true)
         {
-            char c = GetSuffixForKey(ef.Key, context);
+            char c = GetSuffixForKey(ef.Key!, context);
             if (c != '\0') ef.Key += c;
         }
 
@@ -767,22 +773,22 @@ public static class EfHelper
     /// <param name="context">The context.</param>
     /// <returns>The entity or null.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
-    public static EfKeyword GetEfKeyword(Keyword keyword, BiblioDbContext context)
+    public static EfKeyword? GetEfKeyword(Keyword keyword, BiblioDbContext context)
     {
         if (context == null)
             throw new ArgumentNullException(nameof(context));
 
         if (keyword == null) return null;
-        EfKeyword ef = context.Keywords.FirstOrDefault(
+        EfKeyword? ef = context.Keywords.FirstOrDefault(
             k => k.Language == keyword.Language
             && k.Value == keyword.Value);
         if (ef == null)
         {
             ef = new EfKeyword
             {
-                Language = keyword.Language,
-                Value = keyword.Value,
-                Valuex = StandardFilter.Apply(keyword.Value, true)
+                Language = keyword.Language!,
+                Value = keyword.Value!,
+                Valuex = StandardFilter.Apply(keyword.Value!, true)
             };
             context.Keywords.Add(ef);
         }

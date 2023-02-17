@@ -55,7 +55,7 @@ public sealed class AuthorController : Controller
     [ProducesResponseType(404)]
     public ActionResult<Author> GetAuthor([FromRoute] Guid id)
     {
-        Author author = _repository.GetAuthor(id);
+        Author? author = _repository.GetAuthor(id);
         if (author == null) return NotFound();
         return Ok(author);
     }

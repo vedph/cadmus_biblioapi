@@ -5,7 +5,7 @@ namespace Cadmus.Biblio.Api.Controllers;
 
 internal static class ModelHelper
 {
-    public static WorkAuthor GetAuthor(WorkAuthorBindingModel model)
+    public static WorkAuthor? GetAuthor(WorkAuthorBindingModel? model)
     {
         if (model == null) return null;
 
@@ -19,7 +19,7 @@ internal static class ModelHelper
         };
     }
 
-    public static Keyword GetKeyword(KeywordBindingModel model)
+    public static Keyword? GetKeyword(KeywordBindingModel? model)
     {
         if (model == null) return null;
 
@@ -30,7 +30,7 @@ internal static class ModelHelper
         };
     }
 
-    public static WorkFilter GetWorkFilter(WorkFilterBindingModel model)
+    public static WorkFilter? GetWorkFilter(WorkFilterBindingModel? model)
     {
         if (model == null) return null;
 

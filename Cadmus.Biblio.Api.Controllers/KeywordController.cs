@@ -51,7 +51,7 @@ public sealed class KeywordController : Controller
     [ProducesResponseType(404)]
     public ActionResult<Keyword> GetKeyword([FromRoute] int id)
     {
-        Keyword keyword = _repository.GetKeyword(id);
+        Keyword? keyword = _repository.GetKeyword(id);
         if (keyword == null) return NotFound();
         return Ok(keyword);
     }

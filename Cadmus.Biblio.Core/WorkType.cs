@@ -8,12 +8,12 @@ public class WorkType
     /// <summary>
     /// Gets or sets the identifier.
     /// </summary>
-    public string Id { get; set; }
+    public string? Id { get; set; }
 
     /// <summary>
     /// Gets or sets the name.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Converts to string.

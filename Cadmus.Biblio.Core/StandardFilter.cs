@@ -65,8 +65,7 @@ public static class StandardFilter
         }
 
         // right trim
-        if (sb.Length > 0 && sb[sb.Length - 1] == ' ')
-            sb.Remove(sb.Length - 1, 1);
+        if (sb.Length > 0 && sb[^1] == ' ') sb.Remove(sb.Length - 1, 1);
 
         return sb.ToString();
     }

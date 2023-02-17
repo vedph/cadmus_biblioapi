@@ -15,7 +15,7 @@ public class EfAuthorWork
     /// <summary>
     /// Gets or sets the author.
     /// </summary>
-    public EfAuthor Author { get; set; }
+    public EfAuthor? Author { get; set; }
 
     /// <summary>
     /// Gets or sets the work identifier.
@@ -25,7 +25,7 @@ public class EfAuthorWork
     /// <summary>
     /// Gets or sets the work.
     /// </summary>
-    public EfWork Work { get; set; }
+    public EfWork? Work { get; set; }
 
     /// <summary>
     /// Gets or sets the optional role, used with authors linked to a
@@ -33,7 +33,7 @@ public class EfAuthorWork
     /// bibliographic record, e.g. "editor", "translator", "organization",
     /// etc.
     /// </summary>
-    public string Role { get; set; }
+    public string? Role { get; set; }
 
     /// <summary>
     /// Gets or sets the ordinal number of this author in the author(s)

@@ -21,7 +21,7 @@ public sealed class WorkFilterBindingModel : PagingOptionsBindingModel
     /// The work's type.
     /// </summary>
     [MaxLength(20)]
-    public string Type { get; set; }
+    public string? Type { get; set; }
 
     /// <summary>
     /// The author ID to be matched.
@@ -32,20 +32,20 @@ public sealed class WorkFilterBindingModel : PagingOptionsBindingModel
     /// Any portion of the last name to be matched (filtered).
     /// </summary>
     [MaxLength(50)]
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
     /// <summary>
     /// The language to be matched.
     /// </summary>
     [MaxLength(3)]
     [RegularExpression("^[a-z]{3}$")]
-    public string Language { get; set; }
+    public string? Language { get; set; }
 
     /// <summary>
     /// Any portion of the title to be matched (filtered).
     /// </summary>
     [MaxLength(200)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     /// <summary>
     /// The container ID to be matched.
@@ -56,7 +56,7 @@ public sealed class WorkFilterBindingModel : PagingOptionsBindingModel
     /// A keyword value to be matched.
     /// </summary>
     [MaxLength(50)]
-    public string Keyword { get; set; }
+    public string? Keyword { get; set; }
 
     /// <summary>
     /// The minimum year of publication.
@@ -72,5 +72,5 @@ public sealed class WorkFilterBindingModel : PagingOptionsBindingModel
     /// The citation key to be matched.
     /// </summary>
     [MaxLength(300)]
-    public string Key { get; set; }
+    public string? Key { get; set; }
 }

@@ -8,7 +8,7 @@ public class Work : Container
     /// <summary>
     /// Gets or sets the optional work's container.
     /// </summary>
-    public Container Container { get; set; }
+    public Container? Container { get; set; }
 
     /// <summary>
     /// Gets or sets the first page number in the container (0 if not

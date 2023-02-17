@@ -317,7 +317,10 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
-- 2023-02-17: updated packages.
+- 2023-02-17:
+  - updated packages.
+  - enabed nullable for all the projects.
+  - fix to work authors save.
 - 2023-02-02: migrated to new components factory. This is a breaking change for backend components, please see [this page](https://myrmex.github.io/overview/cadmus/dev/history/#2023-02-01---backend-infrastructure-upgrade). Anyway, in the end you just have to update your libraries and a single namespace reference. Benefits include:
   - more streamlined component instantiation.
   - more functionality in components factory, including DI.

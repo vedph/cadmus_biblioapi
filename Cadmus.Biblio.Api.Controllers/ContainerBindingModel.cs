@@ -1,5 +1,6 @@
 ﻿using Cadmus.Biblio.Core;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Cadmus.Biblio.Api.Controllers;
@@ -14,7 +15,7 @@ public sealed class ContainerBindingModel : WorkBaseBindingModel
     /// Gets or sets the number.
     /// </summary>
     [MaxLength(50)]
-    public string Number { get; set; }
+    public string? Number { get; set; }
 
     public Container ToContainer()
     {
@@ -23,8 +24,8 @@ public sealed class ContainerBindingModel : WorkBaseBindingModel
             Id = Id ?? Guid.Empty,
             Key = Key,
             Authors = Authors?.Count > 0
-                ? Authors.ConvertAll(m => ModelHelper.GetAuthor(m))
-                : null,
+                ? Authors.ConvertAll(m => ModelHelper.GetAuthor(m)!)
+                : new List<WorkAuthor>(),
             Type = Type,
             Title = Title,
             Language = Language,
@@ -36,8 +37,8 @@ public sealed class ContainerBindingModel : WorkBaseBindingModel
             AccessDate = AccessDate,
             Note = Note,
             Keywords = Keywords?.Count > 0
-                ? Keywords.ConvertAll(m => ModelHelper.GetKeyword(m))
-                : null,
+                ? Keywords.ConvertAll(m => ModelHelper.GetKeyword(m)!)
+                : new List<Keyword>(),
             Number = Number
         };
     }

@@ -13,7 +13,7 @@ public sealed class EfAuthor : Author
     /// <summary>
     /// Gets or sets the value of <see cref="Last"/> filtered for indexing.
     /// </summary>
-    public string Lastx { get; set; }
+    public string? Lastx { get; set; }
 
     /// <summary>
     /// Gets or sets the author-works link.
@@ -26,5 +26,6 @@ public sealed class EfAuthor : Author
     public EfAuthor()
     {
         Id = Guid.NewGuid();
+        AuthorWorks = new List<EfAuthorWork>();
     }
 }

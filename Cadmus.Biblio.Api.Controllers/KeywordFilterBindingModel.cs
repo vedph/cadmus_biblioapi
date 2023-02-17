@@ -9,12 +9,12 @@ public sealed class KeywordFilterBindingModel : PagingOptionsBindingModel
     /// </summary>
     [MaxLength(3)]
     [RegularExpression("^[a-z]{3}$")]
-    public string Language { get; set; }
+    public string? Language { get; set; }
 
     /// <summary>
     /// Any portion of the keyword's value, eventually prefixed with
     /// the 3-letters keyword's language code plus colon (e.g. <c>eng:test</c>).
     /// </summary>
     [MaxLength(50)]
-    public string Value { get; set; }
+    public string? Value { get; set; }
 }

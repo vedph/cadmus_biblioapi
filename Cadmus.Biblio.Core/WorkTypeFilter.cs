@@ -8,5 +8,5 @@ namespace Cadmus.Biblio.Core;
 /// <seealso cref="PagingOptions" />
 public class WorkTypeFilter : PagingOptions
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }

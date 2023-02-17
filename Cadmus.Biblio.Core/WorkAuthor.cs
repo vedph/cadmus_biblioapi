@@ -11,7 +11,7 @@ public class WorkAuthor : Author
     /// <summary>
     /// Gets or sets the role of this author in the work.
     /// </summary>
-    public string Role { get; set; }
+    public string? Role { get; set; }
 
     /// <summary>
     /// Gets or sets the ordinal number of the author in a list.
@@ -34,8 +34,7 @@ public class WorkAuthor : Author
     /// <exception cref="ArgumentNullException">author</exception>
     public WorkAuthor(Author author)
     {
-        if (author == null)
-            throw new System.ArgumentNullException(nameof(author));
+        if (author == null) throw new ArgumentNullException(nameof(author));
 
         Id = author.Id;
         First = author.First;

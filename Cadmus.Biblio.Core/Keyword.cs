@@ -8,12 +8,12 @@ public class Keyword
     /// <summary>
     /// Gets or sets the language (ISO 639-3).
     /// </summary>
-    public string Language { get; set; }
+    public string? Language { get; set; }
 
     /// <summary>
     /// Gets or sets the keyword's value.
     /// </summary>
-    public string Value { get; set; }
+    public string? Value { get; set; }
 
     /// <summary>
     /// Converts to string.

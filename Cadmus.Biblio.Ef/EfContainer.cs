@@ -11,10 +11,10 @@ public sealed class EfContainer : EfWorkBase
     /// <summary>
     /// Gets or sets the author-container links.
     /// </summary>
-    public List<EfAuthorContainer> AuthorContainers { get; set; }
+    public List<EfAuthorContainer>? AuthorContainers { get; set; }
 
     /// <summary>
     /// Gets or sets the keyword-container links.
     /// </summary>
-    public List<EfKeywordContainer> KeywordContainers { get; set; }
+    public List<EfKeywordContainer>? KeywordContainers { get; set; }
 }

@@ -23,7 +23,7 @@ public class WorkInfo
     /// Gets or sets an optional arbitrarily defined key to identify
     /// this work (e.g. Rossi 1963).
     /// </summary>
-    public string Key { get; set; }
+    public string? Key { get; set; }
 
     /// <summary>
     /// Gets or sets the authors and/or contributors.
@@ -33,17 +33,17 @@ public class WorkInfo
     /// <summary>
     /// Gets or sets the work's type ID (e.g. book, journal, etc.).
     /// </summary>
-    public string Type { get; set; }
+    public string? Type { get; set; }
 
     /// <summary>
     /// Gets or sets the work's title.
     /// </summary>
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     /// <summary>
     /// Gets or sets the work's language.
     /// </summary>
-    public string Language { get; set; }
+    public string? Language { get; set; }
 
     /// <summary>
     /// Gets or sets the work's edition number (0 if not applicable).
@@ -58,12 +58,12 @@ public class WorkInfo
     /// <summary>
     /// Gets or sets the place(s) of publication.
     /// </summary>
-    public string PlacePub { get; set; }
+    public string? PlacePub { get; set; }
 
     /// <summary>
     /// Gets or sets the number.
     /// </summary>
-    public string Number { get; set; }
+    public string? Number { get; set; }
 
     /// <summary>
     /// Gets or sets the first page number.
@@ -83,7 +83,7 @@ public class WorkInfo
     /// <summary>
     /// Gets or sets the container.
     /// </summary>
-    public WorkInfo Container { get; set; }
+    public WorkInfo? Container { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WorkInfo"/> class.

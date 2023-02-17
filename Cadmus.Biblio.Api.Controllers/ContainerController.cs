@@ -38,7 +38,7 @@ public sealed class ContainerController : Controller
         [FromQuery] WorkFilterBindingModel model)
     {
         return Ok(_repository.GetContainers(
-            ModelHelper.GetWorkFilter(model)));
+            ModelHelper.GetWorkFilter(model)!));
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public sealed class ContainerController : Controller
     [ProducesResponseType(404)]
     public ActionResult<Container> GetContainer([FromRoute] Guid id)
     {
-        Container container = _repository.GetContainer(id);
+        Container? container = _repository.GetContainer(id);
         if (container == null) return NotFound();
         return Ok(container);
     }

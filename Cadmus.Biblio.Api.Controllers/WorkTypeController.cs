@@ -49,7 +49,7 @@ public sealed class WorkTypeController : Controller
     [ProducesResponseType(404)]
     public ActionResult<WorkType> GetWorkType([FromRoute] string id)
     {
-        WorkType type = _repository.GetWorkType(id);
+        WorkType? type = _repository.GetWorkType(id);
         if (type == null) return NotFound();
         return Ok(type);
     }

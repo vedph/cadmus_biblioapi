@@ -16,32 +16,32 @@ public class EfWorkBase
     /// Gets or sets an optional arbitrarily defined key to identify
     /// this work (e.g. Rossi 1963).
     /// </summary>
-    public string Key { get; set; }
+    public string? Key { get; set; }
 
     /// <summary>
     /// Gets or sets the work's type ID (e.g. book, journal, etc.).
     /// </summary>
-    public string TypeId { get; set; }
+    public string? TypeId { get; set; }
 
     /// <summary>
     /// Gets or sets the type.
     /// </summary>
-    public EfWorkType Type { get; set; }
+    public EfWorkType? Type { get; set; }
 
     /// <summary>
     /// Gets or sets the work's title.
     /// </summary>
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     /// <summary>
     /// Gets or sets the filtered work's title.
     /// </summary>
-    public string Titlex { get; set; }
+    public string? Titlex { get; set; }
 
     /// <summary>
     /// Gets or sets the work's language.
     /// </summary>
-    public string Language { get; set; }
+    public string? Language { get; set; }
 
     /// <summary>
     /// Gets or sets the work's edition number (0 if not applicable).
@@ -51,7 +51,7 @@ public class EfWorkBase
     /// <summary>
     /// Gets or sets the publisher(s).
     /// </summary>
-    public string Publisher { get; set; }
+    public string? Publisher { get; set; }
 
     /// <summary>
     /// Gets or sets the number. This can be either a container number
@@ -60,7 +60,7 @@ public class EfWorkBase
     /// as a single record, valid for all its issues, and the issue number
     /// is rather specified in the work. The choice is up to the user.
     /// </summary>
-    public string Number { get; set; }
+    public string? Number { get; set; }
 
     /// <summary>
     /// Gets or sets the year of publication.
@@ -70,13 +70,13 @@ public class EfWorkBase
     /// <summary>
     /// Gets or sets the place(s) of publication.
     /// </summary>
-    public string PlacePub { get; set; }
+    public string? PlacePub { get; set; }
 
     /// <summary>
     /// Gets or sets the location ID for this bibliographic item, e.g.
     /// a URL or a DOI.
     /// </summary>
-    public string Location { get; set; }
+    public string? Location { get; set; }
 
     /// <summary>
     /// Gets or sets the last access date. Used for web resources.
@@ -86,7 +86,7 @@ public class EfWorkBase
     /// <summary>
     /// Gets or sets some optional notes.
     /// </summary>
-    public string Note { get; set; }
+    public string? Note { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EfWorkBase"/> class.

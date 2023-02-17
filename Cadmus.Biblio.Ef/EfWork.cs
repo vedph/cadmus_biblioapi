@@ -11,7 +11,7 @@ public sealed class EfWork : EfWorkBase
     /// <summary>
     /// Gets or sets the author-work links.
     /// </summary>
-    public List<EfAuthorWork> AuthorWorks { get; set; }
+    public List<EfAuthorWork>? AuthorWorks { get; set; }
 
     /// <summary>
     /// Gets or sets the optional container identifier.
@@ -21,7 +21,7 @@ public sealed class EfWork : EfWorkBase
     /// <summary>
     /// Gets or sets the optional container.
     /// </summary>
-    public EfContainer Container { get; set; }
+    public EfContainer? Container { get; set; }
 
     /// <summary>
     /// Gets or sets the first page number in the container (0 if not
@@ -38,5 +38,5 @@ public sealed class EfWork : EfWorkBase
     /// <summary>
     /// Gets or sets the keyword-work links.
     /// </summary>
-    public List<EfKeywordWork> KeywordWorks { get; set; }
+    public List<EfKeywordWork>? KeywordWorks { get; set; }
 }
