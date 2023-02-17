@@ -3,7 +3,7 @@
 🐋 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus_biblio_api:2.1.8 -t vedph2020/cadmus_biblio_api:latest
+docker build . -t vedph2020/cadmus_biblio_api:3.0.3 -t vedph2020/cadmus_biblio_api:latest
 ```
 
 (replace with the current version).
@@ -316,6 +316,8 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+### 3.0.3
 
 - 2023-02-17:
   - updated packages.
