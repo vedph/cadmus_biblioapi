@@ -84,6 +84,7 @@ entity work {
     * language
     * edition
     * yearPub
+    * yearPub2
     * firstPage
     * lastPage
     --
@@ -105,6 +106,7 @@ entity container {
     * language
     * edition
     * yearPub
+    * yearPub2
     --
     * typeId <<FK>>
     * publisher
@@ -320,6 +322,9 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+- 2023-02-18:
+  - added optional `yearPub2` to work/container. This is a breaking change in the schema; the new field being nullable, you just have to add it to tables `work` and `container`.
 
 ### 3.0.3
 

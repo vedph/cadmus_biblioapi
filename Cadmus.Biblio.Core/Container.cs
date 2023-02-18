@@ -64,6 +64,12 @@ public class Container
     public short YearPub { get; set; }
 
     /// <summary>
+    /// Gets or sets the second year in a range representing the publication
+    /// period, the first year being <see cref="YearPub"/>.
+    /// </summary>
+    public short? YearPub2 { get; set; }
+
+    /// <summary>
     /// Gets or sets the place(s) of publication.
     /// </summary>
     public string? PlacePub { get; set; }

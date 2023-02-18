@@ -67,6 +67,11 @@ public abstract class WorkBaseBindingModel
     public short? YearPub { get; set; }
 
     /// <summary>
+    /// Gets or sets the optional second year for a publication period.
+    /// </summary>
+    public short? YearPub2 { get; set; }
+
+    /// <summary>
     /// Gets or sets the place(s) of publication.
     /// </summary>
     [MaxLength(100)]

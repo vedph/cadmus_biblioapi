@@ -14,7 +14,7 @@ public sealed class BiblioSeeder
     /// <summary>
     /// Gets or sets the optional logger.
     /// </summary>
-    public ILogger Logger { get; set; }
+    public ILogger? Logger { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BiblioSeeder"/> class.
@@ -36,7 +36,7 @@ public sealed class BiblioSeeder
     /// be seeded; in this string T=types, K=keywords, A=authors,
     /// C=containers, W=works. When specified, only the entities listed
     /// in this string are seeded.</param>
-    public void Seed(int count, string entities = null)
+    public void Seed(int count, string? entities = null)
     {
         if (entities == null || entities.IndexOf('T') > -1)
         {

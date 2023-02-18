@@ -36,8 +36,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
         DatabaseType = databaseType;
     }
 
-    private BiblioDbContext GetContext() =>
-        new(_connectionString, DatabaseType);
+    private BiblioDbContext GetContext() => new(_connectionString, DatabaseType);
 
     #region Works
     private static void PrepareWorkFilter(WorkFilter filter)

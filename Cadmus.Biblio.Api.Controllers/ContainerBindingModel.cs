@@ -32,6 +32,7 @@ public sealed class ContainerBindingModel : WorkBaseBindingModel
             Edition = Edition ?? 0,
             Publisher = Publisher,
             YearPub = YearPub ?? 0,
+            YearPub2 = YearPub2 == 0? null : YearPub2,
             PlacePub = PlacePub,
             Location = Location,
             AccessDate = AccessDate,

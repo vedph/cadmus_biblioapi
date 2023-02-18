@@ -51,6 +51,7 @@ public static class EfHelper
     public static Keyword? GetKeyword(EfKeyword? ef)
     {
         if (ef == null) return null;
+
         return new Keyword
         {
             Language = ef.Language,
@@ -86,10 +87,10 @@ public static class EfHelper
     /// <exception cref="ArgumentNullException">context</exception>
     public static WorkInfo? GetWorkInfo(EfContainer? ef, BiblioDbContext? context)
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
+        if (context == null) throw new ArgumentNullException(nameof(context));
 
         if (ef == null) return null;
+
         WorkInfo info = new()
         {
             IsContainer = true,
@@ -142,10 +143,10 @@ public static class EfHelper
     /// <exception cref="ArgumentNullException">context</exception>
     public static WorkInfo? GetWorkInfo(EfWork? ef, BiblioDbContext? context)
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
+        if (context == null) throw new ArgumentNullException(nameof(context));
 
         if (ef == null) return null;
+
         WorkInfo info = new()
         {
             IsContainer = false,
@@ -214,6 +215,7 @@ public static class EfHelper
             Edition = ef.Edition,
             Publisher = ef.Publisher,
             YearPub = ef.YearPub,
+            YearPub2 = ef.YearPub2,
             PlacePub = ef.PlacePub,
             Location = ef.Location,
             AccessDate = ef.AccessDate,
@@ -263,6 +265,7 @@ public static class EfHelper
             Edition = ef.Edition,
             Publisher = ef.Publisher,
             YearPub = ef.YearPub,
+            YearPub2 = ef.YearPub2,
             PlacePub = ef.PlacePub,
             Location = ef.Location,
             AccessDate = ef.AccessDate,
@@ -310,8 +313,7 @@ public static class EfHelper
     {
         if (type == null) return null;
 
-        EfWorkType? ef = type.Id != null
-            ? context.WorkTypes.Find(type.Id) : null;
+        EfWorkType? ef = type.Id != null ? context.WorkTypes.Find(type.Id) : null;
         if (ef == null)
         {
             ef = new EfWorkType
@@ -515,6 +517,7 @@ public static class EfHelper
             ef.Edition = container.Edition;
             ef.Publisher = container.Publisher!;
             ef.YearPub = container.YearPub;
+            ef.YearPub2 = container.YearPub2;
             ef.PlacePub = container.PlacePub!;
             ef.Location = container.Location!;
             ef.AccessDate = container.AccessDate;
@@ -738,6 +741,7 @@ public static class EfHelper
         ef.Edition = work.Edition;
         ef.Publisher = work.Publisher;
         ef.YearPub = work.YearPub;
+        ef.YearPub2 = work.YearPub2;
         ef.PlacePub = work.PlacePub;
         ef.Location = work.Location;
         ef.AccessDate = work.AccessDate;

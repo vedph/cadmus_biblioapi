@@ -81,6 +81,7 @@ public sealed class WorkController : Controller
             Edition = model.Edition ?? 0,
             Publisher = model.Publisher,
             YearPub = model.YearPub ?? 0,
+            YearPub2 = model.YearPub2 == 0 ? null : model.YearPub2,
             PlacePub = model.PlacePub,
             FirstPage = model.FirstPage ?? 0,
             LastPage = model.LastPage ?? 0,
