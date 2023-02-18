@@ -6,16 +6,116 @@ using System.ComponentModel.DataAnnotations;
 namespace Cadmus.Biblio.Api.Controllers;
 
 /// <summary>
-/// Container model.
+/// Container binding model.
 /// </summary>
-/// <seealso cref="WorkBaseBindingModel" />
-public sealed class ContainerBindingModel : WorkBaseBindingModel
+public class ContainerBindingModel
 {
+    /// <summary>
+    /// Gets or sets the identifier (36-chars GUID).
+    /// </summary>
+    public Guid? Id { get; set; }
+
+    /// <summary>
+    /// Gets or sets an optional arbitrarily defined key to identify
+    /// this work (e.g. Rossi 1963).
+    /// </summary>
+    [MaxLength(300)]
+    public string? Key { get; set; }
+
+    /// <summary>
+    /// Gets or sets the authors and/or contributors.
+    /// To reference an existing author just set the
+    /// <see cref="WorkAuthorBindingModel.Id"/> property.
+    /// </summary>
+    public List<WorkAuthorBindingModel> Authors { get; set; }
+
+    /// <summary>
+    /// Gets or sets the work's type ID (e.g. book, journal, etc.).
+    /// </summary>
+    [Required]
+    [MaxLength(20)]
+    public string? Type { get; set; }
+
+    /// <summary>
+    /// Gets or sets the work's title.
+    /// </summary>
+    [Required]
+    [MaxLength(200)]
+    public string? Title { get; set; }
+
+    /// <summary>
+    /// Gets or sets the work's language.
+    /// </summary>
+    [Required]
+    [MaxLength(3)]
+    [RegularExpression("^[a-z]{3}$")]
+    public string? Language { get; set; }
+
+    /// <summary>
+    /// Gets or sets the work's edition number (0 if not applicable).
+    /// </summary>
+    public short? Edition { get; set; }
+
+    /// <summary>
+    /// Gets or sets the publisher(s).
+    /// </summary>
+    [MaxLength(50)]
+    public string? Publisher { get; set; }
+
     /// <summary>
     /// Gets or sets the number.
     /// </summary>
     [MaxLength(50)]
     public string? Number { get; set; }
+
+    /// <summary>
+    /// Gets or sets the year of publication.
+    /// </summary>
+    public short? YearPub { get; set; }
+
+    /// <summary>
+    /// Gets or sets the optional second year for a publication period.
+    /// </summary>
+    public short? YearPub2 { get; set; }
+
+    /// <summary>
+    /// Gets or sets the place(s) of publication.
+    /// </summary>
+    [MaxLength(100)]
+    public string? PlacePub { get; set; }
+
+    /// <summary>
+    /// Gets or sets the location ID for this bibliographic item, e.g.
+    /// a URL or a DOI.
+    /// </summary>
+    [MaxLength(500)]
+    public string? Location { get; set; }
+
+    /// <summary>
+    /// Gets or sets the last access date. Used for web resources.
+    /// </summary>
+    public DateTime? AccessDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets some optional notes.
+    /// </summary>
+    [MaxLength(500)]
+    public string? Note { get; set; }
+
+    /// <summary>
+    /// Gets or sets the optional keywords linked to this work.
+    /// </summary>
+    public List<KeywordBindingModel> Keywords { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ContainerBindingModel"/>
+    /// class.
+    /// </summary>
+    protected ContainerBindingModel()
+    {
+        Authors = new List<WorkAuthorBindingModel>();
+        Keywords = new List<KeywordBindingModel>();
+    }
 
     public Container ToContainer()
     {
@@ -31,8 +131,9 @@ public sealed class ContainerBindingModel : WorkBaseBindingModel
             Language = Language,
             Edition = Edition ?? 0,
             Publisher = Publisher,
+            Number = Number,
             YearPub = YearPub ?? 0,
-            YearPub2 = YearPub2 == 0? null : YearPub2,
+            YearPub2 = YearPub2 == 0 ? null : YearPub2,
             PlacePub = PlacePub,
             Location = Location,
             AccessDate = AccessDate,
@@ -40,7 +141,6 @@ public sealed class ContainerBindingModel : WorkBaseBindingModel
             Keywords = Keywords?.Count > 0
                 ? Keywords.ConvertAll(m => ModelHelper.GetKeyword(m)!)
                 : new List<Keyword>(),
-            Number = Number
         };
     }
 }

@@ -67,31 +67,7 @@ public sealed class WorkController : Controller
     [ProducesResponseType(201)]
     public IActionResult AddWork([FromBody] WorkBindingModel model)
     {
-        Work work = new()
-        {
-            Id = model.Id ?? Guid.Empty,
-            Key = model.Key,
-            Authors = model.Authors?.Count > 0
-                ? model.Authors.ConvertAll(m => ModelHelper.GetAuthor(m)!)
-                : new List<WorkAuthor>(),
-            Container = model.Container?.ToContainer(),
-            Type = model.Type,
-            Title = model.Title,
-            Language = model.Language,
-            Edition = model.Edition ?? 0,
-            Publisher = model.Publisher,
-            YearPub = model.YearPub ?? 0,
-            YearPub2 = model.YearPub2 == 0 ? null : model.YearPub2,
-            PlacePub = model.PlacePub,
-            FirstPage = model.FirstPage ?? 0,
-            LastPage = model.LastPage ?? 0,
-            Location = model.Location,
-            AccessDate = model.AccessDate,
-            Note = model.Note,
-            Keywords = model.Keywords?.Count > 0
-                ? model.Keywords.ConvertAll(m => ModelHelper.GetKeyword(m)!)
-                : new List<Keyword>(),
-        };
+        Work work = model.ToWork();
         _repository.AddWork(work);
         return CreatedAtRoute("GetWork", new
         {
