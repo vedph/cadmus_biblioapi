@@ -3,7 +3,7 @@
 🐋 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus_biblio_api:3.0.3 -t vedph2020/cadmus_biblio_api:latest
+docker build . -t vedph2020/cadmus_biblio_api:3.1.0 -t vedph2020/cadmus_biblio_api:latest
 ```
 
 (replace with the current version).
@@ -13,7 +13,7 @@ This API is independent from Cadmus, but it is designed to integrate with it. Yo
 The `CadmusBiblioDemoApi` project is provided to test a Cadmus-based editor consuming the bibliography API. So, to play with it you should start both the API projects, and then the [frontend app](https://github.com/vedph/cadmus_biblio_shell). To build the image of the demo:
 
 ```bash
-docker build . -f Dockerfile-demo -t vedph2020/cadmus-biblio-demo-api:0.0.1 -t vedph2020/cadmus-biblio-demo-api:latest
+docker build . -f Dockerfile-demo -t vedph2020/cadmus-biblio-demo-api:0.1.0 -t vedph2020/cadmus-biblio-demo-api:latest
 ```
 
 ## Overview
@@ -322,6 +322,8 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+### 3.1.0
 
 - 2023-02-18:
   - added optional `yearPub2` to work/container. This is a breaking change in the schema; the new field being nullable, you just have to add it to tables `work` and `container`.
