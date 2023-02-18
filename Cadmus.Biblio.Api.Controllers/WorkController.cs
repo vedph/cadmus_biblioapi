@@ -38,8 +38,7 @@ public sealed class WorkController : Controller
     public ActionResult<DataPage<Work>> GetWorks(
         [FromQuery] WorkFilterBindingModel model)
     {
-        return Ok(_repository.GetWorks(
-            ModelHelper.GetWorkFilter(model)!));
+        return Ok(_repository.GetWorks(model.ToWorkFilter()));
     }
 
     /// <summary>

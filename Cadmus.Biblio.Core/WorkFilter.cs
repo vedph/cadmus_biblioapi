@@ -63,7 +63,7 @@ public class WorkFilter : PagingOptions
     public short YearPubMax { get; set; }
 
     /// <summary>
-    /// Gets or sets the citation key to be matched.
+    /// Gets or sets any portion of the citation key to be matched.
     /// </summary>
     public string? Key { get; set; }
 }

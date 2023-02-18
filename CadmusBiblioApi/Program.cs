@@ -28,7 +28,7 @@ public sealed class Program
         var enumerator = dct.GetEnumerator();
         while (enumerator.MoveNext())
         {
-            keys.Add(((DictionaryEntry)enumerator.Current).Key.ToString());
+            keys.Add(((DictionaryEntry)enumerator.Current).Key!.ToString()!);
         }
 
         foreach (string key in keys.OrderBy(s => s))
@@ -78,13 +78,13 @@ public sealed class Program
                 .ConfigureAppConfiguration((context, config) =>
                 {
                     IConfiguration cfg = AppConfigReader.Read();
-                    string csTemplate = cfg.GetValue<string>("Serilog:ConnectionString");
-                    string dbName = cfg.GetValue<string>("DatabaseNames:Data");
+                    string csTemplate = cfg.GetValue<string>("Serilog:ConnectionString")!;
+                    string dbName = cfg.GetValue<string>("DatabaseNames:Data")!;
                     string cs = string.Format(csTemplate, dbName);
                     Debug.WriteLine($"Serilog:ConnectionString override = {cs}");
                     Console.WriteLine($"Serilog:ConnectionString override = {cs}");
 
-                    Dictionary<string, string> dct = new()
+                    Dictionary<string, string?> dct = new()
                     {
                         { "Serilog:ConnectionString", cs }
                     };

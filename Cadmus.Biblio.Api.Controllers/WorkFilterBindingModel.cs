@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cadmus.Biblio.Core;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Cadmus.Biblio.Api.Controllers;
@@ -73,4 +74,24 @@ public sealed class WorkFilterBindingModel : PagingOptionsBindingModel
     /// </summary>
     [MaxLength(300)]
     public string? Key { get; set; }
+
+    public WorkFilter ToWorkFilter()
+    {
+        return new WorkFilter
+        {
+            PageNumber = PageNumber,
+            PageSize = PageSize,
+            IsMatchAnyEnabled = MatchAny,
+            Type = Type,
+            AuthorId = AuthorId ?? Guid.Empty,
+            LastName = LastName,
+            Language = Language,
+            Title = Title,
+            ContainerId = ContainerId ?? Guid.Empty,
+            Keyword = Keyword,
+            YearPubMin = YearPubMin ?? 0,
+            YearPubMax = YearPubMax ?? 0,
+            Key = Key
+        };
+    }
 }

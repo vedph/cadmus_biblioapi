@@ -31,7 +31,7 @@ public sealed class AuthorSeeder
                 .RuleFor(a => a.Id, Guid.NewGuid())
                 .RuleFor(a => a.First, first)
                 .RuleFor(a => a.Last, last)
-                .RuleFor(a => a.Suffix, (string)null)
+                .RuleFor(a => a.Suffix, (string?)null)
                 .Generate();
             repository.AddAuthor(author);
             repeat = 0;

@@ -37,7 +37,7 @@ public sealed class WorkBindingModel : ContainerBindingModel
             Id = Id ?? Guid.Empty,
             Key = Key,
             Authors = Authors?.Count > 0
-                ? Authors.ConvertAll(m => ModelHelper.GetAuthor(m)!)
+                ? Authors.ConvertAll(m => m.ToWorkAuthor())
                 : new List<WorkAuthor>(),
             Type = Type,
             Title = Title,
@@ -52,7 +52,7 @@ public sealed class WorkBindingModel : ContainerBindingModel
             AccessDate = AccessDate,
             Note = Note,
             Keywords = Keywords?.Count > 0
-                ? Keywords.ConvertAll(m => ModelHelper.GetKeyword(m)!)
+                ? Keywords.ConvertAll(m => m.ToKeyword())
                 : new List<Keyword>(),
             Container = Container?.ToContainer(),
             FirstPage = FirstPage ?? 0,

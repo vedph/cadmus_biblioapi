@@ -71,7 +71,7 @@ public sealed class Startup
         {
             origins = section.AsEnumerable()
                 .Where(p => !string.IsNullOrEmpty(p.Value))
-                .Select(p => p.Value).ToArray();
+                .Select(p => p.Value).ToArray()!;
         }
 
         services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
@@ -87,7 +87,7 @@ public sealed class Startup
     private void ConfigureAuthServices(IServiceCollection services)
     {
         // identity
-        string connStringTemplate = Configuration.GetConnectionString("Default");
+        string connStringTemplate = Configuration.GetConnectionString("Default")!;
 
         services.AddIdentityMongoDbProvider<ApplicationUser, ApplicationRole>(
             options => { },
@@ -111,7 +111,7 @@ public sealed class Startup
                // NOTE: remember to set the values in configuration:
                // Jwt:SecureKey, Jwt:Audience, Jwt:Issuer
                IConfigurationSection jwtSection = Configuration.GetSection("Jwt");
-               string key = jwtSection["SecureKey"];
+               string? key = jwtSection["SecureKey"];
                if (string.IsNullOrEmpty(key))
                    throw new InvalidOperationException("Required JWT SecureKey not found");
 
@@ -192,7 +192,7 @@ public sealed class Startup
     {
         // get dependencies
         ICadmusRepository repository =
-                provider.GetService<IRepositoryProvider>().CreateRepository();
+                provider.GetService<IRepositoryProvider>()!.CreateRepository();
         ICadmusPreviewFactoryProvider factoryProvider =
             new StandardCadmusPreviewFactoryProvider();
 
@@ -205,21 +205,21 @@ public sealed class Startup
         }
 
         // get profile source
-        ILogger logger = provider.GetService<ILogger>();
-        IHostEnvironment env = provider.GetService<IHostEnvironment>();
+        ILogger? logger = provider.GetService<ILogger>();
+        IHostEnvironment env = provider.GetService<IHostEnvironment>()!;
         string path = Path.Combine(env.ContentRootPath,
             "wwwroot", "preview-profile.json");
         if (!File.Exists(path))
         {
             Console.WriteLine($"Preview profile expected at {path} not found");
-            logger.Error($"Preview profile expected at {path} not found");
+            logger?.Error($"Preview profile expected at {path} not found");
             return new CadmusPreviewer(factoryProvider.GetFactory("{}"),
                 repository);
         }
 
         // load profile
         Console.WriteLine($"Loading preview profile from {path}...");
-        logger.Information($"Loading preview profile from {path}...");
+        logger?.Information($"Loading preview profile from {path}...");
         string profile;
         using (StreamReader reader = new(new FileStream(
             path, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8))
@@ -282,7 +282,7 @@ public sealed class Startup
         {
             string cs = string.Format(
                 CultureInfo.InvariantCulture,
-                Configuration.GetConnectionString("Biblio"),
+                Configuration.GetConnectionString("Biblio")!,
                 Configuration.GetValue<string>("DatabaseNames:Biblio"));
 
             return new EfBiblioRepository(cs, "mysql");
@@ -296,13 +296,13 @@ public sealed class Startup
         // serilog
         // Install-Package Serilog.Exceptions Serilog.Sinks.MongoDB
         // https://github.com/RehanSaeed/Serilog.Exceptions
-        string maxSize = Configuration["Serilog:MaxMbSize"];
+        string maxSize = Configuration["Serilog:MaxMbSize"]!;
         services.AddSingleton<ILogger>(_ => new LoggerConfiguration()
             .MinimumLevel.Information()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
             .Enrich.WithExceptionDetails()
             .WriteTo.Console()
-            .WriteTo.MongoDBCapped(Configuration["Serilog:ConnectionString"],
+            .WriteTo.MongoDBCapped(Configuration["Serilog:ConnectionString"]!,
                 cappedMaxSizeMb: !string.IsNullOrEmpty(maxSize) &&
                     int.TryParse(maxSize, out int n) && n > 0 ? n : 10)
                 .CreateLogger());
@@ -361,7 +361,7 @@ public sealed class Startup
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            string url = Configuration.GetValue<string>("Swagger:Endpoint");
+            string? url = Configuration.GetValue<string>("Swagger:Endpoint");
             if (string.IsNullOrEmpty(url)) url = "v1/swagger.json";
             options.SwaggerEndpoint(url, "V1 Docs");
         });

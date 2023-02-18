@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cadmus.Biblio.Core;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Cadmus.Biblio.Api.Controllers;
@@ -38,4 +39,20 @@ public sealed class WorkAuthorBindingModel
     /// </summary>
     [MaxLength(50)]
     public string? Role { get; set; }
+
+    /// <summary>
+    /// Converts this model into a work-author model.
+    /// </summary>
+    /// <returns>Model.</returns>
+    public WorkAuthor ToWorkAuthor()
+    {
+        return new WorkAuthor
+        {
+            Id = Id ?? Guid.Empty,
+            First = First,
+            Last = Last,
+            Suffix = Suffix,
+            Role = Role
+        };
+    }
 }

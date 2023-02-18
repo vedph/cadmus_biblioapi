@@ -37,8 +37,7 @@ public sealed class ContainerController : Controller
     public ActionResult<DataPage<Container>> GetContainers(
         [FromQuery] WorkFilterBindingModel model)
     {
-        return Ok(_repository.GetContainers(
-            ModelHelper.GetWorkFilter(model)!));
+        return Ok(_repository.GetContainers(model.ToWorkFilter()));
     }
 
     /// <summary>

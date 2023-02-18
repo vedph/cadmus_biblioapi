@@ -80,7 +80,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
             var predicate = PredicateBuilder.New<EfWork>();
 
             if (!string.IsNullOrEmpty(filter.Key))
-                predicate.Or(w => w.Key!.Equals(filter.Key));
+                predicate.Or(w => w.Key!.Contains(filter.Key));
 
             if (!string.IsNullOrEmpty(filter.Type))
                 predicate.Or(w => w.Type!.Equals(filter.Type));
@@ -125,7 +125,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
         {
             // key
             if (!string.IsNullOrEmpty(filter.Key))
-                works = works.Where(w => w.Key == filter.Key);
+                works = works.Where(w => w.Key!.Contains(filter.Key));
 
             // type
             if (!string.IsNullOrEmpty(filter.Type))
@@ -297,7 +297,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
             var predicate = PredicateBuilder.New<EfContainer>();
 
             if (!string.IsNullOrEmpty(filter.Key))
-                predicate.Or(c => c.Key!.Equals(filter.Key));
+                predicate.Or(c => c.Key!.Contains(filter.Key));
 
             if (!string.IsNullOrEmpty(filter.Type))
                 predicate.Or(c => c.Type!.Equals(filter.Type));
@@ -339,7 +339,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
         {
             // key
             if (!string.IsNullOrEmpty(filter.Key))
-                containers = containers.Where(w => w.Key == filter.Key);
+                containers = containers.Where(w => w.Key!.Contains(filter.Key));
 
             // type
             if (!string.IsNullOrEmpty(filter.Type))

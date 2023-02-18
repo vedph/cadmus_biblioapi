@@ -31,7 +31,7 @@ public static class BiblioHostSeedExtensions
             }, (exception, timeSpan, _) =>
             {
                 ILogger logger = serviceProvider
-                    .GetService<ILoggerFactory>()
+                    .GetService<ILoggerFactory>()!
                     .CreateLogger(typeof(BiblioHostSeedExtensions));
 
                 string message = "Unable to connect to DB" +
@@ -40,16 +40,15 @@ public static class BiblioHostSeedExtensions
                 logger.LogError(exception, message);
             }).Execute(() =>
             {
-                IConfiguration config =
-                    serviceProvider.GetService<IConfiguration>();
+                IConfiguration config = serviceProvider.GetService<IConfiguration>()!;
 
-                ILogger logger = serviceProvider
-                    .GetService<ILoggerFactory>()
+                ILogger? logger = serviceProvider
+                    .GetService<ILoggerFactory>()!
                     .CreateLogger(typeof(BiblioHostSeedExtensions));
 
                 Console.WriteLine("Seeding database...");
                 IBiblioRepository repository =
-                    serviceProvider.GetService<IBiblioRepository>();
+                    serviceProvider.GetService<IBiblioRepository>()!;
 
                 BiblioSeeder seeder = new(repository)
                 {
@@ -73,8 +72,8 @@ public static class BiblioHostSeedExtensions
             }, (exception, timeSpan, _) =>
             {
                 // in case of DbException we must retry
-                ILogger logger = serviceProvider
-                    .GetService<ILoggerFactory>()
+                ILogger? logger = serviceProvider
+                    .GetService<ILoggerFactory>()!
                     .CreateLogger(typeof(BiblioHostSeedExtensions));
 
                 string message = "Unable to connect to DB" +
@@ -84,11 +83,7 @@ public static class BiblioHostSeedExtensions
             }).Execute(async() =>
             {
                 IConfiguration config =
-                    serviceProvider.GetService<IConfiguration>();
-
-                //ILogger logger = serviceProvider
-                //    .GetService<ILoggerFactory>()
-                //    .CreateLogger(typeof(BiblioHostSeedExtensions));
+                    serviceProvider.GetService<IConfiguration>()!;
 
                 // delay if requested, to allow DB start
                 int delay = config.GetValue<int>("Seed:BiblioDelay");
@@ -100,10 +95,10 @@ public static class BiblioHostSeedExtensions
                 else Console.WriteLine("No delay for seeding");
 
                 // if the DB does not exist, create and seed it
-                string dbName = config.GetValue<string>("DatabaseNames:Biblio");
+                string dbName = config.GetValue<string>("DatabaseNames:Biblio")!;
                 string cs = string.Format(
                     CultureInfo.InvariantCulture,
-                    config.GetConnectionString("Biblio"),
+                    config.GetConnectionString("Biblio")!,
                     dbName);
                 Console.WriteLine($"Checking for database {dbName}...");
                 Serilog.Log.Information($"Checking for database {dbName}...");
@@ -145,8 +140,8 @@ public static class BiblioHostSeedExtensions
         using (var scope = host.Services.CreateScope())
         {
             IServiceProvider serviceProvider = scope.ServiceProvider;
-            ILogger logger = serviceProvider
-                .GetService<ILoggerFactory>()
+            ILogger? logger = serviceProvider
+                .GetService<ILoggerFactory>()!
                 .CreateLogger(typeof(BiblioHostSeedExtensions));
 
             try
