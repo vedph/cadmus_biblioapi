@@ -40,6 +40,9 @@ public sealed class WorkAuthorBindingModel
     [MaxLength(50)]
     public string? Role { get; set; }
 
+    [Range(0, 100)]
+    public short Ordinal { get; set; }
+
     /// <summary>
     /// Converts this model into a work-author model.
     /// </summary>
@@ -52,7 +55,8 @@ public sealed class WorkAuthorBindingModel
             First = First,
             Last = Last,
             Suffix = Suffix,
-            Role = Role
+            Role = Role,
+            Ordinal = Ordinal
         };
     }
 }

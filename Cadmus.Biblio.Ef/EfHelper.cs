@@ -376,80 +376,75 @@ public static class EfHelper
                 Author = efa,
                 Container = container
             });
-        } // for
-
-        // remove all the no more requested authors
-        if (container.AuthorContainers != null)
-        {
-            foreach (EfAuthorContainer ac in container.AuthorContainers)
-            {
-                if (requested.All(r => r.AuthorId != ac.AuthorId))
-                    context.AuthorContainers.Remove(ac);
-            }
         }
-        else container.AuthorContainers = new List<EfAuthorContainer>();
+        container.AuthorContainers = requested;
 
-        // add all those which are not yet present
-        foreach (EfAuthorContainer ac in requested)
-        {
-            if (container.AuthorContainers.All(
-                r => r.AuthorId != ac.AuthorId))
-            {
-                container.AuthorContainers.Add(ac);
-            }
-        }
+        //// remove all the no more requested authors
+        //if (container.AuthorContainers != null)
+        //{
+        //    foreach (EfAuthorContainer ac in container.AuthorContainers)
+        //    {
+        //        if (requested.All(r => r.AuthorId != ac.AuthorId))
+        //            context.AuthorContainers.Remove(ac);
+        //    }
+        //}
+        //else container.AuthorContainers = new List<EfAuthorContainer>();
+
+        //// add all those which are not yet present
+        //foreach (EfAuthorContainer ac in requested)
+        //{
+        //    if (container.AuthorContainers.All(
+        //        r => r.AuthorId != ac.AuthorId))
+        //    {
+        //        container.AuthorContainers.Add(ac);
+        //    }
+        //}
     }
 
-    private static void AddKeywords(IList<Keyword> keywords,
-        EfContainer container, BiblioDbContext context)
+    private static void AddAuthors(IList<WorkAuthor> authors, EfWork work,
+    BiblioDbContext context)
     {
-        // collect the keywords to be assigned, adding the missing ones
-        List<EfKeywordContainer> requested = new();
-        foreach (Keyword keyword in keywords)
+        // collect the authors to be assigned, adding the missing ones
+        List<EfAuthorWork> requested = new();
+        foreach (WorkAuthor author in authors)
         {
-            // find the keyword by its content, as we have no ID
-            EfKeyword? efk = context.Keywords.FirstOrDefault(k =>
-                k.Value == keyword.Value && k.Language == keyword.Language);
-
-            // if not found, add it
-            if (efk == null)
+            EfAuthor? efa = GetEfAuthorFor(author, context);
+            if (efa == null) continue;
+            requested.Add(new EfAuthorWork
             {
-                efk = new EfKeyword
-                {
-                    Language = keyword.Language!,
-                    Value = keyword.Value!,
-                    Valuex = StandardFilter.Apply(keyword.Value!, true)
-                };
-                context.Keywords.Add(efk);
-            }
-
-            requested.Add(new EfKeywordContainer
-            {
-                Keyword = efk,
-                Container = container
+                Author = efa,
+                AuthorId = efa.Id,
+                Work = work,
+                WorkId = work.Id,
+                Role = author.Role,
+                Ordinal = author.Ordinal
             });
         }
+        work.AuthorWorks = requested;
 
-        // remove all the keywords which are no more requested
-        if (container.KeywordContainers != null)
-        {
-            foreach (EfKeywordContainer kc in container.KeywordContainers)
-            {
-                if (requested.All(r => r.KeywordId != kc.KeywordId))
-                    context.KeywordContainers.Remove(kc);
-            }
-        }
-        else container.KeywordContainers = new List<EfKeywordContainer>();
+        //// remove all the no more requested authors
+        //if (work.AuthorWorks != null)
+        //{
+        //    foreach (EfAuthorWork aw in work.AuthorWorks)
+        //    {
+        //        if (requested.All(r => r.AuthorId != aw.AuthorId))
+        //            context.AuthorWorks.Remove(aw);
+        //    }
+        //}
+        //else
+        //{
+        //    work.AuthorWorks = new List<EfAuthorWork>();
+        //}
 
-        // add all those which are not yet present
-        foreach (EfKeywordContainer kc in requested)
-        {
-            if (container.KeywordContainers.All(
-                r => r.KeywordId != kc.KeywordId))
-            {
-                container.KeywordContainers.Add(kc);
-            }
-        }
+        //// add all those which are not yet present
+        //foreach (EfAuthorWork aw in requested)
+        //{
+        //    if (work.AuthorWorks.All(
+        //        r => r.AuthorId != aw.AuthorId))
+        //    {
+        //        work.AuthorWorks.Add(aw);
+        //    }
+        //}
     }
 
     private static EfWorkType GetOrCreateWorkType(string? id, string? name,
@@ -527,10 +522,14 @@ public static class EfHelper
             // authors
             if (container.Authors?.Count > 0)
                 AddAuthors(container.Authors, ef, context);
+            else
+                ef.AuthorContainers = new List<EfAuthorContainer>();
 
             // keywords
             if (container.Keywords?.Count > 0)
                 AddKeywords(container.Keywords, ef, context);
+            else
+                ef.KeywordContainers = new List<EfKeywordContainer>();
 
             // key
             ef.Key = WorkKeyBuilder.PickKey(ef.Key!, container, true);
@@ -592,49 +591,6 @@ public static class EfHelper
         return efa;
     }
 
-    private static void AddAuthors(IList<WorkAuthor> authors, EfWork work,
-        BiblioDbContext context)
-    {
-        // collect the authors to be assigned, adding the missing ones
-        List<EfAuthorWork> requested = new();
-        foreach (WorkAuthor author in authors)
-        {
-            EfAuthor? efa = GetEfAuthorFor(author, context);
-            if (efa == null) continue;
-            requested.Add(new EfAuthorWork
-            {
-                Author = efa,
-                AuthorId = efa.Id,
-                Work = work,
-                WorkId = work.Id,
-            });
-        }
-
-        // remove all the no more requested authors
-        if (work.AuthorWorks != null)
-        {
-            foreach (EfAuthorWork aw in work.AuthorWorks)
-            {
-                if (requested.All(r => r.AuthorId != aw.AuthorId))
-                    context.AuthorWorks.Remove(aw);
-            }
-        }
-        else
-        {
-            work.AuthorWorks = new List<EfAuthorWork>();
-        }
-
-        // add all those which are not yet present
-        foreach (EfAuthorWork aw in requested)
-        {
-            if (work.AuthorWorks.All(
-                r => r.AuthorId != aw.AuthorId))
-            {
-                work.AuthorWorks.Add(aw);
-            }
-        }
-    }
-
     private static void AddKeywords(IList<Keyword> keywords, EfWork work,
         BiblioDbContext context)
     {
@@ -683,6 +639,58 @@ public static class EfHelper
                 r => r.KeywordId != kw.KeywordId))
             {
                 work.KeywordWorks.Add(kw);
+            }
+        }
+    }
+
+    private static void AddKeywords(IList<Keyword> keywords,
+        EfContainer container, BiblioDbContext context)
+    {
+        // collect the keywords to be assigned, adding the missing ones
+        List<EfKeywordContainer> requested = new();
+        foreach (Keyword keyword in keywords)
+        {
+            // find the keyword by its content, as we have no ID
+            EfKeyword? efk = context.Keywords.FirstOrDefault(k =>
+                k.Value == keyword.Value && k.Language == keyword.Language);
+
+            // if not found, add it
+            if (efk == null)
+            {
+                efk = new EfKeyword
+                {
+                    Language = keyword.Language!,
+                    Value = keyword.Value!,
+                    Valuex = StandardFilter.Apply(keyword.Value!, true)
+                };
+                context.Keywords.Add(efk);
+            }
+
+            requested.Add(new EfKeywordContainer
+            {
+                Keyword = efk,
+                Container = container
+            });
+        }
+
+        // remove all the keywords which are no more requested
+        if (container.KeywordContainers != null)
+        {
+            foreach (EfKeywordContainer kc in container.KeywordContainers)
+            {
+                if (requested.All(r => r.KeywordId != kc.KeywordId))
+                    context.KeywordContainers.Remove(kc);
+            }
+        }
+        else container.KeywordContainers = new List<EfKeywordContainer>();
+
+        // add all those which are not yet present
+        foreach (EfKeywordContainer kc in requested)
+        {
+            if (container.KeywordContainers.All(
+                r => r.KeywordId != kc.KeywordId))
+            {
+                container.KeywordContainers.Add(kc);
             }
         }
     }
@@ -755,10 +763,14 @@ public static class EfHelper
         // authors
         if (work.Authors?.Count > 0)
             AddAuthors(work.Authors, ef, context);
+        else
+            ef.AuthorWorks = new List<EfAuthorWork>();
 
         // keywords
         if (work.Keywords?.Count > 0)
             AddKeywords(work.Keywords, ef, context);
+        else
+            ef.KeywordWorks = new List<EfKeywordWork>();
 
         // key
         ef.Key = WorkKeyBuilder.PickKey(ef.Key!, work, false);
