@@ -349,6 +349,8 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2023-02-20: fix to model copy in saving authors (`EfHelper`).
+
 ### 3.1.3
 
 - 2023-02-20: fix to author-work/author-container save.

@@ -229,8 +229,10 @@ public static class EfHelper
             container.Authors.AddRange(from ac in ef.AuthorContainers
                                        select new WorkAuthor
                                        {
+                                           Id = ac.AuthorId,
                                            Last = ac.Author?.Last,
                                            First = ac.Author?.First,
+                                           Suffix = ac.Author?.Suffix,
                                            Role = ac.Role,
                                            Ordinal = ac.Ordinal
                                        });
@@ -285,6 +287,7 @@ public static class EfHelper
                                       Id = ac.AuthorId,
                                       Last = ac.Author?.Last,
                                       First = ac.Author?.First,
+                                      Suffix = ac.Author?.Suffix,
                                       Role = ac.Role,
                                       Ordinal = ac.Ordinal
                                   });
