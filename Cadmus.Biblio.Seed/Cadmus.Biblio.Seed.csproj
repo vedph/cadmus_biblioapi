@@ -9,9 +9,9 @@
     <Description>Cadmus bibliography mock data seeder.</Description>
     <Copyright>by Daniele Fusi 2021</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>3.0.4</Version>
-    <FileVersion>3.0.4</FileVersion>
-    <AssemblyVersion>3.0.4</AssemblyVersion>
+    <Version>3.0.5</Version>
+    <FileVersion>3.0.5</FileVersion>
+    <AssemblyVersion>3.0.5</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
