@@ -19,7 +19,7 @@ public sealed class WorkKeyBuilderTest
                 }
             }),
             YearPub = 2020
-        });
+        }, false);
 
         Assert.Equal("Doe 2020", key);
     }
@@ -39,7 +39,7 @@ public sealed class WorkKeyBuilderTest
             }),
             Number = "n.s.11",
             YearPub = 2020
-        });
+        }, true);
 
         Assert.Equal("Doe n.s.11 2020", key);
     }
@@ -59,7 +59,7 @@ public sealed class WorkKeyBuilderTest
                 }
             }),
             YearPub = 2020
-        });
+        }, true);
 
         Assert.Equal("Doe jr. 2020", key);
     }
@@ -85,7 +85,7 @@ public sealed class WorkKeyBuilderTest
                 }
             }),
             YearPub = 2020
-        });
+        }, true);
 
         Assert.Equal("Doe & Aspen 2020", key);
     }
@@ -129,7 +129,7 @@ public sealed class WorkKeyBuilderTest
                 },
             }),
             YearPub = 2020
-        });
+        }, true);
 
         Assert.Equal("Doe & Aspen & Williams & al. 2020", key);
     }
@@ -153,7 +153,7 @@ public sealed class WorkKeyBuilderTest
                 }
             }),
             YearPub = 2020
-        });
+        }, true);
 
         Assert.Equal("Aspen & Doe 2020", key);
     }
@@ -178,7 +178,7 @@ public sealed class WorkKeyBuilderTest
         Work work = GetSampleWork();
         work.Key = "!new";
 
-        string key = WorkKeyBuilder.PickKey("old", work);
+        string key = WorkKeyBuilder.PickKey("old", work, false);
 
         Assert.Equal("!new", key);
     }
@@ -188,7 +188,7 @@ public sealed class WorkKeyBuilderTest
     {
         Work work = GetSampleWork();
 
-        string key = WorkKeyBuilder.PickKey("!old", work);
+        string key = WorkKeyBuilder.PickKey("!old", work, false);
 
         Assert.Equal("!old", key);
     }
@@ -198,7 +198,7 @@ public sealed class WorkKeyBuilderTest
     {
         Work work = GetSampleWork();
 
-        string key = WorkKeyBuilder.PickKey("old", work);
+        string key = WorkKeyBuilder.PickKey("old", work, false);
 
         Assert.Equal("Doe 2020", key);
     }

@@ -1,6 +1,7 @@
 ﻿using Cadmus.Biblio.Core;
 using Fusi.DbManager;
 using Fusi.DbManager.MySql;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -1486,6 +1487,56 @@ public sealed class EfBiblioRepositoryTest
         Assert.Equal(2, page.Items.Count);
         Assert.Equal("Il gamma", page.Items[0].Title);
         Assert.Equal("The Alpha", page.Items[1].Title);
+    }
+
+    [Fact]
+    public void AddWork_SameKey_Suffixed()
+    {
+        ResetDatabase();
+        var repository = GetRepository();
+
+        Work a = new()
+        {
+            Type = "paper",
+            Title = "Alpha",
+            Language = "eng",
+            YearPub = 2011,
+            Authors = new List<WorkAuthor>(new[]
+                {
+                    new WorkAuthor
+                    {
+                        First = "John",
+                        Last = "Doe",
+                        Ordinal = 1,
+                        Role = "editor"
+                    }
+                })
+        };
+        Work b = new()
+        {
+            Type = "paper",
+            Title = "Beta",
+            Language = "eng",
+            YearPub = 2011,
+            Authors = new List<WorkAuthor>(new[]
+                {
+                    new WorkAuthor
+                    {
+                        First = "John",
+                        Last = "Doe",
+                        Ordinal = 1,
+                        Role = "editor"
+                    }
+                })
+        };
+
+        repository.AddWork(a);
+        Assert.NotNull(a.Key);
+        Assert.Equal("Doe 2011", a.Key);
+
+        repository.AddWork(b);
+        Assert.NotNull(b.Key);
+        Assert.Equal("Doe 2011b", b.Key);
     }
     #endregion
 }

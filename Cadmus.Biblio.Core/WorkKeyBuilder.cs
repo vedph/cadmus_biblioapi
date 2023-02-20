@@ -18,9 +18,10 @@ public static class WorkKeyBuilder
     /// <summary>
     /// Builds the key for the specified work.
     /// </summary>
-    /// <param name="work">The work.</param>
+    /// <param name="work">The work or container.</param>
+    /// <param name="container">True if the work is a container.</param>
     /// <exception cref="ArgumentNullException">work</exception>
-    public static string Build(Container work)
+    public static string Build(Container work, bool container)
     {
         if (work == null) throw new ArgumentNullException(nameof(work));
 
@@ -29,18 +30,18 @@ public static class WorkKeyBuilder
         // authors (max 3)
         if (work.Authors?.Count > 0)
         {
-            sb.Append(string.Join(" & ",
+            sb.AppendJoin(" & ",
                 (from a in work.Authors
-                orderby a.Ordinal, a.Last, a.Suffix
-                select string.IsNullOrEmpty(a.Suffix)
-                    ? a.Last
-                    : $"{a.Last} {a.Suffix}").Take(3)));
+                 orderby a.Ordinal, a.Last, a.Suffix
+                 select string.IsNullOrEmpty(a.Suffix)
+                     ? a.Last
+                     : $"{a.Last} {a.Suffix}").Take(3));
 
             if (work.Authors.Count > 3) sb.Append(" & al.");
         }
 
-        // number if any
-        if (!string.IsNullOrEmpty(work?.Number))
+        // number if any but for containers only
+        if (container && !string.IsNullOrEmpty(work?.Number))
             sb.Append(' ').Append(work.Number);
 
         // year
@@ -59,9 +60,10 @@ public static class WorkKeyBuilder
     /// <param name="oldKey">The old key.</param>
     /// <param name="newWork">The new work/container; its key can be specified,
     /// or just be null.</param>
+    /// <param name="container">True if the work is a container.</param>
     /// <returns>Key.</returns>
     /// <exception cref="ArgumentNullException">work</exception>
-    public static string PickKey(string oldKey, Container newWork)
+    public static string PickKey(string oldKey, Container newWork, bool container)
     {
         if (newWork == null) throw new ArgumentNullException(nameof(newWork));
 
@@ -70,7 +72,7 @@ public static class WorkKeyBuilder
             return newWork.Key;
 
         // else calculate the new key
-        string newKey = Build(newWork);
+        string newKey = Build(newWork, container);
 
         // if the existing key is not specified/is not manual, the new key wins,
         // else keep the existing key

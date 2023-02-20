@@ -55,7 +55,7 @@ public sealed class WorkSeeder : IBiblioSeeder
                 .RuleFor(c => c.Note, f => f.Random.Bool(0.2f)
                     ? f.Lorem.Sentence() : null)
                 .Generate();
-            work.Key = WorkKeyBuilder.Build(work);
+            work.Key = WorkKeyBuilder.Build(work, false);
 
             // authors
             work.Authors.Add(new WorkAuthor

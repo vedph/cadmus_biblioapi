@@ -347,6 +347,10 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2023-02-20:
+  - work key builder: add number only if it's a container.
+  - work key builder: fix to auto suffix for existing keys.
+
 ### 3.1.1
 
 - 2023-02-18:

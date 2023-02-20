@@ -533,7 +533,7 @@ public static class EfHelper
                 AddKeywords(container.Keywords, ef, context);
 
             // key
-            ef.Key = WorkKeyBuilder.PickKey(ef.Key!, container);
+            ef.Key = WorkKeyBuilder.PickKey(ef.Key!, container, true);
             // add key suffix if required and possible
             if (ef.Key?.StartsWith(WorkKeyBuilder.MAN_KEY_PREFIX) != true)
             {
@@ -693,9 +693,11 @@ public static class EfHelper
         if (existing != null)
         {
             Match m = Regex.Match(existing.Key ?? "", @"\d+([a-z])?$");
-            if (m.Success && m.Groups[1].Value.Length > 0)
+            if (m.Success)
             {
-                char c = m.Groups[1].Value[0];
+                char c = (m.Groups[1].Value.Length > 0
+                    ? m.Groups[1].Value[0]
+                    : 'a');
                 if (c < 'z') c++;
                 return c;
             }
@@ -759,7 +761,7 @@ public static class EfHelper
             AddKeywords(work.Keywords, ef, context);
 
         // key
-        ef.Key = WorkKeyBuilder.PickKey(ef.Key!, work);
+        ef.Key = WorkKeyBuilder.PickKey(ef.Key!, work, false);
         // add key suffix if required and possible
         if (ef.Key?.StartsWith(WorkKeyBuilder.MAN_KEY_PREFIX) != true)
         {

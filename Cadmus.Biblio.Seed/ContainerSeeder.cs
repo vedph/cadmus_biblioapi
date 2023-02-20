@@ -46,7 +46,7 @@ public sealed class ContainerSeeder : IBiblioSeeder
                 .RuleFor(c => c.Note, f => f.Random.Bool(0.2f)
                     ? f.Lorem.Sentence() : null)
                 .Generate();
-            container.Key = WorkKeyBuilder.Build(container);
+            container.Key = WorkKeyBuilder.Build(container, true);
 
             // authors
             container.Authors.Add(new WorkAuthor
