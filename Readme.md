@@ -351,6 +351,8 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2023-05-16: updated packages.
+
 ### 3.1.5
 
 - 2023-05-16: updated packages.
