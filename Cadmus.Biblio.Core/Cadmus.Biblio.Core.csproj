@@ -9,14 +9,14 @@
     <Product>Cadmus</Product>
     <Description>Cadmus bibliography API core</Description>
     <Copyright>by Daniele Fusi 2020</Copyright>
-    <Version>3.0.5</Version>
-    <FileVersion>3.0.5</FileVersion>
-    <AssemblyVersion>3.0.5</AssemblyVersion>
+    <Version>3.1.5</Version>
+    <FileVersion>3.1.5</FileVersion>
+    <AssemblyVersion>3.1.5</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Fusi.Text" Version="3.0.0" />
-    <PackageReference Include="Fusi.Tools" Version="3.1.0" />
+    <PackageReference Include="Fusi.Tools" Version="3.1.1" />
   </ItemGroup>
 
 </Project>

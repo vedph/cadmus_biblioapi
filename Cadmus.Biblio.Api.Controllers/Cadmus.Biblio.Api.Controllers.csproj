@@ -8,9 +8,9 @@
     <Product>Cadmus</Product>
     <Description>Cadmus bibliographic API controllers.</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>3.0.5</Version>
-    <FileVersion>3.0.5</FileVersion>
-    <AssemblyVersion>3.0.5</AssemblyVersion>
+    <Version>3.1.5</Version>
+    <FileVersion>3.1.5</FileVersion>
+    <AssemblyVersion>3.1.5</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,15 +20,14 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Identity.Mongo" Version="8.3.3" />
-    <PackageReference Include="Cadmus.Api.Models" Version="6.0.2" />
-    <PackageReference Include="Cadmus.Api.Services" Version="6.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Cadmus.Api.Models" Version="6.2.2" />
+    <PackageReference Include="Cadmus.Api.Services" Version="6.2.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
     <PackageReference Include="Serilog" Version="2.12.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.1" />
   </ItemGroup>
 
 </Project>
