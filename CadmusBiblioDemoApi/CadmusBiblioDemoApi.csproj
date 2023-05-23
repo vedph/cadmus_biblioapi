@@ -4,9 +4,9 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>3.1.5</Version>
-    <FileVersion>3.1.5</FileVersion>
-    <AssemblyVersion>3.1.5</AssemblyVersion>
+    <Version>4.0.0</Version>
+    <FileVersion>4.0.0</FileVersion>
+    <AssemblyVersion>4.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,10 +18,10 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Identity.Mongo" Version="8.3.3" />
-    <PackageReference Include="Cadmus.Api.Controllers" Version="6.2.3" />
-    <PackageReference Include="Cadmus.Api.Models" Version="6.2.3" />
-    <PackageReference Include="Cadmus.Api.Services" Version="6.2.3" />
-    <PackageReference Include="Cadmus.Seed.General.Parts" Version="4.2.1" />
+    <PackageReference Include="Cadmus.Api.Controllers" Version="7.0.0" />
+    <PackageReference Include="Cadmus.Api.Models" Version="7.0.0" />
+    <PackageReference Include="Cadmus.Api.Services" Version="7.0.0" />
+    <PackageReference Include="Cadmus.Seed.General.Parts" Version="5.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />

@@ -12,6 +12,7 @@
     - [Backend](#backend)
     - [Frontend](#frontend)
   - [History](#history)
+    - [4.0.0](#400)
     - [3.1.5](#315)
     - [3.1.4](#314)
     - [3.1.3](#313)
@@ -31,7 +32,7 @@
 🐋 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus_biblio_api:3.1.5 -t vedph2020/cadmus_biblio_api:latest
+docker build . -t vedph2020/cadmus_biblio_api:4.0.0 -t vedph2020/cadmus_biblio_api:latest
 ```
 
 (replace with the current version).
@@ -351,6 +352,9 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+### 4.0.0
+
+- 2023-05-23: updated packages (breaking change in general parts introducing [AssertedCompositeId](https://github.com/vedph/cadmus-bricks-shell/blob/master/projects/myrmidon/cadmus-refs-asserted-ids/README.md#asserted-composite-id)).
 - 2023-05-16: updated packages.
 
 ### 3.1.5
