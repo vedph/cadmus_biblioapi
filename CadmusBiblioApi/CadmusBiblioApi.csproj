@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
 	<Nullable>enable</Nullable>
-    <Version>4.0.0</Version>
-    <FileVersion>4.0.0</FileVersion>
-    <AssemblyVersion>4.0.0</AssemblyVersion>
+    <Version>4.0.1</Version>
+    <FileVersion>4.0.1</FileVersion>
+    <AssemblyVersion>4.0.1</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cadmus.Api.Services" Version="7.0.0" />
+    <PackageReference Include="Cadmus.Api.Services" Version="7.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
