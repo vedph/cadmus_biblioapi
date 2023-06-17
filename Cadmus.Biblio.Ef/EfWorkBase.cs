@@ -7,19 +7,21 @@ namespace Cadmus.Biblio.Ef;
 /// </summary>
 public class EfWorkBase
 {
+    private DateTime? _accessDate;
+
     /// <summary>
     /// Gets or sets the identifier.
     /// </summary>
-    public Guid Id { get; set; }
+    public string Id { get; set; }
 
     /// <summary>
-    /// Gets or sets an optional arbitrarily defined key to identify
-    /// this work (e.g. Rossi 1963).
+    /// Gets or sets an arbitrarily defined key to identify this work
+    /// (e.g. <c>Rossi 1963</c>).
     /// </summary>
-    public string? Key { get; set; }
+    public string Key { get; set; }
 
     /// <summary>
-    /// Gets or sets the work's type ID (e.g. book, journal, etc.).
+    /// Gets or sets the optional work's type ID (e.g. book, journal, etc.).
     /// </summary>
     public string? TypeId { get; set; }
 
@@ -31,17 +33,17 @@ public class EfWorkBase
     /// <summary>
     /// Gets or sets the work's title.
     /// </summary>
-    public string? Title { get; set; }
+    public string Title { get; set; }
 
     /// <summary>
     /// Gets or sets the filtered work's title.
     /// </summary>
-    public string? Titlex { get; set; }
+    public string Titlex { get; set; }
 
     /// <summary>
     /// Gets or sets the work's language.
     /// </summary>
-    public string? Language { get; set; }
+    public string Language { get; set; }
 
     /// <summary>
     /// Gets or sets the work's edition number (0 if not applicable).
@@ -87,7 +89,11 @@ public class EfWorkBase
     /// <summary>
     /// Gets or sets the last access date. Used for web resources.
     /// </summary>
-    public DateTime? AccessDate { get; set; }
+    public DateTime? AccessDate
+    {
+        get => _accessDate;
+        set => _accessDate = value?.SetKindUtc();
+    }
 
     /// <summary>
     /// Gets or sets some optional notes.
@@ -99,7 +105,8 @@ public class EfWorkBase
     /// </summary>
     public EfWorkBase()
     {
-        Id = Guid.NewGuid();
+        Id = Guid.NewGuid().ToString();
+        Key = Title = Titlex = Language = PlacePub = Note = "";
     }
 
     /// <summary>

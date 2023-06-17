@@ -23,7 +23,7 @@ public static class EfHelper
         using StreamReader reader = new(
             Assembly.GetExecutingAssembly()
             .GetManifestResourceStream(
-                "Cadmus.Biblio.Ef.Assets.cadmus-biblio.sql")!);
+                "Cadmus.Biblio.Ef.Assets.cadmus-biblio.pgsql")!);
         return reader.ReadToEnd();
     }
 
@@ -70,7 +70,7 @@ public static class EfHelper
 
         return new Author
         {
-            Id = ef.Id,
+            Id = Guid.Parse(ef.Id),
             First = ef.First,
             Last = ef.Last,
             Suffix = ef.Suffix
@@ -94,7 +94,7 @@ public static class EfHelper
         WorkInfo info = new()
         {
             IsContainer = true,
-            Id = ef.Id,
+            Id = Guid.Parse(ef.Id),
             Key = ef.Key,
             Type = ef.Type?.Id,
             Title = ef.Title,
@@ -108,25 +108,25 @@ public static class EfHelper
         // authors
         if (ef.AuthorContainers?.Count > 0)
         {
-            info.Authors = (from aw in ef.AuthorContainers
+            info.Authors = (from ac in ef.AuthorContainers
                             select new WorkAuthor
                             {
-                                Id = aw.AuthorId,
-                                First = aw.Author?.First,
-                                Last = aw.Author?.Last,
-                                Role = aw.Role,
-                                Ordinal = aw.Ordinal
+                                Id = Guid.Parse(ac.AuthorId),
+                                First = ac.Author!.First,
+                                Last = ac.Author!.Last,
+                                Role = ac.Role,
+                                Ordinal = ac.Ordinal
                             }).ToList();
         }
 
         // keywords
         if (ef.KeywordContainers?.Count > 0)
         {
-            info.Keywords = (from kw in ef.KeywordContainers
+            info.Keywords = (from kc in ef.KeywordContainers
                              select new Keyword
                              {
-                                 Language = kw.Keyword?.Language,
-                                 Value = kw.Keyword?.Value
+                                 Language = kc.Keyword!.Language,
+                                 Value = kc.Keyword!.Value
                              }).ToList();
         }
 
@@ -150,7 +150,7 @@ public static class EfHelper
         WorkInfo info = new()
         {
             IsContainer = false,
-            Id = ef.Id,
+            Id = Guid.Parse(ef.Id),
             Key = ef.Key,
             Type = ef.Type?.Id,
             Title = ef.Title,
@@ -169,9 +169,9 @@ public static class EfHelper
             info.Authors = (from aw in ef.AuthorWorks
                             select new WorkAuthor
                             {
-                                Id = aw.AuthorId,
-                                First = aw.Author?.First,
-                                Last = aw.Author?.Last,
+                                Id = Guid.Parse(aw.AuthorId),
+                                First = aw.Author!.First,
+                                Last = aw.Author!.Last,
                                 Role = aw.Role,
                                 Ordinal = aw.Ordinal
                             }).ToList();
@@ -183,8 +183,8 @@ public static class EfHelper
             info.Keywords = (from kw in ef.KeywordWorks
                              select new Keyword
                              {
-                                 Language = kw.Keyword?.Language!,
-                                 Value = kw.Keyword?.Value!
+                                 Language = kw.Keyword!.Language,
+                                 Value = kw.Keyword!.Value
                              }).ToList();
         }
 
@@ -207,7 +207,7 @@ public static class EfHelper
 
         Container container = new()
         {
-            Id = ef.Id,
+            Id = Guid.Parse(ef.Id),
             Key = ef.Key,
             Type = ef.Type?.Id,
             Title = ef.Title,
@@ -229,10 +229,10 @@ public static class EfHelper
             container.Authors.AddRange(from ac in ef.AuthorContainers
                                        select new WorkAuthor
                                        {
-                                           Id = ac.AuthorId,
-                                           Last = ac.Author?.Last,
-                                           First = ac.Author?.First,
-                                           Suffix = ac.Author?.Suffix,
+                                           Id = Guid.Parse(ac.AuthorId),
+                                           Last = ac.Author!.Last,
+                                           First = ac.Author!.First,
+                                           Suffix = ac.Author!.Suffix,
                                            Role = ac.Role,
                                            Ordinal = ac.Ordinal
                                        });
@@ -259,7 +259,7 @@ public static class EfHelper
 
         Work work = new()
         {
-            Id = ef.Id,
+            Id = Guid.Parse(ef.Id),
             Type = ef.Type?.Id,
             Title = ef.Title,
             Language = ef.Language,
@@ -284,10 +284,10 @@ public static class EfHelper
             work.Authors.AddRange(from ac in ef.AuthorWorks
                                   select new WorkAuthor
                                   {
-                                      Id = ac.AuthorId,
-                                      Last = ac.Author?.Last,
-                                      First = ac.Author?.First,
-                                      Suffix = ac.Author?.Suffix,
+                                      Id = Guid.Parse(ac.AuthorId),
+                                      Last = ac.Author!.Last,
+                                      First = ac.Author!.First,
+                                      Suffix = ac.Author!.Suffix,
                                       Role = ac.Role,
                                       Ordinal = ac.Ordinal
                                   });
@@ -337,23 +337,23 @@ public static class EfHelper
     /// <param name="context">The context.</param>
     /// <returns>The entity or null.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
-    public static EfAuthor? GetEfAuthor(Author? author, BiblioDbContext context)
+    public static EfAuthor? GetOrAddEfAuthor(Author? author,
+        BiblioDbContext context)
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
+        if (context == null) throw new ArgumentNullException(nameof(context));
 
         if (author == null) return null;
 
         EfAuthor? ef = author.Id != Guid.Empty
-            ? context.Authors.Find(author.Id) : null;
+            ? context.Authors.Find(author.Id.ToString()) : null;
         if (ef == null)
         {
-            if (author.Last == null) return null;
+            if (author.Last.Length == 0) return null;
             ef = new EfAuthor();
             context.Authors.Add(ef);
         }
 
-        if (author.Last != null)
+        if (author.Last.Length > 0)
         {
             ef.First = author.First;
             ef.Last = author.Last;
@@ -381,27 +381,6 @@ public static class EfHelper
             });
         }
         container.AuthorContainers = requested;
-
-        //// remove all the no more requested authors
-        //if (container.AuthorContainers != null)
-        //{
-        //    foreach (EfAuthorContainer ac in container.AuthorContainers)
-        //    {
-        //        if (requested.All(r => r.AuthorId != ac.AuthorId))
-        //            context.AuthorContainers.Remove(ac);
-        //    }
-        //}
-        //else container.AuthorContainers = new List<EfAuthorContainer>();
-
-        //// add all those which are not yet present
-        //foreach (EfAuthorContainer ac in requested)
-        //{
-        //    if (container.AuthorContainers.All(
-        //        r => r.AuthorId != ac.AuthorId))
-        //    {
-        //        container.AuthorContainers.Add(ac);
-        //    }
-        //}
     }
 
     private static void AddAuthors(IList<WorkAuthor> authors, EfWork work,
@@ -424,30 +403,6 @@ public static class EfHelper
             });
         }
         work.AuthorWorks = requested;
-
-        //// remove all the no more requested authors
-        //if (work.AuthorWorks != null)
-        //{
-        //    foreach (EfAuthorWork aw in work.AuthorWorks)
-        //    {
-        //        if (requested.All(r => r.AuthorId != aw.AuthorId))
-        //            context.AuthorWorks.Remove(aw);
-        //    }
-        //}
-        //else
-        //{
-        //    work.AuthorWorks = new List<EfAuthorWork>();
-        //}
-
-        //// add all those which are not yet present
-        //foreach (EfAuthorWork aw in requested)
-        //{
-        //    if (work.AuthorWorks.All(
-        //        r => r.AuthorId != aw.AuthorId))
-        //    {
-        //        work.AuthorWorks.Add(aw);
-        //    }
-        //}
     }
 
     private static EfWorkType GetOrCreateWorkType(string? id, string? name,
@@ -494,7 +449,7 @@ public static class EfHelper
             ? context.Containers
                 .Include(c => c.AuthorContainers)
                 .Include(c => c.KeywordContainers)
-                .FirstOrDefault(c => c.Id == container.Id)
+                .FirstOrDefault(c => c.Id == container.Id.ToString())
             : null;
 
         // if new or not found, add it with a new ID
@@ -552,14 +507,14 @@ public static class EfHelper
     {
         // find the author
         EfAuthor? efa = author.Id != Guid.Empty
-            ? context.Authors.Find(author.Id) : null;
+            ? context.Authors.Find(author.Id.ToString()) : null;
 
         // if not found, add a new author
         if (efa == null)
         {
             // if an existing author was required but was not found,
             // just ignore him (defensive)
-            if (author.Last == null) return null;
+            if (author.Last.Length == 0) return null;
 
             // else we have a new author, add it
             efa = new EfAuthor
@@ -568,13 +523,13 @@ public static class EfHelper
                 Last = author.Last,
                 Suffix = author.Suffix
             };
-            author.Id = efa.Id;         // update the received ID
+            author.Id = Guid.Parse(efa.Id);         // update the received ID
             context.Authors.Add(efa);
         }
         else
         {
             // if found, supply data in the source author if empty
-            if (author.Last == null)
+            if (author.Last.Length == 0)
             {
                 author.First = efa.First;
                 author.Last = efa.Last;
@@ -735,7 +690,7 @@ public static class EfHelper
             ? context.Works
                 .Include(w => w.AuthorWorks)
                 .Include(w => w.KeywordWorks)
-                .FirstOrDefault(w => w.Id == work.Id)
+                .FirstOrDefault(w => w.Id == work.Id.ToString())
             : null;
 
         // if new or not found, add it with a new ID

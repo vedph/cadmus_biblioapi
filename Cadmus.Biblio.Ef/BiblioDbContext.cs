@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Cadmus.Biblio.Ef;
 
@@ -86,8 +87,11 @@ public sealed class BiblioDbContext : DbContext
     {
         return (databaseType?.ToLowerInvariant()) switch
         {
+            //_ => new DbContextOptionsBuilder<BiblioDbContext>()
+            //  .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+            //  .Options,
             _ => new DbContextOptionsBuilder<BiblioDbContext>()
-              .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+              .UseNpgsql(connectionString)
               .Options,
         };
     }
@@ -118,10 +122,22 @@ public sealed class BiblioDbContext : DbContext
             // note that these are fake credentials for development.
             // in production they would be replaced with environment data,
             // but in any case in production we would not hit this code
-            const string cs = "Server=localhost;Database=cadmus-biblio;Uid=root;Pwd=mysql;";
-            optionsBuilder.UseMySql(cs, ServerVersion.AutoDetect(cs));
+            //const string cs = "Server=localhost;Database=cadmus-biblio;Uid=root;Pwd=mysql;";
+            //optionsBuilder.UseMySql(cs, ServerVersion.AutoDetect(cs));
+            const string cs = "Server=localhost;port=5432;" +
+                "Database=cadmus-biblio;User Id=postgres;Password=postgres;" +
+                "Include Error Detail=True";
+            optionsBuilder.UseNpgsql(cs);
         }
         base.OnConfiguring(optionsBuilder);
+    }
+
+    protected override void ConfigureConventions(
+        ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder
+            .Properties<DateTime>()
+            .HaveConversion<DateTimeToUtcConverter>();
     }
 
     /// <summary>
@@ -143,13 +159,15 @@ public sealed class BiblioDbContext : DbContext
     /// </remarks>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // worktype
-        modelBuilder.Entity<EfWorkType>().ToTable("worktype");
+        // work_type
+        modelBuilder.Entity<EfWorkType>().ToTable("work_type");
         modelBuilder.Entity<EfWorkType>().Property(t => t.Id)
+            .HasColumnName("id")
             .IsRequired()
             .IsUnicode(false)
             .HasMaxLength(20);
         modelBuilder.Entity<EfWorkType>().Property(t => t.Name)
+            .HasColumnName("name")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(100);
@@ -157,166 +175,256 @@ public sealed class BiblioDbContext : DbContext
         // author
         modelBuilder.Entity<EfAuthor>().ToTable("author");
         modelBuilder.Entity<EfAuthor>().Property(a => a.Id)
+            .HasColumnName("id")
             .IsRequired()
             .IsUnicode(false)
             .HasMaxLength(36)
             .IsFixedLength();
         modelBuilder.Entity<EfAuthor>().Property(a => a.First)
+            .HasColumnName("first")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(50);
         modelBuilder.Entity<EfAuthor>().Property(a => a.Last)
+            .HasColumnName("last")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(50);
         modelBuilder.Entity<EfAuthor>().Property(a => a.Lastx)
+            .HasColumnName("lastx")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(50);
         modelBuilder.Entity<EfAuthor>().Property(a => a.Suffix)
+            .HasColumnName("suffix")
             .IsUnicode()
             .HasMaxLength(50);
 
         // work
         modelBuilder.Entity<EfWork>().ToTable("work");
         modelBuilder.Entity<EfWork>().Property(w => w.Id)
+            .HasColumnName("id")
             .IsRequired()
             .IsUnicode(false)
             .HasMaxLength(36)
             .IsFixedLength();
         modelBuilder.Entity<EfWork>().Property(w => w.Key)
+            .HasColumnName("key")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(300);
         modelBuilder.Entity<EfWork>().Property(w => w.TypeId)
+            .HasColumnName("type_id")
             .IsUnicode(false)
             .HasMaxLength(20);
         modelBuilder.Entity<EfWork>().Property(w => w.ContainerId)
+            .HasColumnName("container_id")
             .HasMaxLength(36)
             .IsFixedLength();
         modelBuilder.Entity<EfWork>().Property(w => w.Title)
+            .HasColumnName("title")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(200);
         modelBuilder.Entity<EfWork>().Property(w => w.Titlex)
+            .HasColumnName("titlex")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(200);
         modelBuilder.Entity<EfWork>().Property(w => w.Language)
+            .HasColumnName("language")
             .IsRequired()
             .IsUnicode(false)
             .HasMaxLength(3)
             .IsFixedLength();
         modelBuilder.Entity<EfWork>().Property(w => w.Edition)
+            .HasColumnName("edition")
             .IsRequired();
         modelBuilder.Entity<EfWork>().Property(w => w.Publisher)
+            .HasColumnName("publisher")
             .IsUnicode()
             .HasMaxLength(50);
         modelBuilder.Entity<EfWork>().Property(w => w.YearPub)
+            .HasColumnName("year_pub")
             .IsRequired();
+        modelBuilder.Entity<EfWork>().Property(w => w.YearPub2)
+            .HasColumnName("year_pub2");
         modelBuilder.Entity<EfWork>().Property(w => w.PlacePub)
+            .HasColumnName("place_pub")
             .IsUnicode()
             .HasMaxLength(100);
         modelBuilder.Entity<EfWork>().Property(w => w.Location)
+            .HasColumnName("location")
             .IsUnicode()
             .HasMaxLength(500);
+        modelBuilder.Entity<EfWork>().Property(w => w.AccessDate)
+            .HasColumnName("access_date");
         modelBuilder.Entity<EfWork>().Property(w => w.Number)
+            .HasColumnName("number")
             .IsUnicode()
             .HasMaxLength(50);
         modelBuilder.Entity<EfWork>().Property(w => w.FirstPage)
+            .HasColumnName("first_page")
             .IsRequired();
         modelBuilder.Entity<EfWork>().Property(w => w.LastPage)
+            .HasColumnName("last_page")
             .IsRequired();
         modelBuilder.Entity<EfWork>().Property(w => w.Note)
+            .HasColumnName("note")
             .IsUnicode()
             .HasMaxLength(500);
 
         // container
         modelBuilder.Entity<EfContainer>().ToTable("container");
         modelBuilder.Entity<EfContainer>().Property(w => w.Id)
+            .HasColumnName("id")
             .IsRequired()
             .IsUnicode(false)
             .HasMaxLength(36)
             .IsFixedLength();
         modelBuilder.Entity<EfContainer>().Property(w => w.Key)
+            .HasColumnName("key")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(300);
-        modelBuilder.Entity<EfWork>().Property(w => w.TypeId)
+        modelBuilder.Entity<EfContainer>().Property(w => w.TypeId)
+            .HasColumnName("type_id")
             .IsUnicode(false)
             .HasMaxLength(20);
         modelBuilder.Entity<EfContainer>().Property(w => w.Title)
+            .HasColumnName("title")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(200);
         modelBuilder.Entity<EfContainer>().Property(w => w.Titlex)
+            .HasColumnName("titlex")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(200);
         modelBuilder.Entity<EfContainer>().Property(w => w.Language)
+            .HasColumnName("language")
             .IsRequired()
             .IsUnicode(false)
             .HasMaxLength(3)
             .IsFixedLength();
         modelBuilder.Entity<EfContainer>().Property(w => w.Edition)
+            .HasColumnName("edition")
             .IsRequired();
         modelBuilder.Entity<EfContainer>().Property(w => w.Publisher)
+            .HasColumnName("publisher")
             .IsUnicode()
             .HasMaxLength(50);
         modelBuilder.Entity<EfContainer>().Property(w => w.YearPub)
+            .HasColumnName("year_pub")
             .IsRequired();
+        modelBuilder.Entity<EfContainer>().Property(w => w.YearPub2)
+            .HasColumnName("year_pub2");
         modelBuilder.Entity<EfContainer>().Property(w => w.PlacePub)
+            .HasColumnName("place_pub")
             .IsUnicode()
             .HasMaxLength(100);
         modelBuilder.Entity<EfContainer>().Property(w => w.Location)
+            .HasColumnName("location")
             .IsUnicode()
             .HasMaxLength(500);
+        modelBuilder.Entity<EfContainer>().Property(w => w.AccessDate)
+            .HasColumnName("access_date");
         modelBuilder.Entity<EfContainer>().Property(w => w.Number)
+            .HasColumnName("number")
             .IsUnicode()
             .HasMaxLength(50);
         modelBuilder.Entity<EfContainer>().Property(w => w.Note)
+            .HasColumnName("note")
             .IsUnicode()
             .HasMaxLength(500);
 
         // keyword
         modelBuilder.Entity<EfKeyword>().ToTable("keyword");
         modelBuilder.Entity<EfKeyword>().Property(k => k.Id)
+            .HasColumnName("id")
             .IsRequired()
             .ValueGeneratedOnAdd();
         modelBuilder.Entity<EfKeyword>().Property(k => k.Language)
+            .HasColumnName("language")
             .IsRequired()
             .IsUnicode(false)
             .HasMaxLength(3)
             .IsFixedLength();
         modelBuilder.Entity<EfKeyword>().Property(k => k.Value)
+            .HasColumnName("value")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(50);
         modelBuilder.Entity<EfKeyword>().Property(k => k.Valuex)
+            .HasColumnName("valuex")
             .IsRequired()
             .IsUnicode()
             .HasMaxLength(50);
 
         // https://dev.to/_patrickgod/many-to-many-relationship-with-entity-framework-core-4059
-        // authorwork
-        modelBuilder.Entity<EfAuthorWork>().ToTable("authorwork");
+        // author_work
+        modelBuilder.Entity<EfAuthorWork>().ToTable("author_work");
         modelBuilder.Entity<EfAuthorWork>()
             .HasKey(aw => new { aw.AuthorId, aw.WorkId });
+        modelBuilder.Entity<EfAuthorWork>().Property(x => x.AuthorId)
+            .HasColumnName("author_id")
+            .HasMaxLength(36)
+            .IsRequired();
+        modelBuilder.Entity<EfAuthorWork>().Property(x => x.WorkId)
+            .HasColumnName("work_id")
+            .HasMaxLength(36)
+            .IsRequired();
+        modelBuilder.Entity<EfAuthorWork>().Property(x => x.Role)
+            .HasColumnName("role")
+            .HasMaxLength(50)
+            .IsUnicode();
+        modelBuilder.Entity<EfAuthorWork>().Property(x => x.Ordinal)
+            .HasColumnName("ordinal")
+            .IsRequired();
 
-        // authorcontainer
-        modelBuilder.Entity<EfAuthorContainer>().ToTable("authorcontainer");
+        // author_container
+        modelBuilder.Entity<EfAuthorContainer>().ToTable("author_container");
         modelBuilder.Entity<EfAuthorContainer>()
             .HasKey(ac => new { ac.AuthorId, ac.ContainerId });
+        modelBuilder.Entity<EfAuthorContainer>().Property(x => x.AuthorId)
+            .HasColumnName("author_id")
+            .HasMaxLength(36)
+            .IsRequired();
+        modelBuilder.Entity<EfAuthorContainer>().Property(x => x.ContainerId)
+            .HasColumnName("container_id")
+            .HasMaxLength(36)
+            .IsRequired();
+        modelBuilder.Entity<EfAuthorContainer>().Property(x => x.Role)
+            .HasColumnName("role")
+            .HasMaxLength(50)
+            .IsUnicode();
+        modelBuilder.Entity<EfAuthorContainer>().Property(x => x.Ordinal)
+            .HasColumnName("ordinal")
+            .IsRequired();
 
-        // keywordwork
-        modelBuilder.Entity<EfKeywordWork>().ToTable("keywordwork");
+        // keyword_work
+        modelBuilder.Entity<EfKeywordWork>().ToTable("keyword_work");
         modelBuilder.Entity<EfKeywordWork>()
             .HasKey(kw => new { kw.KeywordId, kw.WorkId });
+        modelBuilder.Entity<EfKeywordWork>().Property(x => x.KeywordId)
+            .HasColumnName("keyword_id")
+            .IsRequired();
+        modelBuilder.Entity<EfKeywordWork>().Property(x => x.WorkId)
+            .HasColumnName("work_id")
+            .HasMaxLength(36)
+            .IsRequired();
 
-        // keywordcontainer
-        modelBuilder.Entity<EfKeywordContainer>().ToTable("keywordcontainer");
+        // keyword_container
+        modelBuilder.Entity<EfKeywordContainer>().ToTable("keyword_container");
         modelBuilder.Entity<EfKeywordContainer>()
             .HasKey(kc => new { kc.KeywordId, kc.ContainerId });
+        modelBuilder.Entity<EfKeywordContainer>().Property(x => x.KeywordId)
+            .HasColumnName("keyword_id")
+            .IsRequired();
+        modelBuilder.Entity<EfKeywordContainer>().Property(x => x.ContainerId)
+            .HasColumnName("container_id")
+            .HasMaxLength(36)
+            .IsRequired();
 
         base.OnModelCreating(modelBuilder);
     }

@@ -1,6 +1,7 @@
 ﻿using Cadmus.Biblio.Core;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Cadmus.Biblio.Ef;
 
@@ -8,12 +9,45 @@ namespace Cadmus.Biblio.Ef;
 /// Author entity.
 /// </summary>
 /// <seealso cref="Author" />
-public sealed class EfAuthor : Author
+public sealed class EfAuthor
 {
     /// <summary>
-    /// Gets or sets the value of <see cref="Last"/> filtered for indexing.
+    /// Gets or sets the identifier (36-chars GUID).
     /// </summary>
-    public string? Lastx { get; set; }
+    public string Id { get; set; }
+
+    /// <summary>
+    /// First name.
+    /// </summary>
+    public string First { get; set; }
+
+    /// <summary>
+    /// Last name.
+    /// </summary>
+    public string Last { get; set; }
+
+    /// <summary>
+    /// Last name.
+    /// </summary>
+    public string Lastx { get; set; }
+
+    /// <summary>
+    /// Gets or sets an optional, arbitrary suffix which can be appended
+    /// to the name to disambiguate two authors with the same name.
+    /// </summary>
+    public string? Suffix { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EfAuthor"/> class.
+    /// </summary>
+    public EfAuthor()
+    {
+        Id = Guid.NewGuid().ToString();
+        First = "";
+        Last = "";
+        Lastx = "";
+        AuthorWorks = new List<EfAuthorWork>();
+    }
 
     /// <summary>
     /// Gets or sets the author-works link.
@@ -21,11 +55,20 @@ public sealed class EfAuthor : Author
     public List<EfAuthorWork> AuthorWorks { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EfAuthor"/> class.
+    /// Converts to string.
     /// </summary>
-    public EfAuthor()
+    /// <returns>
+    /// A <see cref="string" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
     {
-        Id = Guid.NewGuid();
-        AuthorWorks = new List<EfAuthorWork>();
+        StringBuilder sb = new();
+
+        sb.Append(Last);
+        if (!string.IsNullOrEmpty(Suffix))
+            sb.Append(" (").Append(Suffix).Append(')');
+        sb.Append(", ").Append(First);
+
+        return sb.ToString();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Cadmus.Biblio.Core;
 using Cadmus.Biblio.Ef;
 using Cadmus.Biblio.Seed;
-using Fusi.DbManager.MySql;
+using Fusi.DbManager.PgSql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Polly;
 using System;
 using System.Data.Common;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -96,14 +95,11 @@ public static class BiblioHostSeedExtensions
 
                 // if the DB does not exist, create and seed it
                 string dbName = config.GetValue<string>("DatabaseNames:Biblio")!;
-                string cs = string.Format(
-                    CultureInfo.InvariantCulture,
-                    config.GetConnectionString("Biblio")!,
-                    dbName);
+                string cst = config.GetConnectionString("Biblio")!;
                 Console.WriteLine($"Checking for database {dbName}...");
                 Serilog.Log.Information($"Checking for database {dbName}...");
 
-                MySqlDbManager manager = new(cs);
+                PgSqlDbManager manager = new(cst);
                 if (!manager.Exists(dbName))
                 {
                     // create

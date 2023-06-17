@@ -52,8 +52,8 @@ public sealed class WorkAuthorBindingModel
         return new WorkAuthor
         {
             Id = Id ?? Guid.Empty,
-            First = First,
-            Last = Last,
+            First = First ?? "",
+            Last = Last ?? "",
             Suffix = Suffix,
             Role = Role,
             Ordinal = Ordinal

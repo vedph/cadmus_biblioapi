@@ -16,7 +16,7 @@ public sealed class EfWork : EfWorkBase
     /// <summary>
     /// Gets or sets the optional container identifier.
     /// </summary>
-    public Guid? ContainerId { get; set; }
+    public string? ContainerId { get; set; }
 
     /// <summary>
     /// Gets or sets the optional container.

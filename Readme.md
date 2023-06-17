@@ -33,7 +33,7 @@
 🐋 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus_biblio_api:4.0.0 -t vedph2020/cadmus_biblio_api:latest
+docker build . -t vedph2020/cadmus-biblio-api:5.0.0 -t vedph2020/cadmus-biblio-api:latest
 ```
 
 (replace with the current version).
@@ -43,7 +43,7 @@ This API is independent from Cadmus, but it is designed to integrate with it. Yo
 The `CadmusBiblioDemoApi` project is provided to test a Cadmus-based editor consuming the bibliography API. So, to play with it you should start both the API projects, and then the [frontend app](https://github.com/vedph/cadmus_biblio_shell). To build the image of the demo:
 
 ```bash
-docker build . -f Dockerfile-demo -t vedph2020/cadmus-biblio-demo-api:3.1.5 -t vedph2020/cadmus-biblio-demo-api:latest
+docker build . -f Dockerfile-demo -t vedph2020/cadmus-biblio-demo-api:5.0.0 -t vedph2020/cadmus-biblio-demo-api:latest
 ```
 
 ## Overview
@@ -218,15 +218,15 @@ To empty the database:
 
 ```sql
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE `authorwork`;
-TRUNCATE TABLE `authorcontainer`;
-TRUNCATE TABLE `authorwork`;
+TRUNCATE TABLE `author_work`;
+TRUNCATE TABLE `author_container`;
+TRUNCATE TABLE `author_work`;
 TRUNCATE TABLE `container`;
 TRUNCATE TABLE `keyword`;
-TRUNCATE TABLE `keywordcontainer`;
-TRUNCATE TABLE `keywordwork`;
+TRUNCATE TABLE `keyword_container`;
+TRUNCATE TABLE `keyword_work`;
 TRUNCATE TABLE `work`;
-TRUNCATE TABLE `worktype`;
+TRUNCATE TABLE `work_type`;
 SET FOREIGN_KEY_CHECKS = 1;
 ```
 
@@ -352,6 +352,10 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+### 5.0.0
+
+- 2023-06-17: moved to PostgreSQL.
 
 ### 4.0.1
 

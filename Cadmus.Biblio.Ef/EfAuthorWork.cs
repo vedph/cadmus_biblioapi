@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Cadmus.Biblio.Ef;
+﻿namespace Cadmus.Biblio.Ef;
 
 /// <summary>
 /// Entity linking an <see cref="EfAuthor"/> to an <see cref="EfWork"/>.
@@ -10,7 +8,7 @@ public class EfAuthorWork
     /// <summary>
     /// Gets or sets the author identifier.
     /// </summary>
-    public Guid AuthorId { get; set; }
+    public string AuthorId { get; set; }
 
     /// <summary>
     /// Gets or sets the author.
@@ -20,7 +18,7 @@ public class EfAuthorWork
     /// <summary>
     /// Gets or sets the work identifier.
     /// </summary>
-    public Guid WorkId { get; set; }
+    public string WorkId { get; set; }
 
     /// <summary>
     /// Gets or sets the work.
@@ -41,6 +39,15 @@ public class EfAuthorWork
     /// meaningless.
     /// </summary>
     public short Ordinal { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EfAuthorWork"/> class.
+    /// </summary>
+    public EfAuthorWork()
+    {
+        AuthorId = "";
+        WorkId = "";
+    }
 
     /// <summary>
     /// Converts to string.

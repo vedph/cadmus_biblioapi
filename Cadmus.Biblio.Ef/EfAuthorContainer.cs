@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Cadmus.Biblio.Ef;
+﻿namespace Cadmus.Biblio.Ef;
 
 /// <summary>
 /// Entity linking an <see cref="EfAuthor"/> to an <see cref="EfContainer"/>.
@@ -10,7 +8,7 @@ public class EfAuthorContainer
     /// <summary>
     /// Gets or sets the author identifier.
     /// </summary>
-    public Guid AuthorId { get; set; }
+    public string AuthorId { get; set; }
 
     /// <summary>
     /// Gets or sets the author.
@@ -20,12 +18,12 @@ public class EfAuthorContainer
     /// <summary>
     /// Gets or sets the container identifier.
     /// </summary>
-    public Guid ContainerId { get; set; }
+    public string ContainerId { get; set; }
 
     /// <summary>
     /// Gets or sets the work.
     /// </summary>
-    public EfContainer? Container{ get; set; }
+    public EfContainer? Container { get; set; }
 
     /// <summary>
     /// Gets or sets the optional role, used with authors linked to a
@@ -41,6 +39,15 @@ public class EfAuthorContainer
     /// meaningless.
     /// </summary>
     public short Ordinal { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EfAuthorContainer"/> class.
+    /// </summary>
+    public EfAuthorContainer()
+    {
+        AuthorId = "";
+        ContainerId = "";
+    }
 
     /// <summary>
     /// Converts to string.

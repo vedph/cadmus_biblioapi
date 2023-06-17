@@ -1,7 +1,6 @@
 ﻿using Cadmus.Biblio.Core;
 using Fusi.DbManager;
-using Fusi.DbManager.MySql;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Fusi.DbManager.PgSql;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -17,14 +16,15 @@ public class NonParallelResourceCollection { }
 [Collection(nameof(NonParallelResourceCollection))]
 public sealed class EfBiblioRepositoryTest
 {
-    private const string CST = "Server=localhost;Database={0};Uid=root;Pwd=mysql";
+    private const string CST = "Server=localhost;port=5432;Database={0};" +
+        "User Id=postgres;Password=postgres;Include Error Detail=True";
     private const string DB = "cadmus-biblio-test";
 
     private readonly IDbManager _manager;
 
     public EfBiblioRepositoryTest()
     {
-        _manager = new MySqlDbManager(string.Format(CST, DB));
+        _manager = new PgSqlDbManager(CST);
     }
 
     private void ResetDatabase()
@@ -38,7 +38,7 @@ public sealed class EfBiblioRepositoryTest
     private static IBiblioRepository GetRepository()
     {
         return new EfBiblioRepository(
-            string.Format(CST, "cadmus-biblio-test"), "mysql");
+            string.Format(CST, "cadmus-biblio-test"), "pgsql");
     }
 
     #region Work types
@@ -695,7 +695,7 @@ public sealed class EfBiblioRepositoryTest
             YearPub = 2020,
             PlacePub = "Boston",
             Location = "www.jsa.org/123",
-            AccessDate = new DateTime(2021, 1, 31),
+            AccessDate = new DateTime(2021, 1, 31).ToUniversalTime(),
             Number = "1",
             Note = "A note",
             Authors = new List<WorkAuthor>(new[]

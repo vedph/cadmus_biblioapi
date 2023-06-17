@@ -72,8 +72,8 @@ public sealed class AuthorController : Controller
         Author author = new()
         {
             Id = model.Id ?? Guid.Empty,
-            First = model.First,
-            Last = model.Last,
+            First = model.First ?? "",
+            Last = model.Last ?? "",
             Suffix = model.Suffix
         };
         _repository.AddAuthor(author);

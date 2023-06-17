@@ -85,7 +85,8 @@ public static class Program
                 })
                 .UseSerilog()
                 .Build()
-                .SeedAsync(); // see Services/HostSeedExtension
+                // see Services/HostSeedExtension
+                .SeedAsync();
 
             host.Run();
 

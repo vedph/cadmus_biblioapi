@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="Fusi.Cli.Commands" Version="2.1.1" />
-    <PackageReference Include="Fusi.DbManager.MySql" Version="3.0.0" />
+    <PackageReference Include="Fusi.DbManager.MySql" Version="3.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Cadmus.Biblio.Ef;
+﻿namespace Cadmus.Biblio.Ef;
 
 public sealed class EfKeywordContainer
 {
@@ -17,12 +15,20 @@ public sealed class EfKeywordContainer
     /// <summary>
     /// Gets or sets the work identifier.
     /// </summary>
-    public Guid ContainerId { get; set; }
+    public string ContainerId { get; set; }
 
     /// <summary>
     /// Gets or sets the work.
     /// </summary>
     public EfContainer? Container { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EfKeywordContainer"/> class.
+    /// </summary>
+    public EfKeywordContainer()
+    {
+        ContainerId = "";
+    }
 
     /// <summary>
     /// Converts to string.

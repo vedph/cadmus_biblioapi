@@ -20,12 +20,9 @@ using Cadmus.Api.Services.Auth;
 using Cadmus.Api.Services.Messaging;
 using Cadmus.Api.Services;
 using Microsoft.AspNetCore.HttpOverrides;
-using Cadmus.Index.Sql;
 using Cadmus.BiblioDemo.Services;
 using Cadmus.Core.Storage;
 using Cadmus.Export.Preview;
-using Cadmus.Graph.MySql;
-using Cadmus.Graph;
 
 namespace CadmusBiblioDemoApi
 {
@@ -292,17 +289,6 @@ namespace CadmusBiblioDemoApi
                 Configuration.GetValue<string>("DatabaseNames:Data"));
             services.AddSingleton<IItemIndexFactoryProvider>(_ =>
                 new StandardItemIndexFactoryProvider(indexCS));
-
-            // graph repository
-            services.AddSingleton<IGraphRepository>(_ =>
-            {
-                var repository = new MySqlGraphRepository();
-                repository.Configure(new SqlOptions
-                {
-                    ConnectionString = indexCS
-                });
-                return repository;
-            });
 
             // previewer
             services.AddSingleton(p => GetPreviewer(p));
