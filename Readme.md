@@ -353,6 +353,8 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2023-06-21: updated packages.
+
 ### 5.0.0
 
 - 2023-06-17: moved to PostgreSQL.
