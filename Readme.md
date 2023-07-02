@@ -244,6 +244,11 @@ To fill only a subset of the tables, use the `-e` option with a string including
 - `C`=containers
 - `W`=works
 
+In the **API**, these environment variables are used for seeding:
+
+- `SEED__BIBLIODELAY`: delay (in seconds) before starting the seeding process; default is 0.
+- `SEED__ENTITYCOUNT`: the count of entities to seed; default is 100.
+
 ## Adding Bibliography
 
 This section explains how to add the external bibliography services to a Cadmus solution.
