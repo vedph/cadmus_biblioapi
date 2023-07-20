@@ -16,9 +16,6 @@ using Microsoft.OpenApi.Models;
 using AspNetCore.Identity.Mongo;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using System.Reflection;
-using Serilog;
-using Serilog.Events;
-using Serilog.Exceptions;
 using Cadmus.Api.Services.Auth;
 using Cadmus.Api.Services.Messaging;
 using Cadmus.Biblio.Core;
@@ -30,6 +27,7 @@ using Cadmus.Api.Services;
 using Cadmus.Core.Storage;
 using Cadmus.Core;
 using Cadmus.Export.Preview;
+using Microsoft.Extensions.Logging;
 
 namespace CadmusBiblioApi;
 
@@ -205,21 +203,21 @@ public sealed class Startup
         }
 
         // get profile source
-        ILogger? logger = provider.GetService<ILogger>();
+        ILogger<Startup>? logger = provider.GetService<ILogger<Startup>>();
         IHostEnvironment env = provider.GetService<IHostEnvironment>()!;
         string path = Path.Combine(env.ContentRootPath,
             "wwwroot", "preview-profile.json");
         if (!File.Exists(path))
         {
             Console.WriteLine($"Preview profile expected at {path} not found");
-            logger?.Error($"Preview profile expected at {path} not found");
+            logger?.LogError("Preview profile expected at {path} not found", path);
             return new CadmusPreviewer(factoryProvider.GetFactory("{}"),
                 repository);
         }
 
         // load profile
         Console.WriteLine($"Loading preview profile from {path}...");
-        logger?.Information($"Loading preview profile from {path}...");
+        logger?.LogInformation("Loading preview profile from {path}...", path);
         string profile;
         using (StreamReader reader = new(new FileStream(
             path, FileMode.Open, FileAccess.Read, FileShare.Read), Encoding.UTF8))
@@ -292,20 +290,6 @@ public sealed class Startup
 
         // swagger
         ConfigureSwaggerServices(services);
-
-        // serilog
-        // Install-Package Serilog.Exceptions Serilog.Sinks.MongoDB
-        // https://github.com/RehanSaeed/Serilog.Exceptions
-        string maxSize = Configuration["Serilog:MaxMbSize"]!;
-        services.AddSingleton<ILogger>(_ => new LoggerConfiguration()
-            .MinimumLevel.Information()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            .Enrich.WithExceptionDetails()
-            .WriteTo.Console()
-            .WriteTo.MongoDBCapped(Configuration["Serilog:ConnectionString"]!,
-                cappedMaxSizeMb: !string.IsNullOrEmpty(maxSize) &&
-                    int.TryParse(maxSize, out int n) && n > 0 ? n : 10)
-                .CreateLogger());
     }
 
     /// <summary>

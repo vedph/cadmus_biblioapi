@@ -1,9 +1,7 @@
 using System.Collections;
 using Serilog;
 using System.Diagnostics;
-using Serilog.Events;
 using Cadmus.Api.Services.Seeding;
-using Cadmus.Api.Services;
 
 namespace CadmusBiblioDemoApi;
 
@@ -44,16 +42,6 @@ public static class Program
     /// <param name="args">The arguments.</param>
     public static async Task<int> Main(string[] args)
     {
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-#if DEBUG
-            .WriteTo.File("cadmus-log.txt", rollingInterval: RollingInterval.Day)
-#endif
-            .CreateLogger();
-
         try
         {
             Log.Information("Starting Cadmus BiblioDemo API host");
@@ -63,27 +51,21 @@ public static class Program
             // see https://stackoverflow.com/questions/45148389/how-to-seed-in-entity-framework-core-2
             // and https://docs.microsoft.com/en-us/aspnet/core/migration/1x-to-2x/?view=aspnetcore-2.1#move-database-initialization-code
             var host = await CreateHostBuilder(args)
-                // add in-memory config to override Serilog connection string
-                // as there is no way of configuring it outside appsettings
-                // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-5.0#in-memory-provider-and-binding-to-a-poco-class
-                .ConfigureAppConfiguration((context, config) =>
+                .UseSerilog((hostingContext, loggerConfiguration) =>
                 {
-                    IConfiguration cfg = AppConfigReader.Read();
-                    string csTemplate = cfg.GetValue<string>("Serilog:ConnectionString")!;
-                    string dbName = cfg.GetValue<string>("DatabaseNames:Data")!;
-                    string cs = string.Format(csTemplate, dbName);
-                    Debug.WriteLine($"Serilog:ConnectionString override = {cs}");
-                    Console.WriteLine($"Serilog:ConnectionString override = {cs}");
+                    string cs = hostingContext.Configuration
+                        .GetConnectionString("Log")!;
+                    var maxSize = hostingContext.Configuration["Serilog:MaxMbSize"];
 
-                    Dictionary<string, string?> dct = new()
-                    {
-                        { "Serilog:ConnectionString", cs }
-                    };
-                    // (requires Microsoft.Extensions.Configuration package
-                    // to get the MemoryConfigurationProvider)
-                    config.AddInMemoryCollection(dct);
+                    loggerConfiguration
+                        .ReadFrom.Configuration(hostingContext.Configuration)
+            #if DEBUG
+                        .WriteTo.File("cadmus-log.txt", rollingInterval: RollingInterval.Day)
+            #endif
+                        .WriteTo.MongoDBCapped(cs,
+                            cappedMaxSizeMb: !string.IsNullOrEmpty(maxSize) &&
+                                int.TryParse(maxSize, out int n) && n > 0 ? n : 10);
                 })
-                .UseSerilog()
                 .Build()
                 // see Services/HostSeedExtension
                 .SeedAsync();

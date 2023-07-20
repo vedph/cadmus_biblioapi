@@ -35,13 +35,13 @@
 🐋 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus-biblio-api:5.0.1 -t vedph2020/cadmus-biblio-api:latest
+docker build . -t vedph2020/cadmus-biblio-api:5.0.2 -t vedph2020/cadmus-biblio-api:latest
 ```
 
 for ARM (MacOS with ARM CPU: see [registry](https://mcr.microsoft.com/v2/dotnet/sdk/tags/list)):
 
 ```bash
-docker build . -f Dockerfile-arm -t vedph2020/cadmus-biblio-api_arm:5.0.0 -t vedph2020/cadmus-biblio-api_arm:latest
+docker build . -f Dockerfile-arm -t vedph2020/cadmus-biblio-api_arm:5.0.1 -t vedph2020/cadmus-biblio-api_arm:latest
 ```
 
 (replace with the current version).
@@ -365,6 +365,8 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+- 2023-07-20: refactored [logging](https://myrmex.github.io/overview/cadmus/dev/history/b-logging).
 
 ### 5.0.1
 
