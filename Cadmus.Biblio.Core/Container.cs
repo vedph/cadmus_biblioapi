@@ -91,6 +91,18 @@ public class Container
     public string? Note { get; set; }
 
     /// <summary>
+    /// Gets or sets the optional datation, used for historical works and
+    /// expressed in a human-readable form.
+    /// </summary>
+    public string? Datation { get; set; }
+
+    /// <summary>
+    /// Gets or sets the value calculated from <see cref="Datation"/> for
+    /// use with sorting or filtering.
+    /// </summary>
+    public double? DatationValue { get; set; }
+
+    /// <summary>
     /// Gets or sets the optional keywords linked to this work.
     /// </summary>
     public List<Keyword> Keywords { get; set; }

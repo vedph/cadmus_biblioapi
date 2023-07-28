@@ -103,6 +103,17 @@ public class ContainerBindingModel
     public string? Note { get; set; }
 
     /// <summary>
+    /// Gets or sets the datation.
+    /// </summary>
+    [MaxLength(1000)]
+    public string? Datation { get; set; }
+
+    /// <summary>
+    /// Gets or sets the datation value.
+    /// </summary>
+    public double? DatationValue { get; set; }
+
+    /// <summary>
     /// Gets or sets the optional keywords linked to this work.
     /// </summary>
     public List<KeywordBindingModel> Keywords { get; set; }
@@ -138,6 +149,8 @@ public class ContainerBindingModel
             Location = Location,
             AccessDate = AccessDate,
             Note = Note,
+            Datation = Datation,
+            DatationValue = DatationValue,
             Keywords = Keywords?.Count > 0
                 ? Keywords.ConvertAll(m => m.ToKeyword())
                 : new List<Keyword>(),

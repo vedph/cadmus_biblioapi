@@ -366,6 +366,7 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2023-07-28: added `datation` and `datationValue` to work/container.
 - 2023-07-20: refactored [logging](https://myrmex.github.io/overview/cadmus/dev/history/b-logging).
 
 ### 5.0.1

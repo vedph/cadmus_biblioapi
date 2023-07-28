@@ -220,6 +220,8 @@ public static class EfHelper
             Location = ef.Location,
             AccessDate = ef.AccessDate,
             Note = ef.Note,
+            Datation = ef.Datation,
+            DatationValue = ef.DatationValue,
             Number = ef.Number
         };
 
@@ -276,6 +278,8 @@ public static class EfHelper
             LastPage = ef.LastPage,
             Key = ef.Key,
             Note = ef.Note,
+            Datation = ef.Datation,
+            DatationValue = ef.DatationValue,
         };
 
         // authors
@@ -476,6 +480,8 @@ public static class EfHelper
             ef.AccessDate = container.AccessDate;
             ef.Number = container.Number!;
             ef.Note = container.Note!;
+            ef.Datation = container.Datation;
+            ef.DatationValue = container.DatationValue;
 
             // authors
             if (container.Authors?.Count > 0)
@@ -717,6 +723,8 @@ public static class EfHelper
         ef.FirstPage = work.FirstPage;
         ef.LastPage = work.LastPage;
         ef.Note = work.Note;
+        ef.Datation = work.Datation;
+        ef.DatationValue = work.DatationValue;
 
         // authors
         if (work.Authors?.Count > 0)

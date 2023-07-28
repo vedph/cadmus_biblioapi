@@ -63,6 +63,16 @@ public class WorkFilter : PagingOptions
     public short YearPubMax { get; set; }
 
     /// <summary>
+    /// Gets or sets the minimum datation value.
+    /// </summary>
+    public double? DatationMin { get; set; }
+
+    /// <summary>
+    /// Gets or sets the maximum datation value.
+    /// </summary>
+    public double? DatationMax { get; set; }
+
+    /// <summary>
     /// Gets or sets any portion of the citation key to be matched.
     /// </summary>
     public string? Key { get; set; }

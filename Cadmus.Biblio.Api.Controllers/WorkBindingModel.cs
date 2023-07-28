@@ -51,6 +51,8 @@ public sealed class WorkBindingModel : ContainerBindingModel
             Location = Location,
             AccessDate = AccessDate,
             Note = Note,
+            Datation = Datation,
+            DatationValue = DatationValue,
             Keywords = Keywords?.Count > 0
                 ? Keywords.ConvertAll(m => m.ToKeyword())
                 : new List<Keyword>(),

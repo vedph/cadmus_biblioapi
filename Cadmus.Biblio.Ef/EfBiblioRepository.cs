@@ -119,6 +119,12 @@ public sealed class EfBiblioRepository : IBiblioRepository
             if (filter.YearPubMax > 0)
                 predicate.Or(w => w.YearPub <= filter.YearPubMax);
 
+            if (filter.DatationMin != null)
+                predicate.Or(w => w.DatationValue >= filter.DatationMin);
+
+            if (filter.DatationMax != null)
+                predicate.Or(w => w.DatationValue <= filter.DatationMax);
+
             works = works.AsExpandable().Where(predicate);
         }
         else
@@ -157,7 +163,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
             if (filter.ContainerId != Guid.Empty)
             {
                 works = works.Where(w =>
-                    w.ContainerId.Equals(filter.ContainerId));
+                    w.ContainerId!.Equals(filter.ContainerId));
             }
 
             // keyword
@@ -174,6 +180,14 @@ public sealed class EfBiblioRepository : IBiblioRepository
             // yearpubmax
             if (filter.YearPubMax > 0)
                 works = works.Where(w => w.YearPub <= filter.YearPubMax);
+
+            // datationmin
+            if (filter.DatationMin != null)
+                works = works.Where(w => w.DatationValue >= filter.DatationMin);
+
+            // datationmax
+            if (filter.DatationMax != null)
+                works = works.Where(w => w.DatationValue <= filter.DatationMax);
         }
 
         int tot = works.Count();
@@ -311,15 +325,16 @@ public sealed class EfBiblioRepository : IBiblioRepository
             if (!string.IsNullOrEmpty(filter.LastName))
             {
                 predicate.Or(c =>
-                    c.AuthorContainers!.Any(ac =>
-                        ac.Author!.Lastx!.ToLower().Contains(filter.LastName.ToLower())));
+                    c.AuthorContainers!.Any(ac => ac.Author!.Lastx!.ToLower()
+                        .Contains(filter.LastName.ToLower())));
             }
 
             if (!string.IsNullOrEmpty(filter.Language))
                 predicate.Or(c => c.Language!.Equals(filter.Language));
 
             if (!string.IsNullOrEmpty(filter.Title))
-                predicate.Or(c => c.Titlex!.ToLower().Contains(filter.Title.ToLower()));
+                predicate.Or(c => c.Titlex!.ToLower().Contains(
+                    filter.Title.ToLower()));
 
             if (!string.IsNullOrEmpty(filter.Keyword))
             {
@@ -332,6 +347,12 @@ public sealed class EfBiblioRepository : IBiblioRepository
 
             if (filter.YearPubMax > 0)
                 predicate.Or(c => c.YearPub <= filter.YearPubMax);
+
+            if (filter.DatationMin != null)
+                predicate.Or(w => w.DatationValue >= filter.DatationMin);
+
+            if (filter.DatationMax != null)
+                predicate.Or(w => w.DatationValue <= filter.DatationMax);
 
             containers = containers.AsExpandable().Where(predicate);
         }
@@ -381,6 +402,14 @@ public sealed class EfBiblioRepository : IBiblioRepository
             // yearpubmax
             if (filter.YearPubMax > 0)
                 containers = containers.Where(w => w.YearPub <= filter.YearPubMax);
+
+            // datationmin
+            if (filter.DatationMin != null)
+                containers = containers.Where(w => w.DatationValue >= filter.DatationMin);
+
+            // datationmax
+            if (filter.DatationMax != null)
+                containers = containers.Where(w => w.DatationValue <= filter.DatationMax);
         }
 
         int tot = containers.Count();

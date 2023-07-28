@@ -273,6 +273,12 @@ public sealed class BiblioDbContext : DbContext
             .HasColumnName("note")
             .IsUnicode()
             .HasMaxLength(500);
+        modelBuilder.Entity<EfWork>().Property(w => w.Datation)
+            .HasColumnName("datation")
+            .IsUnicode()
+            .HasMaxLength(1000);
+        modelBuilder.Entity<EfWork>().Property(w => w.DatationValue)
+            .HasColumnName("datation_value");
 
         // container
         modelBuilder.Entity<EfContainer>().ToTable("container");
@@ -337,6 +343,12 @@ public sealed class BiblioDbContext : DbContext
             .HasColumnName("note")
             .IsUnicode()
             .HasMaxLength(500);
+        modelBuilder.Entity<EfContainer>().Property(w => w.Datation)
+            .HasColumnName("datation")
+            .IsUnicode()
+            .HasMaxLength(1000);
+        modelBuilder.Entity<EfContainer>().Property(w => w.DatationValue)
+            .HasColumnName("datation_value");
 
         // keyword
         modelBuilder.Entity<EfKeyword>().ToTable("keyword");

@@ -7,8 +7,8 @@ CREATE TABLE author (
 	suffix varchar(50) NULL,
 	CONSTRAINT author_pk PRIMARY KEY (id)
 );
-CREATE INDEX author_last_idx ON public.author USING btree (last);
-CREATE INDEX author_lastx_idx ON public.author USING btree (lastx);
+CREATE INDEX author_last_idx ON author USING btree (last);
+CREATE INDEX author_lastx_idx ON author USING btree (lastx);
 
 -- container
 CREATE TABLE container (
@@ -27,11 +27,13 @@ CREATE TABLE container (
 	access_date timestamptz NULL,
 	"number" varchar(50) NULL,
 	note varchar(500) NULL,
+	datation varchar(1000) NULL,
+	datation_value double precision NULL,
 	CONSTRAINT container_pk PRIMARY KEY (id)
 );
-CREATE INDEX container_key_idx ON public.container USING btree (key);
-CREATE INDEX container_titlex_idx ON public.container USING btree (titlex);
-CREATE INDEX container_type_id_idx ON public.container USING btree (type_id);
+CREATE INDEX container_key_idx ON container USING btree (key);
+CREATE INDEX container_titlex_idx ON container USING btree (titlex);
+CREATE INDEX container_type_id_idx ON container USING btree (type_id);
 
 -- author_container
 CREATE TABLE author_container (
@@ -41,9 +43,9 @@ CREATE TABLE author_container (
 	ordinal int2 NOT NULL,
 	CONSTRAINT author_container_pk PRIMARY KEY (author_id, container_id)
 );
--- public.author_container foreign keys
-ALTER TABLE public.author_container ADD CONSTRAINT author_container_fk FOREIGN KEY (author_id) REFERENCES author(id) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE public.author_container ADD CONSTRAINT author_container_fk2 FOREIGN KEY (container_id) REFERENCES container(id) ON DELETE CASCADE ON UPDATE CASCADE;
+-- author_container foreign keys
+ALTER TABLE author_container ADD CONSTRAINT author_container_fk FOREIGN KEY (author_id) REFERENCES author(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE author_container ADD CONSTRAINT author_container_fk2 FOREIGN KEY (container_id) REFERENCES container(id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- work_type
 CREATE TABLE work_type (
@@ -52,7 +54,7 @@ CREATE TABLE work_type (
 	CONSTRAINT work_type_pk PRIMARY KEY (id)
 );
 
--- "work" definition
+-- work
 CREATE TABLE "work" (
 	id bpchar(36) NOT NULL,
 	"key" varchar(300) NOT NULL,
@@ -72,14 +74,16 @@ CREATE TABLE "work" (
 	first_page int2 NOT NULL,
 	last_page int2 NOT NULL,
 	note varchar(500) NULL,
+	datation varchar(1000) NULL,
+	datation_value double precision NULL,
 	CONSTRAINT work_pk PRIMARY KEY (id)
 );
-CREATE INDEX work_key_idx ON public.work USING btree (key);
-CREATE INDEX work_titlex_idx ON public.work USING btree (titlex);
-CREATE INDEX work_type_id_idx ON public.work USING btree (type_id);
--- public."work" foreign keys
-ALTER TABLE public."work" ADD CONSTRAINT work_fk FOREIGN KEY (type_id) REFERENCES work_type(id) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE public."work" ADD CONSTRAINT work_fk_1 FOREIGN KEY (container_id) REFERENCES container(id) ON DELETE CASCADE ON UPDATE CASCADE;
+CREATE INDEX work_key_idx ON work USING btree (key);
+CREATE INDEX work_titlex_idx ON work USING btree (titlex);
+CREATE INDEX work_type_id_idx ON work USING btree (type_id);
+-- "work" foreign keys
+ALTER TABLE "work" ADD CONSTRAINT work_fk FOREIGN KEY (type_id) REFERENCES work_type(id) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "work" ADD CONSTRAINT work_fk_1 FOREIGN KEY (container_id) REFERENCES container(id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- author_work
 CREATE TABLE author_work (
@@ -90,8 +94,8 @@ CREATE TABLE author_work (
 	CONSTRAINT author_work_pk PRIMARY KEY (author_id, work_id)
 );
 -- author_work foreign keys
-ALTER TABLE public.author_work ADD CONSTRAINT author_work_fk FOREIGN KEY (author_id) REFERENCES author(id) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE public.author_work ADD CONSTRAINT author_work_fk_1 FOREIGN KEY (work_id) REFERENCES "work"(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE author_work ADD CONSTRAINT author_work_fk FOREIGN KEY (author_id) REFERENCES author(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE author_work ADD CONSTRAINT author_work_fk_1 FOREIGN KEY (work_id) REFERENCES "work"(id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- keyword
 CREATE TABLE keyword (
@@ -101,9 +105,9 @@ CREATE TABLE keyword (
 	valuex varchar(50) NOT NULL,
 	CONSTRAINT keyword_pk PRIMARY KEY (id)
 );
-CREATE INDEX keyword_language_idx ON public.keyword USING btree (language);
-CREATE INDEX keyword_value_idx ON public.keyword USING btree (value);
-CREATE INDEX keyword_valuex_idx ON public.keyword USING btree (valuex);
+CREATE INDEX keyword_language_idx ON keyword USING btree (language);
+CREATE INDEX keyword_value_idx ON keyword USING btree (value);
+CREATE INDEX keyword_valuex_idx ON keyword USING btree (valuex);
 
 -- keyword_container
 CREATE TABLE keyword_container (
