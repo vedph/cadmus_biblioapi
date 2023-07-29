@@ -86,108 +86,13 @@ This project is an example of such an additional API service, provided for those
 
 ### Schema
 
-The bibliographic database here is a MySql database with a very simple schema, centered around the concept of work. Apart from its title and details, the work is connected to these other data:
+The bibliographic database here is a PostgreSQL (or MySql) database with a very simple schema, centered around the concept of work. Apart from its title and details, the work is connected to these other data:
 
 - a single _work type_, drawn from an editable list (e.g. book, paper, web page, audio recording, TV show...);
 - any number of _authors_, with different roles (authors proper have a default role of null; other may be translators, organizations, etc.);
 - any number of _keywords_.
 
 Also, works can be contained in another work, acting as a works _container_ (e.g. journal, proceedings, books of articles, etc.). Its schema is equal to that of a work, except that it lacks a container, and first and last page numbers.
-
-(Paste the following code in the box at [PlantUml website](https://plantuml.com/) if you cannot see it):
-
-```plantuml
-@startuml
-hide circle
-skinparam linetype ortho
-
-entity worktype {
-    * id <<PK>>
-    * name
-}
-
-entity author {
-    * id <<PK>>
-    * first
-    * last
-    * lastx
-    * suffix
-}
-
-entity work {
-    * id <<PK>>
-    * key
-    * title
-    * titlex
-    * language
-    * edition
-    * yearPub
-    * yearPub2
-    * firstPage
-    * lastPage
-    --
-    * typeId <<FK>>
-    * containerId
-    * publisher
-    * placePub
-    * location
-    * accessDate
-    * number
-    * note
-}
-
-entity container {
-    * id <<PK>>
-    * key
-    * title
-    * titlex
-    * language
-    * edition
-    * yearPub
-    * yearPub2
-    --
-    * typeId <<FK>>
-    * publisher
-    * placePub
-    * location
-    * accessDate
-    * number
-    * note
-}
-
-entity keyword {
-    * id: number <<PK AI>>
-    * language: text
-    * value: text
-    * valuex: text
-}
-
-entity authorwork {
-    * authorId <<PK FK>>
-    * workId <<PK FK>>
-    * role
-}
-
-entity authorcontainer {
-    * authorId <<PK FK>>
-    * workId <<PK FK>>
-    * role
-}
-
-work }o-- worktype
-work }o-- container
-authorwork }o-- work
-authorwork }o-- author
-keywordwork }o-- keyword
-keywordwork }o-- work
-authorcontainer }o-- work
-authorcontainer }o-- author
-keywordcontainer }o-- keyword
-keywordcontainer }o-- container
-@enduml
-```
-
-Alternatively, here is a picture:
 
 ![schema](./schema.png)
 
@@ -265,7 +170,7 @@ This section explains how to add the external bibliography services to a Cadmus 
 
 The only thing to change in the backend is the profile.
 
-1. add the part definition to your item's facets, e.g.:
+(1) add the part definition to your item's facets, e.g.:
 
 ```json
 {
@@ -278,7 +183,7 @@ The only thing to change in the backend is the profile.
 }
 ```
 
-2. add the human-friendly name for that part type in the `model-types@en` thesaurus, e.g.:
+(2) add the human-friendly name for that part type in the `model-types@en` thesaurus, e.g.:
 
 ```json
 {
@@ -289,10 +194,9 @@ The only thing to change in the backend is the profile.
 
 ### Frontend
 
-1. install packages: `npm i @myrmidon/cadmus-biblio-api @myrmidon/cadmus-biblio-core @myrmidon/cadmus-biblio-ui @myrmidon/cadmus-part-biblio-pg @myrmidon/cadmus-part-biblio-ui`.
+(1) install packages: `npm i @myrmidon/cadmus-biblio-api @myrmidon/cadmus-biblio-core @myrmidon/cadmus-biblio-ui @myrmidon/cadmus-part-biblio-pg @myrmidon/cadmus-part-biblio-ui`.
 
-
-2. in app `part-editor-keys.ts`, add the mappings for the external bibliography part editor:
+(2) in app `part-editor-keys.ts`, add the mappings for the external bibliography part editor:
 
 ```ts
 // ...
@@ -308,7 +212,7 @@ export const PART_EDITOR_KEYS: PartEditorKeys = {
 }
 ```
 
-3. in `app.module.ts`, import the biblio module and wire it in the routes:
+(3) in `app.module.ts`, import the biblio module and wire it in the routes:
 
 ```ts
 RouterModule.forRoot(
@@ -326,7 +230,7 @@ RouterModule.forRoot(
   ]
 ```
 
-4. in `env.js`, add the URI to the bibliography service, e.g.:
+(4) in `env.js`, add the URI to the bibliography service, e.g.:
 
 ```js
 // https://www.jvandemo.com/how-to-use-environment-variables-to-configure-your-angular-application-without-a-rebuild/
@@ -341,7 +245,7 @@ RouterModule.forRoot(
 })(this);
 ```
 
-5. in the Docker compose script, insert a new layer for the bibliographic services, e.g.:
+(5) in the Docker compose script, insert a new layer for the bibliographic services, e.g.:
 
 ```yml
   cadmus-biblio-api:
