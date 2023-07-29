@@ -55,6 +55,11 @@ public sealed class BiblioDbContext : DbContext
     public DbSet<EfKeywordContainer> KeywordContainers { get; set; }
 
     /// <summary>
+    /// Gets or sets the container links.
+    /// </summary>
+    public DbSet<EfContainerLink> ContainerLinks { get; set; }
+
+    /// <summary>
     /// Gets or sets the work external links.
     /// </summary>
     public DbSet<EfWorkLink> WorkLinks { get; set; }
@@ -290,7 +295,7 @@ public sealed class BiblioDbContext : DbContext
         modelBuilder.Entity<EfWorkLink>().Property(l => l.Id)
             .HasColumnName("id")
             .IsRequired()
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
         modelBuilder.Entity<EfWorkLink>().Property(l => l.SourceId)
             .HasColumnName("work_id")
             .IsRequired()
@@ -389,7 +394,7 @@ public sealed class BiblioDbContext : DbContext
         modelBuilder.Entity<EfContainerLink>().Property(l => l.Id)
             .HasColumnName("id")
             .IsRequired()
-            .ValueGeneratedOnAddOrUpdate();
+            .ValueGeneratedOnAdd();
         modelBuilder.Entity<EfContainerLink>().Property(l => l.SourceId)
             .HasColumnName("container_id")
             .IsRequired()

@@ -823,6 +823,7 @@ public static class EfHelper
             ? context.Works
                 .Include(w => w.AuthorWorks)
                 .Include(w => w.KeywordWorks)
+                .Include(w => w.Links)
                 .FirstOrDefault(w => w.Id == work.Id.ToString())
             : null;
 
@@ -890,10 +891,10 @@ public static class EfHelper
     /// <param name="context">The context.</param>
     /// <returns>The entity or null.</returns>
     /// <exception cref="ArgumentNullException">context</exception>
-    public static EfKeyword? GetEfKeyword(Keyword keyword, BiblioDbContext context)
+    public static EfKeyword? GetEfKeyword(Keyword keyword,
+        BiblioDbContext context)
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
+        if (context == null) throw new ArgumentNullException(nameof(context));
 
         if (keyword == null) return null;
         EfKeyword? ef = context.Keywords.FirstOrDefault(
