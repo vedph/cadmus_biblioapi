@@ -119,6 +119,11 @@ public class ContainerBindingModel
     public List<KeywordBindingModel> Keywords { get; set; }
 
     /// <summary>
+    /// Gets or sets the external links.
+    /// </summary>
+    public List<LinkBindingModel> Links { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ContainerBindingModel"/>
     /// class.
     /// </summary>
@@ -126,8 +131,13 @@ public class ContainerBindingModel
     {
         Authors = new List<WorkAuthorBindingModel>();
         Keywords = new List<KeywordBindingModel>();
+        Links = new List<LinkBindingModel>();
     }
 
+    /// <summary>
+    /// Converts to container model.
+    /// </summary>
+    /// <returns>Container.</returns>
     public Container ToContainer()
     {
         return new Container
@@ -154,6 +164,9 @@ public class ContainerBindingModel
             Keywords = Keywords?.Count > 0
                 ? Keywords.ConvertAll(m => m.ToKeyword())
                 : new List<Keyword>(),
+            ExternalIds = Links?.Count > 0
+                ? Links.ConvertAll(m => m.ToExternalId())
+                : new List<ExternalId>()
         };
     }
 }

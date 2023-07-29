@@ -17,4 +17,9 @@ public sealed class EfContainer : EfWorkBase
     /// Gets or sets the keyword-container links.
     /// </summary>
     public List<EfKeywordContainer>? KeywordContainers { get; set; }
+
+    /// <summary>
+    /// Gets or sets the links.
+    /// </summary>
+    public List<EfContainerLink>? Links { get; set; }
 }

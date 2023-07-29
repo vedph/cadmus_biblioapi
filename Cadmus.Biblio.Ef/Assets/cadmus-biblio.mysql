@@ -220,3 +220,36 @@ CREATE TABLE `keyword_work` (
   CONSTRAINT `keywordwork_work` FOREIGN KEY (`work_id`) REFERENCES `work` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `work_link`
+--
+
+DROP TABLE IF EXISTS `work_link`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `work_link` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `work_id` char(36) NOT NULL,
+  `scope` varchar(50) NOT NULL,
+  `value` varchar(1000) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `work_worklink` FOREIGN KEY (`work_id`) REFERENCES `work`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- 
+-- Table structure for table `container_link`
+--
+
+DROP TABLE IF EXISTS `container_link`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `container_link` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `container_id` char(36) NOT NULL,
+  `scope` varchar(50) NOT NULL,
+  `value` varchar(1000) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `container_containerlink` FOREIGN KEY (`container_id`) REFERENCES `container`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

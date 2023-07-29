@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Cadmus.Biblio.Ef;
 
@@ -39,4 +38,9 @@ public sealed class EfWork : EfWorkBase
     /// Gets or sets the keyword-work links.
     /// </summary>
     public List<EfKeywordWork>? KeywordWorks { get; set; }
+
+    /// <summary>
+    /// Gets or sets the links.
+    /// </summary>
+    public List<EfWorkLink>? Links { get; set; }
 }

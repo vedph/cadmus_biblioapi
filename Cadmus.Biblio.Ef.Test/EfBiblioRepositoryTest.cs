@@ -184,7 +184,7 @@ public sealed class EfBiblioRepositoryTest
         });
 
         Assert.Equal(1, page.Total);
-        Assert.Equal(1, page.Items.Count);
+        Assert.Single(page.Items);
 
         WorkType type2 = page.Items[0];
         Assert.Equal("journal", type2.Id);
@@ -263,7 +263,7 @@ public sealed class EfBiblioRepositoryTest
         });
 
         Assert.Equal(1, page.Total);
-        Assert.Equal(1, page.Items.Count);
+        Assert.Single(page.Items);
 
         WorkType type2 = page.Items[0];
         Assert.Equal("journal", type2.Id);
@@ -450,7 +450,7 @@ public sealed class EfBiblioRepositoryTest
         });
 
         Assert.Equal(1, page.Total);
-        Assert.Equal(1, page.Items.Count);
+        Assert.Single(page.Items);
 
         Assert.Equal("rosso", page.Items[0].Value);
     }
@@ -494,7 +494,7 @@ public sealed class EfBiblioRepositoryTest
         });
 
         Assert.Equal(0, page.Total);
-        Assert.Equal(0, page.Items.Count);
+        Assert.Empty(page.Items);
     }
     #endregion
 
@@ -1041,7 +1041,7 @@ public sealed class EfBiblioRepositoryTest
         });
 
         Assert.Equal(1, page.Total);
-        Assert.Equal(1, page.Items.Count);
+        Assert.Single(page.Items);
         Assert.Equal("The Journal of Samples", page.Items[0].Title);
     }
 
@@ -1102,6 +1102,14 @@ public sealed class EfBiblioRepositoryTest
                     Language = "eng",
                     Value = "test"
                 }
+            }),
+            ExternalIds = new List<ExternalId>(new[]
+            {
+                new ExternalId
+                {
+                    Scope = "doi",
+                    Value = "10.1234/1234"
+                }
             })
         };
     }
@@ -1136,6 +1144,7 @@ public sealed class EfBiblioRepositoryTest
         Assert.Equal(work.LastPage, work2.LastPage);
         Assert.Equal(work.Authors.Count, work2.Authors.Count);
         Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
+        Assert.Equal(work.ExternalIds.Count, work2.ExternalIds.Count);
     }
 
     [Fact]
@@ -1170,6 +1179,7 @@ public sealed class EfBiblioRepositoryTest
         Assert.Equal(work.LastPage, work2.LastPage);
         Assert.Equal(work.Authors.Count, work2.Authors.Count);
         Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
+        Assert.Equal(work.ExternalIds.Count, work2.ExternalIds.Count);
     }
 
     [Fact]
@@ -1316,7 +1326,7 @@ public sealed class EfBiblioRepositoryTest
         Assert.NotNull(work.Key);
         Assert.NotEqual(key, work.Key);
 
-        var work2 = repository.GetWork(work.Id);
+        Work work2 = repository.GetWork(work.Id);
         Assert.NotNull(work2);
         Assert.Equal(work.Key, work2.Key);
         Assert.Equal(work.Type, work2.Type);
@@ -1333,6 +1343,7 @@ public sealed class EfBiblioRepositoryTest
         Assert.Equal(work.Note, work2.Note);
         Assert.Equal(work.Authors.Count, work2.Authors.Count);
         Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
+        Assert.Equal(work.ExternalIds.Count, work2.ExternalIds.Count);
     }
 
     [Fact]
@@ -1464,7 +1475,7 @@ public sealed class EfBiblioRepositoryTest
         });
 
         Assert.Equal(1, page.Total);
-        Assert.Equal(1, page.Items.Count);
+        Assert.Single(page.Items);
         Assert.Equal("The Alpha", page.Items[0].Title);
     }
 

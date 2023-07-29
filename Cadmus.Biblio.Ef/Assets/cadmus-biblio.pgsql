@@ -122,3 +122,23 @@ CREATE TABLE keyword_work (
 	work_id bpchar(36) NOT NULL,
 	CONSTRAINT keyword_work_pk PRIMARY KEY (keyword_id, work_id)
 );
+
+-- work_link
+CREATE TABLE work_link (
+	id serial4 NOT NULL,
+	work_id bpchar(36) NOT NULL,
+	"scope" varchar(50) NOT NULL,
+	value varchar(1000) NOT NULL,
+	CONSTRAINT work_link_pk PRIMARY KEY (id),
+	CONSTRAINT work_link_fk FOREIGN KEY (work_id) REFERENCES "work"(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- container_link
+CREATE TABLE container_link (
+	id serial4 NOT NULL,
+	container_id bpchar(36) NOT NULL,
+	"scope" varchar(50) NOT NULL,
+	value varchar(1000) NOT NULL,
+	CONSTRAINT container_link_pk PRIMARY KEY (id),
+	CONSTRAINT container_link_fk FOREIGN KEY (container_id) REFERENCES "container"(id) ON DELETE CASCADE ON UPDATE CASCADE
+);

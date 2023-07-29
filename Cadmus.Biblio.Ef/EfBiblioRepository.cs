@@ -69,7 +69,8 @@ public sealed class EfBiblioRepository : IBiblioRepository
             .Include(w => w.AuthorWorks!)
             .ThenInclude(aw => aw.Author)
             .Include(w => w.KeywordWorks!)
-            .ThenInclude(kw => kw.Keyword);
+            .ThenInclude(kw => kw.Keyword)
+            .Include(w => w.Links);
 
         if (filter.IsMatchAnyEnabled)
         {
@@ -231,6 +232,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
             .ThenInclude(aw => aw.Author)
             .Include(w => w.KeywordWorks!)
             .ThenInclude(kw => kw.Keyword)
+            .Include(w => w.Links)
             .FirstOrDefault(w => w.Id == id.ToString());
         return EfHelper.GetWork(work);
     }
@@ -296,11 +298,12 @@ public sealed class EfBiblioRepository : IBiblioRepository
         using var db = GetContext();
         IQueryable<EfContainer> containers = db.Containers
             .AsNoTracking()
-            .Include(w => w.Type)
-            .Include(w => w.AuthorContainers!)
-            .ThenInclude(aw => aw.Author)
-            .Include(w => w.KeywordContainers!)
-            .ThenInclude(kw => kw.Keyword);
+            .Include(c => c.Type)
+            .Include(c => c.AuthorContainers!)
+            .ThenInclude(ac => ac.Author)
+            .Include(c => c.KeywordContainers!)
+            .ThenInclude(kc => kc.Keyword)
+            .Include(c => c.Links);
 
         if (filter.IsMatchAnyEnabled)
         {
@@ -444,12 +447,13 @@ public sealed class EfBiblioRepository : IBiblioRepository
         using var db = GetContext();
         EfContainer? container = db.Containers
             .AsNoTracking()
-            .Include(w => w.Type)
-            .Include(w => w.AuthorContainers!)
-            .ThenInclude(aw => aw.Author)
-            .Include(w => w.KeywordContainers!)
-            .ThenInclude(kw => kw.Keyword)
-            .FirstOrDefault(w => w.Id == id.ToString());
+            .Include(c => c.Type)
+            .Include(c => c.AuthorContainers!)
+            .ThenInclude(ac => ac.Author)
+            .Include(c => c.KeywordContainers!)
+            .ThenInclude(kc => kc.Keyword)
+            .Include(c => c.Links)
+            .FirstOrDefault(c => c.Id == id.ToString());
         return EfHelper.GetContainer(container);
     }
 

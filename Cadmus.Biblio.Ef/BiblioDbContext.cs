@@ -54,6 +54,11 @@ public sealed class BiblioDbContext : DbContext
     /// </summary>
     public DbSet<EfKeywordContainer> KeywordContainers { get; set; }
 
+    /// <summary>
+    /// Gets or sets the work external links.
+    /// </summary>
+    public DbSet<EfWorkLink> WorkLinks { get; set; }
+
     // https://docs.microsoft.com/en-us/ef/core/miscellaneous/configuring-dbcontext
 
     /// <summary>
@@ -280,6 +285,35 @@ public sealed class BiblioDbContext : DbContext
         modelBuilder.Entity<EfWork>().Property(w => w.DatationValue)
             .HasColumnName("datation_value");
 
+        // work link
+        modelBuilder.Entity<EfWorkLink>().ToTable("work_link");
+        modelBuilder.Entity<EfWorkLink>().Property(l => l.Id)
+            .HasColumnName("id")
+            .IsRequired()
+            .ValueGeneratedOnAddOrUpdate();
+        modelBuilder.Entity<EfWorkLink>().Property(l => l.SourceId)
+            .HasColumnName("work_id")
+            .IsRequired()
+            .IsUnicode(false)
+            .HasMaxLength(36)
+            .IsFixedLength();
+        modelBuilder.Entity<EfWorkLink>().Property(l => l.Scope)
+            .HasColumnName("scope")
+            .IsRequired()
+            .IsUnicode(false)
+            .HasMaxLength(50);
+        modelBuilder.Entity<EfWorkLink>().Property(l => l.Value)
+            .HasColumnName("value")
+            .IsRequired()
+            .IsUnicode()
+            .HasMaxLength(1000);
+
+        // work has many links
+        modelBuilder.Entity<EfWork>()
+            .HasMany(w => w.Links)
+            .WithOne(l => l.Source)
+            .HasForeignKey(l => l.SourceId);
+
         // container
         modelBuilder.Entity<EfContainer>().ToTable("container");
         modelBuilder.Entity<EfContainer>().Property(w => w.Id)
@@ -349,6 +383,35 @@ public sealed class BiblioDbContext : DbContext
             .HasMaxLength(1000);
         modelBuilder.Entity<EfContainer>().Property(w => w.DatationValue)
             .HasColumnName("datation_value");
+
+        // container link
+        modelBuilder.Entity<EfContainerLink>().ToTable("container_link");
+        modelBuilder.Entity<EfContainerLink>().Property(l => l.Id)
+            .HasColumnName("id")
+            .IsRequired()
+            .ValueGeneratedOnAddOrUpdate();
+        modelBuilder.Entity<EfContainerLink>().Property(l => l.SourceId)
+            .HasColumnName("container_id")
+            .IsRequired()
+            .IsUnicode(false)
+            .HasMaxLength(36)
+            .IsFixedLength();
+        modelBuilder.Entity<EfContainerLink>().Property(l => l.Scope)
+            .HasColumnName("scope")
+            .IsRequired()
+            .IsUnicode(false)
+            .HasMaxLength(50);
+        modelBuilder.Entity<EfContainerLink>().Property(l => l.Value)
+            .HasColumnName("value")
+            .IsRequired()
+            .IsUnicode()
+            .HasMaxLength(1000);
+
+        // container has many links
+        modelBuilder.Entity<EfContainer>()
+            .HasMany(w => w.Links)
+            .WithOne(l => l.Source)
+            .HasForeignKey(l => l.SourceId);
 
         // keyword
         modelBuilder.Entity<EfKeyword>().ToTable("keyword");

@@ -195,6 +195,28 @@ public static class EfHelper
         return info;
     }
 
+    public static ExternalId? GetContainerExternalId(EfContainerLink? link)
+    {
+        if (link == null) return null;
+        return new ExternalId
+        {
+            SourceId = link.SourceId,
+            Scope = link.Scope,
+            Value = link.Value
+        };
+    }
+
+    public static ExternalId? GetWorkExternalId(EfWorkLink? link)
+    {
+        if (link == null) return null;
+        return new ExternalId
+        {
+            SourceId = link.SourceId,
+            Scope = link.Scope,
+            Value = link.Value
+        };
+    }
+
     /// <summary>
     /// Gets the container object corresponding to the specified container
     /// entity.
@@ -245,6 +267,14 @@ public static class EfHelper
         {
             container.Keywords.AddRange(from ak in ef.KeywordContainers
                                         select GetKeyword(ak.Keyword));
+        }
+
+        // links
+        if (ef.Links?.Count > 0)
+        {
+            container.ExternalIds.AddRange(
+                from l in ef.Links
+                select GetContainerExternalId(l));
         }
 
         return container;
@@ -302,6 +332,14 @@ public static class EfHelper
         {
             work.Keywords.AddRange(from aw in ef.KeywordWorks
                                    select GetKeyword(aw.Keyword));
+        }
+
+        // links
+        if (ef.Links?.Count > 0)
+        {
+            work.ExternalIds.AddRange(
+                from l in ef.Links
+                select GetWorkExternalId(l));
         }
 
         return work;
@@ -388,7 +426,7 @@ public static class EfHelper
     }
 
     private static void AddAuthors(IList<WorkAuthor> authors, EfWork work,
-    BiblioDbContext context)
+        BiblioDbContext context)
     {
         // collect the authors to be assigned, adding the missing ones
         List<EfAuthorWork> requested = new();
@@ -435,6 +473,47 @@ public static class EfHelper
         return ef;
     }
 
+    private static void AddLinks(IList<ExternalId> ids, EfContainer container)
+    {
+        if (container.Links?.Count > 0)
+        {
+            // add the missing links
+            foreach (ExternalId id in ids)
+            {
+                EfContainerLink? link = container.Links
+                    .Find(l => l.Scope == id.Scope && l.Value == id.Value);
+                if (link == null)
+                {
+                    container.Links.Add(new EfContainerLink
+                    {
+                        Scope = id.Scope,
+                        Value = id.Value,
+                    });
+                }
+            }
+
+            // remove the extra links
+            foreach (EfContainerLink link in container.Links)
+            {
+                if (ids.All(
+                    id => id.Scope != link.Scope || id.Value != link.Value))
+                {
+                    container.Links.Remove(link);
+                }
+            }
+        }
+        else
+        {
+            container.Links ??= new List<EfContainerLink>();
+            container.Links.AddRange(ids.Select(
+                ids => new EfContainerLink
+                {
+                    Scope = ids.Scope,
+                    Value = ids.Value,
+                }));
+        }
+    }
+
     /// <summary>
     /// Gets the container entity corresponding to the specified container.
     /// </summary>
@@ -453,6 +532,7 @@ public static class EfHelper
             ? context.Containers
                 .Include(c => c.AuthorContainers)
                 .Include(c => c.KeywordContainers)
+                .Include(c => c.Links)
                 .FirstOrDefault(c => c.Id == container.Id.ToString())
             : null;
 
@@ -494,6 +574,12 @@ public static class EfHelper
                 AddKeywords(container.Keywords, ef, context);
             else
                 ef.KeywordContainers = new List<EfKeywordContainer>();
+
+            // links
+            if (container.ExternalIds?.Count > 0)
+                AddLinks(container.ExternalIds, ef);
+            else
+                ef.Links = new List<EfContainerLink>();
 
             // key
             ef.Key = WorkKeyBuilder.PickKey(ef.Key!, container, true);
@@ -677,6 +763,47 @@ public static class EfHelper
         return '\0';
     }
 
+    private static void AddLinks(IList<ExternalId> ids, EfWork work)
+    {
+        if (work.Links?.Count > 0)
+        {
+            // add the missing links
+            foreach (ExternalId id in ids)
+            {
+                EfWorkLink? link = work.Links
+                    .Find(l => l.Scope == id.Scope && l.Value == id.Value);
+                if (link == null)
+                {
+                    work.Links.Add(new EfWorkLink
+                    {
+                        Scope = id.Scope,
+                        Value = id.Value,
+                    });
+                }
+            }
+
+            // remove the extra links
+            foreach (EfWorkLink link in work.Links)
+            {
+                if (ids.All(
+                    id => id.Scope != link.Scope || id.Value != link.Value))
+                {
+                    work.Links.Remove(link);
+                }
+            }
+        }
+        else
+        {
+            work.Links ??= new List<EfWorkLink>();
+            work.Links.AddRange(ids.Select(
+                ids => new EfWorkLink
+                {
+                    Scope = ids.Scope,
+                    Value = ids.Value,
+                }));
+        }
+    }
+
     /// <summary>
     /// Gets the work entity corresponding to the specified work.
     /// </summary>
@@ -737,6 +864,12 @@ public static class EfHelper
             AddKeywords(work.Keywords, ef, context);
         else
             ef.KeywordWorks = new List<EfKeywordWork>();
+
+        // links
+        if (work.ExternalIds?.Count > 0)
+            AddLinks(work.ExternalIds, ef);
+        else
+            ef.Links = new List<EfWorkLink>();
 
         // key
         ef.Key = WorkKeyBuilder.PickKey(ef.Key!, work, false);
