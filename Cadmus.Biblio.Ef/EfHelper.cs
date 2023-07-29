@@ -486,6 +486,7 @@ public static class EfHelper
                 {
                     container.Links.Add(new EfContainerLink
                     {
+                        Source = container,
                         Scope = id.Scope,
                         Value = id.Value,
                     });
@@ -798,6 +799,7 @@ public static class EfHelper
             work.Links.AddRange(ids.Select(
                 ids => new EfWorkLink
                 {
+                    Source = work,
                     Scope = ids.Scope,
                     Value = ids.Value,
                 }));
