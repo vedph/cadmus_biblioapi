@@ -115,6 +115,9 @@ CREATE TABLE keyword_container (
 	container_id bpchar(36) NOT NULL,
 	CONSTRAINT keyword_container_pk PRIMARY KEY (keyword_id, container_id)
 );
+-- keyword_container foreign keys
+ALTER TABLE keyword_container ADD CONSTRAINT keyword_container_fk FOREIGN KEY (container_id) REFERENCES container(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE keyword_container ADD CONSTRAINT keyword_container_fk_1 FOREIGN KEY (keyword_id) REFERENCES keyword(id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- keyword_work
 CREATE TABLE keyword_work (
@@ -122,6 +125,9 @@ CREATE TABLE keyword_work (
 	work_id bpchar(36) NOT NULL,
 	CONSTRAINT keyword_work_pk PRIMARY KEY (keyword_id, work_id)
 );
+-- keyword_work foreign keys
+ALTER TABLE keyword_work ADD CONSTRAINT keyword_work_fk FOREIGN KEY (work_id) REFERENCES "work"(id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE keyword_work ADD CONSTRAINT keyword_work_fk_1 FOREIGN KEY (keyword_id) REFERENCES keyword(id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- work_link
 CREATE TABLE work_link (
