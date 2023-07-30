@@ -494,7 +494,7 @@ public static class EfHelper
             }
 
             // remove the extra links
-            foreach (EfContainerLink link in container.Links)
+            foreach (EfContainerLink link in container.Links.ToList())
             {
                 if (ids.All(
                     id => id.Scope != link.Scope || id.Value != link.Value))
@@ -786,7 +786,7 @@ public static class EfHelper
             }
 
             // remove the extra links
-            foreach (EfWorkLink link in work.Links)
+            foreach (EfWorkLink link in work.Links.ToList())
             {
                 if (ids.All(
                     id => id.Scope != link.Scope || id.Value != link.Value))

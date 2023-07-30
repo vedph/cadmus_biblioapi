@@ -12,6 +12,7 @@
     - [Backend](#backend)
     - [Frontend](#frontend)
   - [History](#history)
+    - [5.1.0](#510)
     - [5.0.1](#501)
     - [5.0.0](#500)
     - [4.0.1](#401)
@@ -35,7 +36,7 @@
 🐋 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus-biblio-api:5.0.2 -t vedph2020/cadmus-biblio-api:latest
+docker build . -t vedph2020/cadmus-biblio-api:5.1.0 -t vedph2020/cadmus-biblio-api:latest
 ```
 
 for ARM (MacOS with ARM CPU: see [registry](https://mcr.microsoft.com/v2/dotnet/sdk/tags/list)):
@@ -51,7 +52,7 @@ This API is independent from Cadmus, but it is designed to integrate with it. Yo
 The `CadmusBiblioDemoApi` project is provided to test a Cadmus-based editor consuming the bibliography API. So, to play with it you should start both the API projects, and then the [frontend app](https://github.com/vedph/cadmus_biblio_shell). To build the image of the demo:
 
 ```bash
-docker build . -f Dockerfile-demo -t vedph2020/cadmus-biblio-demo-api:5.0.0 -t vedph2020/cadmus-biblio-demo-api:latest
+docker build . -f Dockerfile-demo -t vedph2020/cadmus-biblio-demo-api:5.1.0 -t vedph2020/cadmus-biblio-demo-api:latest
 ```
 
 ## Overview
@@ -249,7 +250,8 @@ RouterModule.forRoot(
 
 ```yml
   cadmus-biblio-api:
-    image: vedph2020/cadmus_biblio_api:3.1.4
+    image: vedph2020/cadmus-biblio-api:5.1.0
+    container_name: cadmus-biblio-api
     ports:
       - 61691:80
     depends_on:
@@ -269,6 +271,8 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+### 5.1.0
 
 - 2023-07-29: added links to container and work.
 - 2023-07-28: added `datation` and `datationValue` to work/container.
