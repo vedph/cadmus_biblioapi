@@ -91,7 +91,8 @@ The bibliographic database here is a PostgreSQL (or MySql) database with a very 
 
 - a single _work type_, drawn from an editable list (e.g. book, paper, web page, audio recording, TV show...);
 - any number of _authors_, with different roles (authors proper have a default role of null; other may be translators, organizations, etc.);
-- any number of _keywords_.
+- any number of _keywords_;
+  - any number of _external links_, with a scope (=the context of the linked ID, e.g. VIAF) and an ID (the external ID value).
 
 Also, works can be contained in another work, acting as a works _container_ (e.g. journal, proceedings, books of articles, etc.). Its schema is equal to that of a work, except that it lacks a container, and first and last page numbers.
 
