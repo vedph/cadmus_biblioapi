@@ -716,6 +716,14 @@ public sealed class EfBiblioRepositoryTest
                     Language = "eng",
                     Value = "test"
                 }
+            }),
+            Links = new List<ExternalId>(new[]
+            {
+                new ExternalId
+                {
+                    Scope = "doi",
+                    Value = "10.1234/1234"
+                }
             })
         };
     }
@@ -1103,7 +1111,7 @@ public sealed class EfBiblioRepositoryTest
                     Value = "test"
                 }
             }),
-            ExternalIds = new List<ExternalId>(new[]
+            Links = new List<ExternalId>(new[]
             {
                 new ExternalId
                 {
@@ -1144,7 +1152,7 @@ public sealed class EfBiblioRepositoryTest
         Assert.Equal(work.LastPage, work2.LastPage);
         Assert.Equal(work.Authors.Count, work2.Authors.Count);
         Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
-        Assert.Equal(work.ExternalIds.Count, work2.ExternalIds.Count);
+        Assert.Equal(work.Links.Count, work2.Links.Count);
     }
 
     [Fact]
@@ -1179,7 +1187,7 @@ public sealed class EfBiblioRepositoryTest
         Assert.Equal(work.LastPage, work2.LastPage);
         Assert.Equal(work.Authors.Count, work2.Authors.Count);
         Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
-        Assert.Equal(work.ExternalIds.Count, work2.ExternalIds.Count);
+        Assert.Equal(work.Links.Count, work2.Links.Count);
     }
 
     [Fact]
@@ -1343,7 +1351,7 @@ public sealed class EfBiblioRepositoryTest
         Assert.Equal(work.Note, work2.Note);
         Assert.Equal(work.Authors.Count, work2.Authors.Count);
         Assert.Equal(work.Keywords.Count, work2.Keywords.Count);
-        Assert.Equal(work.ExternalIds.Count, work2.ExternalIds.Count);
+        Assert.Equal(work.Links.Count, work2.Links.Count);
     }
 
     [Fact]

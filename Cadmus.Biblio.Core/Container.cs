@@ -108,9 +108,9 @@ public class Container
     public List<Keyword> Keywords { get; set; }
 
     /// <summary>
-    /// Gets or sets the external IDs.
+    /// Gets or sets the links to external IDs.
     /// </summary>
-    public List<ExternalId> ExternalIds { get; set; }
+    public List<ExternalId> Links { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Container"/> class.
@@ -119,7 +119,7 @@ public class Container
     {
         Authors = new List<WorkAuthor>();
         Keywords = new List<Keyword>();
-        ExternalIds = new List<ExternalId>();
+        Links = new List<ExternalId>();
     }
 
     /// <summary>

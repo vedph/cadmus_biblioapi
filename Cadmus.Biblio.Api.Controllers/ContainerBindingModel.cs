@@ -164,7 +164,7 @@ public class ContainerBindingModel
             Keywords = Keywords?.Count > 0
                 ? Keywords.ConvertAll(m => m.ToKeyword())
                 : new List<Keyword>(),
-            ExternalIds = Links?.Count > 0
+            Links = Links?.Count > 0
                 ? Links.ConvertAll(m => m.ToExternalId())
                 : new List<ExternalId>()
         };

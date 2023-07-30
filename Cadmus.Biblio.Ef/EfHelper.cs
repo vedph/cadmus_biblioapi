@@ -272,7 +272,7 @@ public static class EfHelper
         // links
         if (ef.Links?.Count > 0)
         {
-            container.ExternalIds.AddRange(
+            container.Links.AddRange(
                 from l in ef.Links
                 select GetContainerExternalId(l));
         }
@@ -337,7 +337,7 @@ public static class EfHelper
         // links
         if (ef.Links?.Count > 0)
         {
-            work.ExternalIds.AddRange(
+            work.Links.AddRange(
                 from l in ef.Links
                 select GetWorkExternalId(l));
         }
@@ -509,6 +509,7 @@ public static class EfHelper
             container.Links.AddRange(ids.Select(
                 ids => new EfContainerLink
                 {
+                    Source = container,
                     Scope = ids.Scope,
                     Value = ids.Value,
                 }));
@@ -577,8 +578,8 @@ public static class EfHelper
                 ef.KeywordContainers = new List<EfKeywordContainer>();
 
             // links
-            if (container.ExternalIds?.Count > 0)
-                AddLinks(container.ExternalIds, ef);
+            if (container.Links?.Count > 0)
+                AddLinks(container.Links, ef);
             else
                 ef.Links = new List<EfContainerLink>();
 
@@ -777,6 +778,7 @@ public static class EfHelper
                 {
                     work.Links.Add(new EfWorkLink
                     {
+                        Source = work,
                         Scope = id.Scope,
                         Value = id.Value,
                     });
@@ -869,8 +871,8 @@ public static class EfHelper
             ef.KeywordWorks = new List<EfKeywordWork>();
 
         // links
-        if (work.ExternalIds?.Count > 0)
-            AddLinks(work.ExternalIds, ef);
+        if (work.Links?.Count > 0)
+            AddLinks(work.Links, ef);
         else
             ef.Links = new List<EfWorkLink>();
 
