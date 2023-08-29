@@ -9,9 +9,9 @@
     <Product>Cadmus</Product>
     <Description>Cadmus bibliography API core</Description>
     <Copyright>by Daniele Fusi 2020</Copyright>
-    <Version>5.1.0</Version>
-    <FileVersion>5.1.0</FileVersion>
-    <AssemblyVersion>5.1.0</AssemblyVersion>
+    <Version>5.1.1</Version>
+    <FileVersion>5.1.1</FileVersion>
+    <AssemblyVersion>5.1.1</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

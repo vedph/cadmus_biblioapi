@@ -10,9 +10,9 @@
     <Product>Cadmus</Product>
     <Description>Cadmus bibliography API CLI tool.</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>5.1.0</Version>
-    <FileVersion>5.1.0</FileVersion>
-    <AssemblyVersion>5.1.0</AssemblyVersion>
+    <Version>5.1.1</Version>
+    <FileVersion>5.1.1</FileVersion>
+    <AssemblyVersion>5.1.1</AssemblyVersion>
 	<Nullable>enable</Nullable>
   </PropertyGroup>
 
