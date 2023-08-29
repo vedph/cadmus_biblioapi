@@ -6,7 +6,7 @@ namespace Cadmus.Biblio.Seed;
 public sealed class WorkTypeSeeder : IBiblioSeeder
 {
     public static string[] TypeIds =
-        new[] { "book", "journal", "procs", "article" };
+        new[] { "book", "journal", "procs", "article", "ancient" };
 
     public void Seed(IBiblioRepository repository, int count)
     {
@@ -18,7 +18,8 @@ public sealed class WorkTypeSeeder : IBiblioSeeder
             new WorkType{ Id = "book", Name = "Book" },
             new WorkType{ Id = "journal", Name = "Journal" },
             new WorkType{ Id = "procs", Name = "Proceedings" },
-            new WorkType{ Id = "article", Name = "Article" }
+            new WorkType{ Id = "article", Name = "Article" },
+            new WorkType{ Id = "ancient", Name = "Ancient Work" },
         })
         {
             repository.AddWorkType(type);

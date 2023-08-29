@@ -273,7 +273,9 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
-- 2023-08-29: updated packages.
+- 2023-08-29:
+  - updated packages.
+  - added type for ancient work to predefined work types in seeder.
 
 ### 5.1.0
 
