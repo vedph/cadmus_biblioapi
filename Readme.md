@@ -12,6 +12,7 @@
     - [Backend](#backend)
     - [Frontend](#frontend)
   - [History](#history)
+    - [5.1.1](#511)
     - [5.1.0](#510)
     - [5.0.1](#501)
     - [5.0.0](#500)
@@ -36,16 +37,8 @@
 🐋 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus-biblio-api:5.1.0 -t vedph2020/cadmus-biblio-api:latest
+docker build . -t vedph2020/cadmus-biblio-api:5.1.1 -t vedph2020/cadmus-biblio-api:latest
 ```
-
-for ARM (MacOS with ARM CPU: see [registry](https://mcr.microsoft.com/v2/dotnet/sdk/tags/list)):
-
-```bash
-docker build . -f Dockerfile-arm -t vedph2020/cadmus-biblio-api_arm:5.0.1 -t vedph2020/cadmus-biblio-api_arm:latest
-```
-
-(replace with the current version).
 
 This API is independent from Cadmus, but it is designed to integrate with it. You can find frontend components for both this independent API and Cadmus in [this repository](https://github.com/vedph/cadmus_biblio_shell).
 
@@ -272,6 +265,8 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+### 5.1.1
 
 - 2023-08-29:
   - updated packages.
