@@ -12,6 +12,7 @@
     - [Backend](#backend)
     - [Frontend](#frontend)
   - [History](#history)
+    - [5.1.2](#512)
     - [5.1.1](#511)
     - [5.1.0](#510)
     - [5.0.1](#501)
@@ -265,6 +266,10 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+### 5.1.2
+
+- 2023-09-04: updated packages.
 
 ### 5.1.1
 
