@@ -12,6 +12,7 @@
     - [Backend](#backend)
     - [Frontend](#frontend)
   - [History](#history)
+    - [5.1.3](#513)
     - [5.1.2](#512)
     - [5.1.1](#511)
     - [5.1.0](#510)
@@ -38,7 +39,7 @@
 🐋 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus-biblio-api:5.1.1 -t vedph2020/cadmus-biblio-api:latest
+docker build . -t vedph2020/cadmus-biblio-api:5.1.3 -t vedph2020/cadmus-biblio-api:latest
 ```
 
 This API is independent from Cadmus, but it is designed to integrate with it. You can find frontend components for both this independent API and Cadmus in [this repository](https://github.com/vedph/cadmus_biblio_shell).
@@ -245,7 +246,7 @@ RouterModule.forRoot(
 
 ```yml
   cadmus-biblio-api:
-    image: vedph2020/cadmus-biblio-api:5.1.0
+    image: vedph2020/cadmus-biblio-api:5.1.3
     container_name: cadmus-biblio-api
     ports:
       - 61691:80
@@ -266,6 +267,10 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+### 5.1.3
+
+- 2023-11-09: ⚠️ upgraded to Angular 17.
 
 ### 5.1.2
 
