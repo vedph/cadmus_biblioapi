@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFramework>net7.0</TargetFramework>
+	<TargetFramework>net8.0</TargetFramework>
 	<Nullable>enable</Nullable>
     <Authors>Daniele Fusi</Authors>
     <Company>Fusi</Company>
@@ -9,9 +9,9 @@
     <Description>Cadmus bibliography mock data seeder.</Description>
     <Copyright>by Daniele Fusi 2021</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>5.1.3</Version>
-    <FileVersion>5.1.3</FileVersion>
-    <AssemblyVersion>5.1.3</AssemblyVersion>
+    <Version>6.0.0</Version>
+    <FileVersion>6.0.0</FileVersion>
+    <AssemblyVersion>6.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

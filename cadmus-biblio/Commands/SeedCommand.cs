@@ -3,7 +3,7 @@ using Cadmus.Biblio.Core;
 using Cadmus.Biblio.Ef;
 using Cadmus.Biblio.Seed;
 using Fusi.Cli.Commands;
-using Fusi.DbManager.MySql;
+using Fusi.DbManager.PgSql;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -68,7 +68,7 @@ internal sealed class SeedCommand : ICommand
             _options.Context.Configuration!.GetConnectionString("Default")!,
             _options.Database);
 
-        MySqlDbManager manager = new(connection);
+        PgSqlDbManager manager = new(connection);
 
         if (!manager.Exists(_options.Database))
         {
