@@ -270,7 +270,7 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ### 5.1.3
 
-- 2023-11-09: ⚠️ upgraded to Angular 17.
+- 2023-11-09: ⚠️ upgraded to .NET 8.
 
 ### 5.1.2
 
