@@ -20,8 +20,8 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Identity.Mongo" Version="8.3.3" />
-    <PackageReference Include="Cadmus.Api.Models" Version="8.0.13" />
-    <PackageReference Include="Cadmus.Api.Services" Version="8.0.13" />
+    <PackageReference Include="Cadmus.Api.Models" Version="9.0.1" />
+    <PackageReference Include="Cadmus.Api.Services" Version="9.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />

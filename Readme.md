@@ -268,7 +268,9 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
-### 5.1.3
+- 2023-11-21: updated packages.
+
+### 6.0.0
 
 - 2023-11-09: ⚠️ upgraded to .NET 8.
 

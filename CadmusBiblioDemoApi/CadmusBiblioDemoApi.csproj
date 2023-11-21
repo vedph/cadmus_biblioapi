@@ -18,10 +18,10 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Identity.Mongo" Version="8.3.3" />
-    <PackageReference Include="Cadmus.Api.Controllers" Version="8.0.13" />
-    <PackageReference Include="Cadmus.Api.Models" Version="8.0.13" />
-    <PackageReference Include="Cadmus.Api.Services" Version="8.0.13" />
-    <PackageReference Include="Cadmus.Seed.General.Parts" Version="6.0.0" />
+    <PackageReference Include="Cadmus.Api.Controllers" Version="9.0.1" />
+    <PackageReference Include="Cadmus.Api.Models" Version="9.0.1" />
+    <PackageReference Include="Cadmus.Api.Services" Version="9.0.1" />
+    <PackageReference Include="Cadmus.Seed.General.Parts" Version="6.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
