@@ -12,7 +12,7 @@
     - [Backend](#backend)
     - [Frontend](#frontend)
   - [History](#history)
-    - [5.1.3](#513)
+    - [6.0.0](#600)
     - [5.1.2](#512)
     - [5.1.1](#511)
     - [5.1.0](#510)
@@ -268,6 +268,7 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2024-01-31: updated packages.
 - 2023-11-21: updated packages.
 
 ### 6.0.0
