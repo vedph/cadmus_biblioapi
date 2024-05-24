@@ -245,6 +245,7 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+- 2024-05-24: updated packages.
 - 2024-04-13: updated packages.
 - 2024-01-31: updated packages.
 - 2023-11-21: updated packages.
