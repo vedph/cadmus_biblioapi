@@ -16,7 +16,7 @@
 🐋 Quick Docker image build:
 
 ```bash
-docker build . -t vedph2020/cadmus-biblio-api:5.1.3 -t vedph2020/cadmus-biblio-api:latest
+docker build . -t vedph2020/cadmus-biblio-api:6.0.1 -t vedph2020/cadmus-biblio-api:latest
 ```
 
 This API is independent from Cadmus, but it is designed to integrate with it. You can find frontend components for both this independent API and Cadmus in [this repository](https://github.com/vedph/cadmus_biblio_shell).
@@ -245,6 +245,9 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+### 6.0.1
+
+- 2024-06-08: updated packages.
 - 2024-05-24: updated packages.
 - 2024-04-13: updated packages.
 - 2024-01-31: updated packages.
