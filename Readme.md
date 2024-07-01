@@ -12,35 +12,17 @@
     - [Backend](#backend)
     - [Frontend](#frontend)
   - [History](#history)
-    - [6.0.1](#601)
-    - [6.0.0](#600)
-    - [5.1.2](#512)
-    - [5.1.1](#511)
-    - [5.1.0](#510)
-    - [5.0.1](#501)
-    - [5.0.0](#500)
-    - [4.0.1](#401)
-    - [4.0.0](#400)
-    - [3.1.5](#315)
-    - [3.1.4](#314)
-    - [3.1.3](#313)
-    - [3.1.2](#312)
-    - [3.1.1](#311)
-    - [3.0.3](#303)
-    - [2.1.8](#218)
-    - [2.1.7](#217)
-    - [2.1.6](#216)
-    - [2.1.5](#215)
-    - [2.1.2](#212)
-    - [2.1.1](#211)
-    - [2.1.0](#210)
-    - [2.0.2](#202)
-    - [2.0.1](#201)
 
-🐋 Quick Docker image build:
+🐋 Quick Docker image build (for X86):
 
 ```bash
-docker build . -t vedph2020/cadmus-biblio-api:6.0.1 -t vedph2020/cadmus-biblio-api:latest
+docker build . --build-arg BUILDPLATFORM=linux -t vedph2020/cadmus-biblio-api:6.0.2 -t vedph2020/cadmus-biblio-api:latest
+```
+
+for ARM:
+
+```bash
+docker build . --build-arg BUILDPLATFORM=arm64 -t vedph2020/cadmus-biblio-api_arm:6.0.2 -t vedph2020/cadmus-biblio-api_arm:latest
 ```
 
 This API is independent from Cadmus, but it is designed to integrate with it. You can find frontend components for both this independent API and Cadmus in [this repository](https://github.com/vedph/cadmus_biblio_shell).
@@ -269,6 +251,11 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+### 6.0.2
+
+- 2024-01-01:
+  - updated packages.
+  - added ARM support to Docker scripts.
 - 2024-06-25: updated packages.
 
 ### 6.0.1
