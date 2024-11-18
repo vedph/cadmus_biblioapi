@@ -16,13 +16,13 @@
 🐋 Quick Docker image build (for X86):
 
 ```bash
-docker build . --build-arg BUILDPLATFORM=linux -t vedph2020/cadmus-biblio-api:6.0.2 -t vedph2020/cadmus-biblio-api:latest
+docker build . --build-arg BUILDPLATFORM=linux -t vedph2020/cadmus-biblio-api:7.0.0 -t vedph2020/cadmus-biblio-api:latest
 ```
 
 for ARM:
 
 ```bash
-docker build . --build-arg BUILDPLATFORM=arm64 -t vedph2020/cadmus-biblio-api_arm:6.0.2 -t vedph2020/cadmus-biblio-api_arm:latest
+docker build . --build-arg BUILDPLATFORM=arm64 -t vedph2020/cadmus-biblio-api_arm:7.0.0 -t vedph2020/cadmus-biblio-api_arm:latest
 ```
 
 This API is independent from Cadmus, but it is designed to integrate with it. You can find frontend components for both this independent API and Cadmus in [this repository](https://github.com/vedph/cadmus_biblio_shell).
@@ -250,6 +250,12 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+### 7.0.0
+
+- 2024-11-18:
+  - ⚠️ upgraded to .NET 9.
+  - refactored infrastructure to drop the legacy `Startup` class.
 
 ### 6.0.2
 

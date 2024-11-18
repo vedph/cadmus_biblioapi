@@ -8,8 +8,7 @@ public sealed class KeywordSeeder : IBiblioSeeder
 {
     public void Seed(IBiblioRepository repository, int count)
     {
-        if (repository == null)
-            throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
 
         foreach (string word in new Faker().Random.WordsArray(count))
         {

@@ -9,11 +9,10 @@ public sealed class AuthorSeeder
 {
     public void Seed(IBiblioRepository repository, int count)
     {
-        if (repository == null)
-            throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
 
         Faker faker = new();
-        HashSet<Tuple<string, string>> names = new();
+        HashSet<Tuple<string, string>> names = [];
         int repeat = 0;
 
         for (int n = 1; n <= count; n++)

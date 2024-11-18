@@ -10,8 +10,7 @@ public sealed class WorkTypeSeeder : IBiblioSeeder
 
     public void Seed(IBiblioRepository repository, int count)
     {
-        if (repository == null)
-            throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
 
         foreach (WorkType type in new[]
         {

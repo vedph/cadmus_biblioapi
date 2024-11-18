@@ -1,5 +1,3 @@
-version: '3.7'
-
 services:
   # MongoDB
   cadmus-biblio-mongo:
@@ -31,10 +29,10 @@ services:
 
   # Biblio API
   cadmus-biblio-api:
-    image: vedph2020/cadmus-biblio-api:6.0.2
+    image: vedph2020/cadmus-biblio-api:7.0.0
     container_name: cadmus-biblio-api
     ports:
-      - 60058:80
+      - 60058:8080
     depends_on:
       - cadmus-biblio-mongo
       - cadmus-biblio-pgsql

@@ -4,7 +4,7 @@ using Cadmus.Seed.General.Parts;
 using Fusi.Microsoft.Extensions.Configuration.InMemoryJson;
 using System.Reflection;
 
-namespace Cadmus.BiblioDemo.Services;
+namespace CadmusBiblioDemoApi.Services;
 
 /// <summary>
 /// BiblioDemo part seeders provider.
@@ -16,11 +16,11 @@ public sealed class BiblioDemoPartSeederFactoryProvider :
     private static IHost GetHost(string config)
     {
         // build the tags to types map for parts/fragments
-        Assembly[] seedAssemblies = new[]
-        {
+        Assembly[] seedAssemblies =
+        [
             // Cadmus.Seed.General.Parts
             typeof(NotePartSeeder).Assembly,
-        };
+        ];
         TagAttributeToTypeMap map = new();
         map.Add(seedAssemblies);
 

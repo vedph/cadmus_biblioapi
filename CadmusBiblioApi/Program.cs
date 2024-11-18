@@ -1,17 +1,22 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Events;
-using Cadmus.Api.Services.Seeding;
 using System.Threading.Tasks;
-using Cadmus.Biblio.Api.Services;
 using Microsoft.Extensions.Configuration;
 using Cadmus.Api.Services;
+using Cadmus.Api.Config;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Cadmus.Api.Config.Services;
+using Microsoft.AspNetCore.HttpOverrides;
+using Scalar.AspNetCore;
+using Cadmus.Biblio.Api.Controllers;
+using Cadmus.Biblio.Core;
+using Cadmus.Biblio.Ef;
+using System.Globalization;
+using CadmusBiblioApi.Services;
 
 namespace CadmusBiblioApi;
 
@@ -20,31 +25,19 @@ namespace CadmusBiblioApi;
 /// </summary>
 public static class Program
 {
-    private static void DumpEnvironmentVars()
+    private static void ConfigureAppServices(IServiceCollection services,
+        IConfiguration config)
     {
-        Console.WriteLine("ENVIRONMENT VARIABLES:");
-        IDictionary dct = Environment.GetEnvironmentVariables();
-        List<string> keys = new();
-        var enumerator = dct.GetEnumerator();
-        while (enumerator.MoveNext())
+        services.AddTransient<IBiblioRepository>(_ =>
         {
-            keys.Add(((DictionaryEntry)enumerator.Current).Key!.ToString()!);
-        }
+            string cs = string.Format(
+                CultureInfo.InvariantCulture,
+                config.GetConnectionString("Biblio")!,
+                config.GetValue<string>("DatabaseNames:Biblio"));
 
-        foreach (string key in keys.OrderBy(s => s))
-            Console.WriteLine($"{key} = {dct[key]}");
+            return new EfBiblioRepository(cs, "pgsql");
+        });
     }
-
-    /// <summary>
-    /// Creates the host builder.
-    /// </summary>
-    /// <param name="args">The arguments.</param>
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            });
 
     /// <summary>
     /// Entry point.
@@ -56,36 +49,87 @@ public static class Program
         try
         {
             Log.Information("Starting biblio host");
-            DumpEnvironmentVars();
+            ServiceConfigurator.DumpEnvironmentVars();
 
-            // this is the place for seeding:
-            // see https://stackoverflow.com/questions/45148389/how-to-seed-in-entity-framework-core-2
-            // and https://docs.microsoft.com/en-us/aspnet/core/migration/1x-to-2x/?view=aspnetcore-2.1#move-database-initialization-code
-            var host = await CreateHostBuilder(args)
-                .UseSerilog((hostingContext, loggerConfiguration) =>
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+            ServiceConfigurator.ConfigureLogger(builder);
+            IConfiguration config = new ConfigurationService(builder.Environment)
+                .Configuration;
+            ServiceConfigurator.ConfigureServices(builder.Services, config,
+                builder.Environment);
+            ConfigureAppServices(builder.Services, config);
+
+            builder.Services.AddOpenApi();
+
+            // controllers from Cadmus.Api.Controllers
+            builder.Services.AddControllers()
+                .AddApplicationPart(typeof(AuthorController).Assembly)
+                .AddControllersAsServices();
+
+            WebApplication app = builder.Build();
+
+            // forward headers for use with an eventual reverse proxy
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor
+                    | ForwardedHeaders.XForwardedProto
+            });
+
+            // development or production
+            if (builder.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                // https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-5.0&tabs=visual-studio
+                app.UseExceptionHandler("/Error");
+                if (config.GetValue<bool>("Server:UseHSTS"))
                 {
-                    string cs = hostingContext.Configuration
-                        .GetConnectionString("Log")!;
-                    var maxSize = hostingContext.Configuration["Serilog:MaxMbSize"];
+                    Console.WriteLine("HSTS: yes");
+                    app.UseHsts();
+                }
+                else
+                {
+                    Console.WriteLine("HSTS: no");
+                }
+            }
 
-                    loggerConfiguration
-                        .ReadFrom.Configuration(hostingContext.Configuration)
-#if DEBUG
-                        .WriteTo.File("cadmus-biblio-log.txt",
-                            rollingInterval: RollingInterval.Day)
-#endif
-                        .WriteTo.MongoDBCapped(cs,
-                            cappedMaxSizeMb: !string.IsNullOrEmpty(maxSize) &&
-                                int.TryParse(maxSize, out int n) && n > 0 ? n : 10);
-                })
-                .Build()
-                // Cadmus seeder (authentication)
-                .SeedAsync(accounts: true, data: false);
+            // HTTPS redirection
+            if (config.GetValue<bool>("Server:UseHttpsRedirection"))
+            {
+                Console.WriteLine("HttpsRedirection: yes");
+                app.UseHttpsRedirection();
+            }
+            else
+            {
+                Console.WriteLine("HttpsRedirection: no");
+            }
 
-            // Biblio seeder
-            await host.SeedBiblioAsync();
+            // CORS
+            app.UseCors("CorsPolicy");
+            // rate limiter
+            if (!config.GetValue<bool>("RateLimit:IsDisabled"))
+                app.UseRateLimiter();
+            // authentication
+            app.UseAuthentication();
+            app.UseAuthorization();
+            // proxy
+            app.UseResponseCaching();
 
-            host.Run();
+            // seed auth database (via Services/HostAuthSeedExtensions)
+            await app.SeedAuthAsync();
+
+            // seed biblio database (via Services/HostSeedExtension)
+            await app.SeedBiblioAsync();
+
+            // map controllers and Scalar API
+            app.MapControllers();
+            app.MapOpenApi();
+            app.MapScalarApiReference();
+
+            Log.Information("Running API");
+            await app.RunAsync();
 
             return 0;
         }
@@ -98,7 +142,7 @@ public static class Program
         }
         finally
         {
-            Log.CloseAndFlush();
+            await Log.CloseAndFlushAsync();
         }
     }
 }

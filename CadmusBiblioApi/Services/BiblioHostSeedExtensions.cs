@@ -12,7 +12,7 @@ using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Cadmus.Biblio.Api.Services;
+namespace CadmusBiblioApi.Services;
 
 /// <summary>
 /// IHost bibliographic database seeder extensions.
@@ -22,12 +22,12 @@ public static class BiblioHostSeedExtensions
     private static Task SeedBiblioAsync(IServiceProvider serviceProvider)
     {
         return Policy.Handle<DbException>()
-            .WaitAndRetry(new[]
-            {
+            .WaitAndRetry(
+            [
                 TimeSpan.FromSeconds(10),
                 TimeSpan.FromSeconds(30),
                 TimeSpan.FromSeconds(60)
-            }, (exception, timeSpan, _) =>
+            ], (exception, timeSpan, _) =>
             {
                 ILogger logger = serviceProvider
                     .GetService<ILoggerFactory>()!
@@ -63,12 +63,12 @@ public static class BiblioHostSeedExtensions
     private static async Task CreateBiblioAsync(IServiceProvider serviceProvider)
     {
         await Policy.Handle<DbException>()
-            .WaitAndRetry(new[]
-            {
+            .WaitAndRetry(
+            [
                 TimeSpan.FromSeconds(10),
                 TimeSpan.FromSeconds(30),
                 TimeSpan.FromSeconds(60)
-            }, (exception, timeSpan, _) =>
+            ], (exception, timeSpan, _) =>
             {
                 // in case of DbException we must retry
                 ILogger? logger = serviceProvider
@@ -79,7 +79,7 @@ public static class BiblioHostSeedExtensions
                     $" (sleep {timeSpan}): {exception.Message}";
                 Console.WriteLine(message);
                 logger.LogError(exception, message);
-            }).Execute(async() =>
+            }).Execute(async () =>
             {
                 IConfiguration config =
                     serviceProvider.GetService<IConfiguration>()!;
@@ -97,14 +97,14 @@ public static class BiblioHostSeedExtensions
                 string dbName = config.GetValue<string>("DatabaseNames:Biblio")!;
                 string cst = config.GetConnectionString("Biblio")!;
                 Console.WriteLine($"Checking for database {dbName}...");
-                Serilog.Log.Information($"Checking for database {dbName}...");
+                Serilog.Log.Information("Checking for database {Name}...", dbName);
 
                 PgSqlDbManager manager = new(cst);
                 if (!manager.Exists(dbName))
                 {
                     // create
                     Console.WriteLine("Creating database...");
-                    Serilog.Log.Information($"Creating database {dbName}...");
+                    Serilog.Log.Information("Creating database {Name}...", dbName);
 
                     manager.CreateDatabase(dbName, EfHelper.GetSchema(), null);
 

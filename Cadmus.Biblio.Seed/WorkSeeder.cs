@@ -9,8 +9,7 @@ public sealed class WorkSeeder : IBiblioSeeder
 {
     public void Seed(IBiblioRepository repository, int count)
     {
-        if (repository == null)
-            throw new ArgumentNullException(nameof(repository));
+        ArgumentNullException.ThrowIfNull(repository);
 
         DataPage<Author> authorsPage = repository.GetAuthors(new AuthorFilter
         {
