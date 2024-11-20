@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Cadmus.Api.Config" Version="10.1.1" />
+		<PackageReference Include="Cadmus.Api.Config" Version="10.1.2" />
 		<PackageReference Include="Cadmus.Api.Services" Version="10.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
 	    <!-- <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.0" /> -->
