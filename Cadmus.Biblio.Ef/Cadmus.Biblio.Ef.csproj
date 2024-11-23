@@ -9,9 +9,9 @@
 		<Description>Cadmus bibliography API Entity Framework components</Description>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
-		<Version>7.0.0</Version>
-		<FileVersion>7.0.0</FileVersion>
-		<AssemblyVersion>7.0.0</AssemblyVersion>
+		<Version>7.0.1</Version>
+		<FileVersion>7.0.1</FileVersion>
+		<AssemblyVersion>7.0.1</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

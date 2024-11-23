@@ -14,7 +14,7 @@ RUN dotnet restore "CadmusBiblioApi/CadmusBiblioApi.csproj" -s https://api.nuget
 # copy the content of the API project
 COPY . .
 # build it
-RUN dotnet build "CadmusBiblioApi/CadmusBiblioApi.csproj" -c Release -o /app/build
+RUN dotnet build "CadmusBiblioApi/CadmusBiblioApi.csproj" -c Release -o /app/build -v detailed
 
 # Stage 3: publish
 FROM build AS publish
