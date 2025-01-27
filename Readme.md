@@ -13,19 +13,15 @@
     - [Frontend](#frontend)
   - [History](#history)
 
-🐋 Quick Docker image build (for X86):
+🐋 Quick Docker image build (you need to have a `buildx` container):
 
 ```bash
-docker build . --build-arg BUILDPLATFORM=linux -t vedph2020/cadmus-biblio-api:7.0.1 -t vedph2020/cadmus-biblio-api:latest
+docker buildx create --use
+
+docker buildx build . --platform linux/amd64,linux/arm64 -t vedph2020/cadmus-biblio-api:7.0.1 -t vedph2020/cadmus-biblio-api:latest --push
 ```
 
-for ARM:
-
-```bash
-docker build . --build-arg BUILDPLATFORM=arm64 -t vedph2020/cadmus-biblio-api_arm:7.0.0 -t vedph2020/cadmus-biblio-api_arm:latest
-```
-
->Note: presently, ARM builds seem to have issues with .NET 9.
+(replace with the current version).
 
 This API is independent from Cadmus, but it is designed to integrate with it. You can find frontend components for both this independent API and Cadmus in [this repository](https://github.com/vedph/cadmus_biblio_shell).
 
@@ -253,6 +249,11 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+### 7.0.2
+
+- 2025-01-27:
+  - updated packages.
+  - fix to container binding model (missing default ctor).
 - 2025-01-04: updated packages.
 - 2024-12-06: updated packages.
 - 2024-30-11: updated packages.

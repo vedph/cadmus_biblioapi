@@ -27,7 +27,7 @@ public class ContainerBindingModel
     /// To reference an existing author just set the
     /// <see cref="WorkAuthorBindingModel.Id"/> property.
     /// </summary>
-    public List<WorkAuthorBindingModel> Authors { get; set; }
+    public List<WorkAuthorBindingModel> Authors { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the work's type ID (e.g. book, journal, etc.).
@@ -116,23 +116,12 @@ public class ContainerBindingModel
     /// <summary>
     /// Gets or sets the optional keywords linked to this work.
     /// </summary>
-    public List<KeywordBindingModel> Keywords { get; set; }
+    public List<KeywordBindingModel> Keywords { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the external links.
     /// </summary>
-    public List<LinkBindingModel> Links { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ContainerBindingModel"/>
-    /// class.
-    /// </summary>
-    protected ContainerBindingModel()
-    {
-        Authors = new List<WorkAuthorBindingModel>();
-        Keywords = new List<KeywordBindingModel>();
-        Links = new List<LinkBindingModel>();
-    }
+    public List<LinkBindingModel> Links { get; set; } = [];
 
     /// <summary>
     /// Converts to container model.
@@ -146,7 +135,7 @@ public class ContainerBindingModel
             Key = Key,
             Authors = Authors?.Count > 0
                 ? Authors.ConvertAll(m => m.ToWorkAuthor())
-                : new List<WorkAuthor>(),
+                : [],
             Type = Type,
             Title = Title,
             Language = Language,
@@ -163,10 +152,10 @@ public class ContainerBindingModel
             DatationValue = DatationValue,
             Keywords = Keywords?.Count > 0
                 ? Keywords.ConvertAll(m => m.ToKeyword())
-                : new List<Keyword>(),
+                : [],
             Links = Links?.Count > 0
                 ? Links.ConvertAll(m => m.ToExternalId())
-                : new List<ExternalId>()
+                : []
         };
     }
 }
