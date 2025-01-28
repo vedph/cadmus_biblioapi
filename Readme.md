@@ -18,7 +18,7 @@
 ```bash
 docker buildx create --use
 
-docker buildx build . --platform linux/amd64,linux/arm64 -t vedph2020/cadmus-biblio-api:7.0.1 -t vedph2020/cadmus-biblio-api:latest --push
+docker buildx build . --platform linux/amd64,linux/arm64 -t vedph2020/cadmus-biblio-api:7.0.2 -t vedph2020/cadmus-biblio-api:latest --push
 ```
 
 (replace with the current version).
@@ -190,7 +190,7 @@ export const PART_EDITOR_KEYS: PartEditorKeys = {
 }
 ```
 
-(3) in `app.module.ts`, import the biblio module and wire it in the routes:
+(3) in `app.module.ts`, import the biblio module and wire it to the routes:
 
 ```ts
 RouterModule.forRoot(
@@ -219,7 +219,7 @@ RouterModule.forRoot(
   window.__env.apiUrl = "http://localhost:39447/api/";
   window.__env.databaseId = "cadmus-ingra";
   // THIS WAS ADDED FOR BIBLIO:
-  window.__env.biblioApiUrl = 'http://localhost:61691/api/';
+  window.__env.biblioApiUrl = 'http://localhost:5000/api/';
 })(this);
 ```
 
@@ -227,17 +227,19 @@ RouterModule.forRoot(
 
 ```yml
   cadmus-biblio-api:
-    image: vedph2020/cadmus-biblio-api:5.1.3
+    image: vedph2020/cadmus-biblio-api:7.0.2
     container_name: cadmus-biblio-api
     ports:
-      - 61691:80
+      - 5000:80
     depends_on:
       - cadmus-mongo
       - cadmus-mysql
     environment:
+      - ASPNETCORE_URLS=http://+:8080
       - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-mongo:27017/{0}
+      - CONNECTIONSTRINGS__AUTH=Server=cadmus-biblio-pgsql;port=5432;Database={0};User Id=postgres;Password=postgres;Include Error Detail=True
       - CONNECTIONSTRINGS__BIBLIO=Server=cadmus-mysql;port=3306;Database={0};Uid=root;Pwd=mysql
-      - SEED__BIBLIODELAY=50
+      - SEED__BIBLIODELAY=25
       - SEED__ENTITYCOUNT=3
       - SERILOG__CONNECTIONSTRING=mongodb://cadmus-mongo:27017/{0}-log
       - STOCKUSERS__0__PASSWORD=P4ss-W0rd!
