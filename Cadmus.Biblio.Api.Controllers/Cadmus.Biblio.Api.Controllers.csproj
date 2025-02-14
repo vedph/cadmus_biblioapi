@@ -8,9 +8,9 @@
     <Product>Cadmus</Product>
     <Description>Cadmus bibliographic API controllers.</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>7.0.2</Version>
-    <FileVersion>7.0.2</FileVersion>
-    <AssemblyVersion>7.0.2</AssemblyVersion>
+    <Version>7.0.3</Version>
+    <FileVersion>7.0.3</FileVersion>
+    <AssemblyVersion>7.0.3</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,14 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cadmus.Api.Models" Version="10.1.4" />
-    <PackageReference Include="Cadmus.Api.Services" Version="10.1.6" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.1" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="9.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.1" />
+    <PackageReference Include="Cadmus.Api.Models" Version="10.1.10" />
+    <PackageReference Include="Cadmus.Api.Services" Version="10.1.10" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.2" />
     <PackageReference Include="Serilog" Version="4.2.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.4.0" />
   </ItemGroup>
 
 </Project>
