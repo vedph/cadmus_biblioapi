@@ -9,13 +9,13 @@
     <Description>Cadmus bibliography mock data seeder.</Description>
     <Copyright>by Daniele Fusi 2021</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>7.0.3</Version>
-    <FileVersion>7.0.3</FileVersion>
-    <AssemblyVersion>7.0.3</AssemblyVersion>
+    <Version>8.0.0</Version>
+    <FileVersion>8.0.0</FileVersion>
+    <AssemblyVersion>8.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bogus" Version="35.6.1" />
+    <PackageReference Include="Bogus" Version="35.6.2" />
   </ItemGroup>
 
   <ItemGroup>
