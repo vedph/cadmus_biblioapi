@@ -41,7 +41,7 @@ services:
       - CONNECTIONSTRINGS__DEFAULT=mongodb://cadmus-biblio-mongo:27017/{0}
       - CONNECTIONSTRINGS__AUTH=Server=cadmus-biblio-pgsql;port=5432;Database={0};User Id=postgres;Password=postgres;Include Error Detail=True
       - CONNECTIONSTRINGS__BIBLIO=Server=cadmus-biblio-pgsql;port=5432;Database={0};User Id=postgres;Password=postgres;Include Error Detail=True
-      - SEED__BIBLIODELAY=25
+      - SEED__DELAY=25
       - SEED__ENTITYCOUNT=100
       - SERILOG__CONNECTIONSTRING=mongodb://cadmus-biblio-mongo:27017/{0}-log
       - STOCKUSERS__0__PASSWORD=P4ss-W0rd!
