@@ -18,7 +18,7 @@
 ```bash
 docker buildx create --use
 
-docker buildx build . --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-biblio-api:8.0.1 -t vedph2020/cadmus-biblio-api:latest --push
+docker buildx build . --platform linux/amd64,linux/arm64,windows/amd64,windows/arm64 -t vedph2020/cadmus-biblio-api:8.0.2 -t vedph2020/cadmus-biblio-api:latest --push
 ```
 
 (replace with the current version).
@@ -250,6 +250,10 @@ RouterModule.forRoot(
 Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
+
+### 8.0.2
+
+- 2025-06-03: updated packages.
 
 ### 8.0.1
 
