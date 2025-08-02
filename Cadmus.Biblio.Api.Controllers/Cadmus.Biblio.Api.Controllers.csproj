@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Cadmus.Api.Models" Version="10.1.16" />
-    <PackageReference Include="Cadmus.Api.Services" Version="12.0.4" />
+    <PackageReference Include="Cadmus.Api.Services" Version="12.0.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.7" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="9.0.7" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.7" />
