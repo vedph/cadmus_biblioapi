@@ -8,7 +8,7 @@ public class EfAuthorWork
     /// <summary>
     /// Gets or sets the author identifier.
     /// </summary>
-    public string AuthorId { get; set; }
+    public string AuthorId { get; set; } = "";
 
     /// <summary>
     /// Gets or sets the author.
@@ -18,7 +18,7 @@ public class EfAuthorWork
     /// <summary>
     /// Gets or sets the work identifier.
     /// </summary>
-    public string WorkId { get; set; }
+    public string WorkId { get; set; } = "";
 
     /// <summary>
     /// Gets or sets the work.
@@ -39,15 +39,6 @@ public class EfAuthorWork
     /// meaningless.
     /// </summary>
     public short Ordinal { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EfAuthorWork"/> class.
-    /// </summary>
-    public EfAuthorWork()
-    {
-        AuthorId = "";
-        WorkId = "";
-    }
 
     /// <summary>
     /// Converts to string.

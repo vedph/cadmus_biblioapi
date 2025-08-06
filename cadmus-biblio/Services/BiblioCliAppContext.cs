@@ -31,7 +31,7 @@ public class BiblioCliAppContext : CliAppContext
     /// <exception cref="ArgumentNullException">dbName</exception>
     public virtual BiblioCliContextService GetContextService(string dbName)
     {
-        if (dbName is null) throw new ArgumentNullException(nameof(dbName));
+        ArgumentNullException.ThrowIfNull(dbName);
 
         return new BiblioCliContextService(
             new BiblioCliContextServiceConfig

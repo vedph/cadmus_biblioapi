@@ -34,7 +34,7 @@ public class WorkAuthor : Author
     /// <exception cref="ArgumentNullException">author</exception>
     public WorkAuthor(Author author)
     {
-        if (author == null) throw new ArgumentNullException(nameof(author));
+        ArgumentNullException.ThrowIfNull(author);
 
         Id = author.Id;
         First = author.First;

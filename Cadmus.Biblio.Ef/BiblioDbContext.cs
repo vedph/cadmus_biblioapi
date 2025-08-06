@@ -244,9 +244,7 @@ public sealed class BiblioDbContext : DbContext
         modelBuilder.Entity<EfWork>().Property(w => w.Language)
             .HasColumnName("language")
             .IsRequired()
-            .IsUnicode(false)
-            .HasMaxLength(3)
-            .IsFixedLength();
+            .HasMaxLength(50);
         modelBuilder.Entity<EfWork>().Property(w => w.Edition)
             .HasColumnName("edition")
             .IsRequired();
@@ -349,9 +347,7 @@ public sealed class BiblioDbContext : DbContext
         modelBuilder.Entity<EfContainer>().Property(w => w.Language)
             .HasColumnName("language")
             .IsRequired()
-            .IsUnicode(false)
-            .HasMaxLength(3)
-            .IsFixedLength();
+            .HasMaxLength(50);
         modelBuilder.Entity<EfContainer>().Property(w => w.Edition)
             .HasColumnName("edition")
             .IsRequired();
@@ -427,9 +423,7 @@ public sealed class BiblioDbContext : DbContext
         modelBuilder.Entity<EfKeyword>().Property(k => k.Language)
             .HasColumnName("language")
             .IsRequired()
-            .IsUnicode(false)
-            .HasMaxLength(3)
-            .IsFixedLength();
+            .HasMaxLength(50);
         modelBuilder.Entity<EfKeyword>().Property(k => k.Value)
             .HasColumnName("value")
             .IsRequired()

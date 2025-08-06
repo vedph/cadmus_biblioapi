@@ -23,7 +23,7 @@ public static class WorkKeyBuilder
     /// <exception cref="ArgumentNullException">work</exception>
     public static string Build(Container work, bool container)
     {
-        if (work == null) throw new ArgumentNullException(nameof(work));
+        ArgumentNullException.ThrowIfNull(work);
 
         StringBuilder sb = new();
 
@@ -65,7 +65,7 @@ public static class WorkKeyBuilder
     /// <exception cref="ArgumentNullException">work</exception>
     public static string PickKey(string oldKey, Container newWork, bool container)
     {
-        if (newWork == null) throw new ArgumentNullException(nameof(newWork));
+        ArgumentNullException.ThrowIfNull(newWork);
 
         // a new key with a manually-set value always wins
         if (newWork.Key?.StartsWith(MAN_KEY_PREFIX) == true)

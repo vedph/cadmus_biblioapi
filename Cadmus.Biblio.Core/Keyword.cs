@@ -6,7 +6,7 @@
 public class Keyword
 {
     /// <summary>
-    /// Gets or sets the language (ISO 639-3).
+    /// Gets or sets the language (ISO 639-3, BCP47, etc.).
     /// </summary>
     public string? Language { get; set; }
 

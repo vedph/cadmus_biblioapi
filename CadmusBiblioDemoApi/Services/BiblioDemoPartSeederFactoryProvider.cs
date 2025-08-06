@@ -44,7 +44,7 @@ public sealed class BiblioDemoPartSeederFactoryProvider :
     /// <exception cref="ArgumentNullException">profile</exception>
     public PartSeederFactory GetFactory(string profile)
     {
-        if (profile == null) throw new ArgumentNullException(nameof(profile));
+        ArgumentNullException.ThrowIfNull(profile);
 
         return new PartSeederFactory(GetHost(profile));
     }

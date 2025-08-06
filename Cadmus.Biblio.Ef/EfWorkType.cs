@@ -9,21 +9,12 @@ public sealed class EfWorkType
     /// Gets or sets the identifier. This is an arbitrary string representing
     /// the type (e.g. <c>book</c>).
     /// </summary>
-    public string Id { get; set; }
+    public string Id { get; set; } = "";
 
     /// <summary>
     /// Gets or sets the human-readable name for the type.
     /// </summary>
-    public string Name { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EfWorkType"/> class.
-    /// </summary>
-    public EfWorkType()
-    {
-        Id = "";
-        Name = "";
-    }
+    public string Name { get; set; } = "";
 
     /// <summary>
     /// Converts to string.

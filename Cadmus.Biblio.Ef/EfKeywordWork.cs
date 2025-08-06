@@ -18,20 +18,12 @@ public sealed class EfKeywordWork
     /// <summary>
     /// Gets or sets the work identifier.
     /// </summary>
-    public string WorkId { get; set; }
+    public string WorkId { get; set; } = "";
 
     /// <summary>
     /// Gets or sets the work.
     /// </summary>
     public EfWork? Work { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EfKeywordWork"/> class.
-    /// </summary>
-    public EfKeywordWork()
-    {
-        WorkId = "";
-    }
 
     /// <summary>
     /// Converts to string.

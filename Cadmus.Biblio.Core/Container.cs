@@ -22,7 +22,7 @@ public class Container
     /// <summary>
     /// Gets or sets the authors and/or contributors.
     /// </summary>
-    public List<WorkAuthor> Authors { get; set; }
+    public List<WorkAuthor> Authors { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the work's type ID (e.g. book, journal, etc.).
@@ -105,22 +105,12 @@ public class Container
     /// <summary>
     /// Gets or sets the optional keywords linked to this work.
     /// </summary>
-    public List<Keyword> Keywords { get; set; }
+    public List<Keyword> Keywords { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the links to external IDs.
     /// </summary>
-    public List<ExternalId> Links { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Container"/> class.
-    /// </summary>
-    public Container()
-    {
-        Authors = new List<WorkAuthor>();
-        Keywords = new List<Keyword>();
-        Links = new List<ExternalId>();
-    }
+    public List<ExternalId> Links { get; set; } = [];
 
     /// <summary>
     /// Converts to string.

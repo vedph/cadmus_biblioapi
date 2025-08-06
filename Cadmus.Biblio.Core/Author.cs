@@ -16,24 +16,18 @@ public class Author
     /// <summary>
     /// First name.
     /// </summary>
-    public string First { get; set; }
+    public string First { get; set; } = "";
 
     /// <summary>
     /// Last name.
     /// </summary>
-    public string Last { get; set; }
+    public string Last { get; set; } = "";
 
     /// <summary>
     /// Gets or sets an optional, arbitrary suffix which can be appended
     /// to the name to disambiguate two authors with the same name.
     /// </summary>
     public string? Suffix { get; set; }
-
-    public Author()
-    {
-        First = "";
-        Last = "";
-    }
 
     /// <summary>
     /// Converts to string.

@@ -87,7 +87,7 @@ public static class EfHelper
     /// <exception cref="ArgumentNullException">context</exception>
     public static WorkInfo? GetWorkInfo(EfContainer? ef, BiblioDbContext? context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
 
         if (ef == null) return null;
 
@@ -143,7 +143,7 @@ public static class EfHelper
     /// <exception cref="ArgumentNullException">context</exception>
     public static WorkInfo? GetWorkInfo(EfWork? ef, BiblioDbContext? context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
 
         if (ef == null) return null;
 
@@ -382,7 +382,7 @@ public static class EfHelper
     public static EfAuthor? GetOrAddEfAuthor(Author? author,
         BiblioDbContext context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
 
         if (author == null) return null;
 
@@ -411,7 +411,7 @@ public static class EfHelper
         BiblioDbContext context)
     {
         // collect the authors to be assigned, adding the missing ones
-        List<EfAuthorContainer> requested = new();
+        List<EfAuthorContainer> requested = [];
         foreach (WorkAuthor author in authors)
         {
             EfAuthor? efa = GetEfAuthorFor(author, context);
@@ -429,7 +429,7 @@ public static class EfHelper
         BiblioDbContext context)
     {
         // collect the authors to be assigned, adding the missing ones
-        List<EfAuthorWork> requested = new();
+        List<EfAuthorWork> requested = [];
         foreach (WorkAuthor author in authors)
         {
             EfAuthor? efa = GetEfAuthorFor(author, context);
@@ -505,7 +505,7 @@ public static class EfHelper
         }
         else
         {
-            container.Links ??= new List<EfContainerLink>();
+            container.Links ??= [];
             container.Links.AddRange(ids.Select(
                 ids => new EfContainerLink
                 {
@@ -526,7 +526,7 @@ public static class EfHelper
     public static EfContainer? GetEfContainer(Container? container,
         BiblioDbContext context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
         if (container == null) return null;
 
         // get the container unless it's new
@@ -569,19 +569,19 @@ public static class EfHelper
             if (container.Authors?.Count > 0)
                 AddAuthors(container.Authors, ef, context);
             else
-                ef.AuthorContainers = new List<EfAuthorContainer>();
+                ef.AuthorContainers = [];
 
             // keywords
             if (container.Keywords?.Count > 0)
                 AddKeywords(container.Keywords, ef, context);
             else
-                ef.KeywordContainers = new List<EfKeywordContainer>();
+                ef.KeywordContainers = [];
 
             // links
             if (container.Links?.Count > 0)
                 AddLinks(container.Links, ef);
             else
-                ef.Links = new List<EfContainerLink>();
+                ef.Links = [];
 
             // key
             ef.Key = WorkKeyBuilder.PickKey(ef.Key!, container, true);
@@ -647,7 +647,7 @@ public static class EfHelper
         BiblioDbContext context)
     {
         // collect the keywords to be assigned, adding the missing ones
-        List<EfKeywordWork> requested = new();
+        List<EfKeywordWork> requested = [];
         foreach (Keyword keyword in keywords)
         {
             // find the keyword by its content, as we have no ID
@@ -682,7 +682,7 @@ public static class EfHelper
                     context.KeywordWorks.Remove(kw);
             }
         }
-        else work.KeywordWorks = new List<EfKeywordWork>();
+        else work.KeywordWorks = [];
 
         // add all those which are not yet present
         foreach (EfKeywordWork kw in requested)
@@ -699,7 +699,7 @@ public static class EfHelper
         EfContainer container, BiblioDbContext context)
     {
         // collect the keywords to be assigned, adding the missing ones
-        List<EfKeywordContainer> requested = new();
+        List<EfKeywordContainer> requested = [];
         foreach (Keyword keyword in keywords)
         {
             // find the keyword by its content, as we have no ID
@@ -734,7 +734,7 @@ public static class EfHelper
                     context.KeywordContainers.Remove(kc);
             }
         }
-        else container.KeywordContainers = new List<EfKeywordContainer>();
+        else container.KeywordContainers = [];
 
         // add all those which are not yet present
         foreach (EfKeywordContainer kc in requested)
@@ -797,7 +797,7 @@ public static class EfHelper
         }
         else
         {
-            work.Links ??= new List<EfWorkLink>();
+            work.Links ??= [];
             work.Links.AddRange(ids.Select(
                 ids => new EfWorkLink
                 {
@@ -817,8 +817,7 @@ public static class EfHelper
     /// <exception cref="ArgumentNullException">context</exception>
     public static EfWork? GetEfWork(Work? work, BiblioDbContext context)
     {
-        if (context == null)
-            throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
 
         if (work == null) return null;
 
@@ -862,19 +861,19 @@ public static class EfHelper
         if (work.Authors?.Count > 0)
             AddAuthors(work.Authors, ef, context);
         else
-            ef.AuthorWorks = new List<EfAuthorWork>();
+            ef.AuthorWorks = [];
 
         // keywords
         if (work.Keywords?.Count > 0)
             AddKeywords(work.Keywords, ef, context);
         else
-            ef.KeywordWorks = new List<EfKeywordWork>();
+            ef.KeywordWorks = [];
 
         // links
         if (work.Links?.Count > 0)
             AddLinks(work.Links, ef);
         else
-            ef.Links = new List<EfWorkLink>();
+            ef.Links = [];
 
         // key
         ef.Key = WorkKeyBuilder.PickKey(ef.Key!, work, false);
@@ -898,7 +897,7 @@ public static class EfHelper
     public static EfKeyword? GetEfKeyword(Keyword keyword,
         BiblioDbContext context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
 
         if (keyword == null) return null;
         EfKeyword? ef = context.Keywords.FirstOrDefault(

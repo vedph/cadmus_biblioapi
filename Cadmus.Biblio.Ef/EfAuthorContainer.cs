@@ -8,7 +8,7 @@ public class EfAuthorContainer
     /// <summary>
     /// Gets or sets the author identifier.
     /// </summary>
-    public string AuthorId { get; set; }
+    public string AuthorId { get; set; } = "";
 
     /// <summary>
     /// Gets or sets the author.
@@ -18,7 +18,7 @@ public class EfAuthorContainer
     /// <summary>
     /// Gets or sets the container identifier.
     /// </summary>
-    public string ContainerId { get; set; }
+    public string ContainerId { get; set; } = "";
 
     /// <summary>
     /// Gets or sets the work.
@@ -39,15 +39,6 @@ public class EfAuthorContainer
     /// meaningless.
     /// </summary>
     public short Ordinal { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="EfAuthorContainer"/> class.
-    /// </summary>
-    public EfAuthorContainer()
-    {
-        AuthorId = "";
-        ContainerId = "";
-    }
 
     /// <summary>
     /// Converts to string.

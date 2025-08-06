@@ -10,14 +10,14 @@ public sealed class WorkKeyBuilderTest
     {
         string key = WorkKeyBuilder.Build(new Work
         {
-            Authors = new List<WorkAuthor>(new[]
-            {
+            Authors = new List<WorkAuthor>(
+            [
                 new WorkAuthor
                 {
                     First = "John",
                     Last = "Doe"
                 }
-            }),
+            ]),
             YearPub = 2020
         }, false);
 
@@ -29,14 +29,14 @@ public sealed class WorkKeyBuilderTest
     {
         string key = WorkKeyBuilder.Build(new Container
         {
-            Authors = new List<WorkAuthor>(new[]
-            {
+            Authors = new List<WorkAuthor>(
+            [
                 new WorkAuthor
                 {
                     First = "John",
                     Last = "Doe"
                 }
-            }),
+            ]),
             Number = "n.s.11",
             YearPub = 2020
         }, true);
@@ -49,15 +49,15 @@ public sealed class WorkKeyBuilderTest
     {
         string key = WorkKeyBuilder.Build(new Work
         {
-            Authors = new List<WorkAuthor>(new[]
-            {
+            Authors = new List<WorkAuthor>(
+            [
                 new WorkAuthor
                 {
                     First = "John",
                     Last = "Doe",
                     Suffix = "jr."
                 }
-            }),
+            ]),
             YearPub = 2020
         }, true);
 
@@ -69,8 +69,8 @@ public sealed class WorkKeyBuilderTest
     {
         string key = WorkKeyBuilder.Build(new Work
         {
-            Authors = new List<WorkAuthor>(new[]
-            {
+            Authors = new List<WorkAuthor>(
+            [
                 new WorkAuthor
                 {
                     First = "John",
@@ -83,7 +83,7 @@ public sealed class WorkKeyBuilderTest
                     Last = "Aspen",
                     Ordinal = 2
                 }
-            }),
+            ]),
             YearPub = 2020
         }, true);
 
@@ -95,8 +95,8 @@ public sealed class WorkKeyBuilderTest
     {
         string key = WorkKeyBuilder.Build(new Work
         {
-            Authors = new List<WorkAuthor>(new[]
-            {
+            Authors = new List<WorkAuthor>(
+            [
                 new WorkAuthor
                 {
                     First = "John",
@@ -127,7 +127,7 @@ public sealed class WorkKeyBuilderTest
                     Last = "Neuman",
                     Ordinal = 5
                 },
-            }),
+            ]),
             YearPub = 2020
         }, true);
 
@@ -139,8 +139,8 @@ public sealed class WorkKeyBuilderTest
     {
         string key = WorkKeyBuilder.Build(new Work
         {
-            Authors = new List<WorkAuthor>(new[]
-            {
+            Authors = new List<WorkAuthor>(
+            [
                 new WorkAuthor
                 {
                     First = "John",
@@ -151,7 +151,7 @@ public sealed class WorkKeyBuilderTest
                     First = "Mike",
                     Last = "Aspen",
                 }
-            }),
+            ]),
             YearPub = 2020
         }, true);
 
@@ -162,12 +162,12 @@ public sealed class WorkKeyBuilderTest
     {
         return new Work
         {
-            Authors = new List<WorkAuthor>(new[] { new WorkAuthor
+            Authors = new List<WorkAuthor>([ new WorkAuthor
             {
                 First = "John",
                 Last = "Doe"
             }
-            }),
+            ]),
             YearPub = 2020
         };
     }

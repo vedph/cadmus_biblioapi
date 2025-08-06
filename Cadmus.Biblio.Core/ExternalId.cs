@@ -8,27 +8,17 @@ public class ExternalId
     /// <summary>
     /// Gets or sets the source (work or container) identifier.
     /// </summary>
-    public string SourceId { get; set; }
+    public string SourceId { get; set; } = "";
 
     /// <summary>
     /// Gets or sets the scope.
     /// </summary>
-    public string Scope { get;set; }
+    public string Scope { get; set; } = "";
 
     /// <summary>
     /// Gets or sets the value.
     /// </summary>
-    public string Value { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ExternalId"/> class.
-    /// </summary>
-    public ExternalId()
-    {
-        SourceId = "";
-        Scope = "";
-        Value = "";
-    }
+    public string Value { get; set; } = "";
 
     /// <summary>
     /// Converts to string.

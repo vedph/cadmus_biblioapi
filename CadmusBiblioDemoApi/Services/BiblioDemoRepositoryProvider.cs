@@ -28,11 +28,11 @@ public sealed class BiblioDemoRepositoryProvider : IRepositoryProvider
     {
         ConnectionString = "";
         TagAttributeToTypeMap map = new();
-        map.Add(new[]
-        {
+        map.Add(
+        [
             // Cadmus.General.Parts
             typeof(NotePart).GetTypeInfo().Assembly,
-        });
+        ]);
 
         _partTypeProvider = new StandardPartTypeProvider(map);
     }

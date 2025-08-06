@@ -8,9 +8,9 @@ public sealed class DateTimeToUtcConverter : ValueConverter<DateTime, DateTime>
 {
     public DateTimeToUtcConverter() : base(Serialize, Deserialize, null) { }
 
-    static Expression<Func<DateTime, DateTime>> Deserialize = x =>
+    static readonly Expression<Func<DateTime, DateTime>> Deserialize = x =>
         x.Kind == DateTimeKind.Unspecified
         ? DateTime.SpecifyKind(x, DateTimeKind.Utc) : x;
 
-    static Expression<Func<DateTime, DateTime>> Serialize = x => x;
+    static readonly Expression<Func<DateTime, DateTime>> Serialize = x => x;
 }

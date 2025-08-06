@@ -56,7 +56,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <exception cref="ArgumentNullException">filter</exception>
     public DataPage<WorkInfo> GetWorks(WorkFilter filter)
     {
-        if (filter == null) throw new ArgumentNullException(nameof(filter));
+        ArgumentNullException.ThrowIfNull(filter);
 
         PrepareWorkFilter(filter);
 
@@ -254,7 +254,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <exception cref="ArgumentNullException">work</exception>
     public void AddWork(Work work)
     {
-        if (work == null) throw new ArgumentNullException(nameof(work));
+        ArgumentNullException.ThrowIfNull(work);
 
         using var db = GetContext();
         EfWork? ef = EfHelper.GetEfWork(work, db);
@@ -291,7 +291,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <exception cref="ArgumentNullException">filter</exception>
     public DataPage<WorkInfo> GetContainers(WorkFilter filter)
     {
-        if (filter == null) throw new ArgumentNullException(nameof(filter));
+        ArgumentNullException.ThrowIfNull(filter);
 
         PrepareWorkFilter(filter);
 
@@ -472,7 +472,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <exception cref="ArgumentNullException">container</exception>
     public void AddContainer(Container container)
     {
-        if (container == null) throw new ArgumentNullException(nameof(container));
+        ArgumentNullException.ThrowIfNull(container);
 
         using var db = GetContext();
         EfContainer? ef = EfHelper.GetEfContainer(container, db);
@@ -509,8 +509,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <exception cref="ArgumentNullException">id</exception>
     public WorkType? GetWorkType(string id)
     {
-        if (id == null)
-            throw new ArgumentNullException(nameof(id));
+        ArgumentNullException.ThrowIfNull(id);
 
         using var db = GetContext();
         EfWorkType? ef = db.WorkTypes.Find(id.ToString());
@@ -526,7 +525,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <exception cref="ArgumentNullException">filter</exception>
     public DataPage<WorkType> GetWorkTypes(WorkTypeFilter filter)
     {
-        if (filter == null) throw new ArgumentNullException(nameof(filter));
+        ArgumentNullException.ThrowIfNull(filter);
 
         using var db = GetContext();
         IQueryable<EfWorkType> types = db.WorkTypes.AsQueryable();
@@ -564,8 +563,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <exception cref="ArgumentNullException">type</exception>
     public void AddWorkType(WorkType type)
     {
-        if (type == null)
-            throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
         using var db = GetContext();
         EfHelper.EnsureEfWorkType(type, db);
@@ -605,7 +603,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <exception cref="ArgumentNullException">filter</exception>
     public DataPage<Author> GetAuthors(AuthorFilter filter)
     {
-        if (filter == null) throw new ArgumentNullException(nameof(filter));
+        ArgumentNullException.ThrowIfNull(filter);
 
         PrepareAuthorFilter(filter);
 
@@ -663,7 +661,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <exception cref="ArgumentNullException">author</exception>
     public void AddAuthor(Author author)
     {
-        if (author == null) throw new ArgumentNullException(nameof(author));
+        ArgumentNullException.ThrowIfNull(author);
 
         using var db = GetContext();
         EfAuthor? ef = EfHelper.GetOrAddEfAuthor(author, db);
@@ -755,7 +753,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
         {
             // filter value for keyword can be language:value
             int i = filter.Value.IndexOf(':');
-            if (i == 3)
+            if (i > -1)
             {
                 string l = filter.Value[..3];
                 keywords = keywords.Where(k => k.Language == l);
@@ -795,8 +793,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
     /// <exception cref="ArgumentNullException">keyword</exception>
     public int AddKeyword(Keyword keyword)
     {
-        if (keyword == null)
-            throw new ArgumentNullException(nameof(keyword));
+        ArgumentNullException.ThrowIfNull(keyword);
 
         using var db = GetContext();
         EfKeyword? ef = EfHelper.GetEfKeyword(keyword, db);

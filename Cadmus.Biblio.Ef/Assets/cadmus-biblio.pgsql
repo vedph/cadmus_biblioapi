@@ -17,7 +17,7 @@ CREATE TABLE container (
 	type_id varchar(20) NULL,
 	title varchar(200) NOT NULL,
 	titlex varchar(200) NOT NULL,
-	"language" bpchar(3) NOT NULL,
+	"language" varchar(50) NOT NULL,
 	edition int2 NOT NULL,
 	publisher varchar(50) NULL,
 	year_pub int2 NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE "work" (
 	container_id bpchar(36) NULL,
 	title varchar(200) NOT NULL,
 	titlex varchar(200) NOT NULL,
-	"language" bpchar(3) NOT NULL,
+	"language" varchar(50) NOT NULL,
 	edition int2 NOT NULL,
 	publisher varchar(50) NULL,
 	year_pub int2 NOT NULL,
@@ -100,7 +100,7 @@ ALTER TABLE author_work ADD CONSTRAINT author_work_fk_1 FOREIGN KEY (work_id) RE
 -- keyword
 CREATE TABLE keyword (
 	id serial4 NOT NULL,
-	"language" bpchar(3) NOT NULL,
+	"language" varchar(50) NOT NULL,
 	value varchar(50) NOT NULL,
 	valuex varchar(50) NOT NULL,
 	CONSTRAINT keyword_pk PRIMARY KEY (id)

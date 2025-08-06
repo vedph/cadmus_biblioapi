@@ -47,8 +47,7 @@ public class ContainerBindingModel
     /// Gets or sets the work's language.
     /// </summary>
     [Required]
-    [MaxLength(3)]
-    [RegularExpression("^[a-z]{3}$")]
+    [MaxLength(50)]
     public string? Language { get; set; }
 
     /// <summary>

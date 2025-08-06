@@ -46,7 +46,7 @@ public sealed class EfAuthor
         First = "";
         Last = "";
         Lastx = "";
-        AuthorWorks = new List<EfAuthorWork>();
+        AuthorWorks = [];
     }
 
     /// <summary>

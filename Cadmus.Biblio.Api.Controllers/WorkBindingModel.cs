@@ -55,10 +55,10 @@ public sealed class WorkBindingModel : ContainerBindingModel
             DatationValue = DatationValue,
             Keywords = Keywords?.Count > 0
                 ? Keywords.ConvertAll(m => m.ToKeyword())
-                : new List<Keyword>(),
+                : [],
             Links = Links?.Count > 0
                 ? Links.ConvertAll(m => m.ToExternalId())
-                : new List<ExternalId>(),
+                : [],
             Container = Container?.ToContainer(),
             FirstPage = FirstPage ?? 0,
             LastPage = LastPage ?? 0,

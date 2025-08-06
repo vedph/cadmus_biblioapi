@@ -7,8 +7,7 @@ public sealed class KeywordFilterBindingModel : PagingOptionsBindingModel
     /// <summary>
     /// The language to be matched.
     /// </summary>
-    [MaxLength(3)]
-    [RegularExpression("^[a-z]{3}$")]
+    [MaxLength(50)]
     public string? Language { get; set; }
 
     /// <summary>

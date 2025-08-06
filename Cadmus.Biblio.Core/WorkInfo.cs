@@ -28,7 +28,7 @@ public class WorkInfo
     /// <summary>
     /// Gets or sets the authors and/or contributors.
     /// </summary>
-    public List<WorkAuthor> Authors { get; set; }
+    public List<WorkAuthor> Authors { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the work's type ID (e.g. book, journal, etc.).
@@ -78,19 +78,10 @@ public class WorkInfo
     /// <summary>
     /// Gets or sets the optional keywords linked to this work.
     /// </summary>
-    public List<Keyword> Keywords { get; set; }
+    public List<Keyword> Keywords { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the container.
     /// </summary>
     public WorkInfo? Container { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="WorkInfo"/> class.
-    /// </summary>
-    public WorkInfo()
-    {
-        Authors = new List<WorkAuthor>();
-        Keywords = new List<Keyword>();
-    }
 }

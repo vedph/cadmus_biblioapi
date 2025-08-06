@@ -5,7 +5,7 @@ namespace Cadmus.Biblio.Core;
 public sealed class KeywordFilter : PagingOptions
 {
     /// <summary>
-    /// The language (ISO 639-3) to match.
+    /// The language (ISO 639-3, BCP47, etc.) to match.
     /// </summary>
     public string? Language { get; set; }
 
