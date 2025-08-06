@@ -129,6 +129,7 @@ public static class Program
             app.MapScalarApiReference();
 
             Log.Information("Running API");
+            Console.WriteLine("Running API...");
             await app.RunAsync();
 
             return 0;
