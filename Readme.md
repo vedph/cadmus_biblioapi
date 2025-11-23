@@ -251,6 +251,10 @@ Here we seed 3 items just for test. You should set the count to 0 in production.
 
 ## History
 
+### 9.0.0
+
+- 2025-11-23: ⚠️ upgraded to NET 10.
+
 ### 8.1.0
 
 - 2025-08-06:
