@@ -9,9 +9,9 @@
 		<Description>Cadmus bibliography API Entity Framework components</Description>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
-		<Version>9.0.0</Version>
-		<FileVersion>9.0.0</FileVersion>
-		<AssemblyVersion>9.0.0</AssemblyVersion>
+		<Version>9.0.1</Version>
+		<FileVersion>9.0.1</FileVersion>
+		<AssemblyVersion>9.0.1</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,9 +25,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="LinqKit.Core" Version="1.2.9" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+		<PackageReference Include="LinqKit.Core" Version="1.2.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>

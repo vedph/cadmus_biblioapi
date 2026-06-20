@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+    <File Path="Dockerfile" />
+    <File Path="Dockerfile-demo" />
+    <File Path="Readme.md" />
+    <File Path="schema.png" />
+  </Folder>
+  <Project Path="cadmus-biblio/cadmus-biblio.csproj" />
+  <Project Path="Cadmus.Biblio.Api.Controllers/Cadmus.Biblio.Api.Controllers.csproj" />
+  <Project Path="Cadmus.Biblio.Core.Test/Cadmus.Biblio.Core.Test.csproj" />
+  <Project Path="Cadmus.Biblio.Core/Cadmus.Biblio.Core.csproj" />
+  <Project Path="Cadmus.Biblio.Ef.Test/Cadmus.Biblio.Ef.Test.csproj" />
+  <Project Path="Cadmus.Biblio.Ef/Cadmus.Biblio.Ef.csproj" />
+  <Project Path="Cadmus.Biblio.Seed/Cadmus.Biblio.Seed.csproj" />
+  <Project Path="CadmusBiblioApi/CadmusBiblioApi.csproj" />
+  <Project Path="CadmusBiblioDemoApi/CadmusBiblioDemoApi.csproj" />
+</Solution>

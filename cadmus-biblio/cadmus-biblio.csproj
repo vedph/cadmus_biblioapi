@@ -10,9 +10,9 @@
     <Product>Cadmus</Product>
     <Description>Cadmus bibliography API CLI tool.</Description>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>9.0.0</Version>
-    <FileVersion>9.0.0</FileVersion>
-    <AssemblyVersion>9.0.0</AssemblyVersion>
+    <Version>9.0.1</Version>
+    <FileVersion>9.0.1</FileVersion>
+    <AssemblyVersion>9.0.1</AssemblyVersion>
 	<Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -28,11 +28,11 @@
 
   <ItemGroup>
     <PackageReference Include="Fusi.Cli.Commands" Version="2.1.1" />
-    <PackageReference Include="Fusi.DbManager.PgSql" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
-    <PackageReference Include="Serilog" Version="4.3.0" />
+    <PackageReference Include="Fusi.DbManager.PgSql" Version="6.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.9" />
+    <PackageReference Include="Serilog" Version="4.3.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
