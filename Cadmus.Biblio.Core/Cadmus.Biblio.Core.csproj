@@ -1,22 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-	<Nullable>enable</Nullable>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <Authors>Daniele Fusi</Authors>
-    <Company>Fusi</Company>
-    <Product>Cadmus</Product>
-    <Description>Cadmus bibliography API core</Description>
-    <Copyright>by Daniele Fusi 2020</Copyright>
-    <Version>9.0.1</Version>
-    <FileVersion>9.0.1</FileVersion>
-    <AssemblyVersion>9.0.1</AssemblyVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<PackageId>Cadmus.Biblio.Core</PackageId>
+		<Title>Cadmus.Biblio.Core</Title>
+		<Authors>Daniele Fusi</Authors>
+		<Company>Fusi</Company>
+		<Product>Cadmus</Product>
+		<Description>Cadmus bibliography API core</Description>
+		<Copyright>by Daniele Fusi 2020</Copyright>
+		<DebugType>portable</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<Deterministic>true</Deterministic>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Fusi.Text" Version="7.0.2" />
-    <PackageReference Include="Fusi.Tools" Version="8.0.4" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Fusi.Text" />
+		<PackageReference Include="Fusi.Tools" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+	</ItemGroup>
 
 </Project>

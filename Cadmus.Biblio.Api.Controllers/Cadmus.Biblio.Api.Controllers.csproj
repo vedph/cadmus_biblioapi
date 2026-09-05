@@ -1,32 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-	<Nullable>enable</Nullable>
-    <Authors>Daniele Fusi</Authors>
-    <Company>Fusi</Company>
-    <Product>Cadmus</Product>
-    <Description>Cadmus bibliographic API controllers.</Description>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>9.0.1</Version>
-    <FileVersion>9.0.1</FileVersion>
-    <AssemblyVersion>9.0.1</AssemblyVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageId>Cadmus.Biblio.Api.Controllers</PackageId>
+		<Title>Cadmus.Biblio.Api.Controllers</Title>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<Authors>Daniele Fusi</Authors>
+		<Company>Fusi</Company>
+		<Product>Cadmus</Product>
+		<Description>Cadmus bibliographic API controllers.</Description>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<DebugType>portable</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<Deterministic>true</Deterministic>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Cadmus.Biblio.Core\Cadmus.Biblio.Core.csproj" />
-    <ProjectReference Include="..\Cadmus.Biblio.Ef\Cadmus.Biblio.Ef.csproj" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(Configuration)'=='Debug'">
+		<ProjectReference Include="..\Cadmus.Biblio.Core\Cadmus.Biblio.Core.csproj" />
+		<ProjectReference Include="..\Cadmus.Biblio.Ef\Cadmus.Biblio.Ef.csproj" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(Configuration)'=='Release'">
+		<PackageReference Include="Cadmus.Biblio.Core" />
+		<PackageReference Include="Cadmus.Biblio.Ef" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Cadmus.Api.Models" Version="11.0.6" />
-    <PackageReference Include="Cadmus.Api.Services" Version="13.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.9" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="10.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.9" />
-    <PackageReference Include="Serilog" Version="4.3.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Cadmus.Api.Models" />
+		<PackageReference Include="Cadmus.Api.Services" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Physical" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+		<PackageReference Include="Serilog" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+	</ItemGroup>
 
 </Project>
