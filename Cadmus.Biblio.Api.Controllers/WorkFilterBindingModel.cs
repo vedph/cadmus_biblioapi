@@ -69,6 +69,16 @@ public sealed class WorkFilterBindingModel : PagingOptionsBindingModel
     public short? YearPubMax { get; set; }
 
     /// <summary>
+    /// The minimum datation value.
+    /// </summary>
+    public double? DatationMin { get; set; }
+
+    /// <summary>
+    /// The maximum datation value.
+    /// </summary>
+    public double? DatationMax { get; set; }
+
+    /// <summary>
     /// The citation key to be matched.
     /// </summary>
     [MaxLength(300)]
@@ -90,6 +100,8 @@ public sealed class WorkFilterBindingModel : PagingOptionsBindingModel
             Keyword = Keyword,
             YearPubMin = YearPubMin ?? 0,
             YearPubMax = YearPubMax ?? 0,
+            DatationMin = DatationMin,
+            DatationMax = DatationMax,
             Key = Key
         };
     }

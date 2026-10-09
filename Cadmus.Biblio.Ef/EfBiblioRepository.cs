@@ -84,7 +84,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
                 predicate.Or(w => w.Key!.ToLower().Contains(filter.Key.ToLower()));
 
             if (!string.IsNullOrEmpty(filter.Type))
-                predicate.Or(w => w.Type!.Equals(filter.Type));
+                predicate.Or(w => w.TypeId == filter.Type);
 
             if (filter.AuthorId != Guid.Empty)
             {
@@ -136,7 +136,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
 
             // type
             if (!string.IsNullOrEmpty(filter.Type))
-                works = works.Where(w => w.Type!.Name == filter.Type);
+                works = works.Where(w => w.TypeId == filter.Type);
 
             // author ID
             if (filter.AuthorId != Guid.Empty)
@@ -317,7 +317,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
                 predicate.Or(c => c.Key!.ToLower().Contains(filter.Key.ToLower()));
 
             if (!string.IsNullOrEmpty(filter.Type))
-                predicate.Or(c => c.Type!.Equals(filter.Type));
+                predicate.Or(c => c.TypeId == filter.Type);
 
             if (filter.AuthorId != Guid.Empty)
             {
@@ -367,7 +367,7 @@ public sealed class EfBiblioRepository : IBiblioRepository
 
             // type
             if (!string.IsNullOrEmpty(filter.Type))
-                containers = containers.Where(w => w.Type!.Name == filter.Type);
+                containers = containers.Where(w => w.TypeId == filter.Type);
 
             // author ID
             if (filter.AuthorId != Guid.Empty)

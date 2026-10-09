@@ -1509,6 +1509,69 @@ public sealed class EfBiblioRepositoryTest
     }
 
     [Fact]
+    public void GetWorks_AndFilteredByType_Ok()
+    {
+        ResetDatabase();
+        var repository = GetRepository();
+        foreach (Work work in GetSampleWorks())
+            repository.AddWork(work);
+
+        var page = repository.GetWorks(new WorkFilter
+        {
+            IsMatchAnyEnabled = false,
+            Type = "paper"
+        });
+
+        Assert.Equal(1, page.Total);
+        Assert.Single(page.Items);
+        Assert.Equal("Il gamma", page.Items[0].Title);
+    }
+
+    [Fact]
+    public void GetWorks_OrFilteredByType_Ok()
+    {
+        ResetDatabase();
+        var repository = GetRepository();
+        foreach (Work work in GetSampleWorks())
+            repository.AddWork(work);
+
+        var page = repository.GetWorks(new WorkFilter
+        {
+            IsMatchAnyEnabled = true,
+            Type = "paper",
+            YearPubMax = 1900
+        });
+
+        Assert.Equal(1, page.Total);
+        Assert.Single(page.Items);
+        Assert.Equal("Il gamma", page.Items[0].Title);
+    }
+
+    [Fact]
+    public void GetWorks_FilteredByDatation_Ok()
+    {
+        ResetDatabase();
+        var repository = GetRepository();
+        IList<Work> works = GetSampleWorks();
+        works[0].Datation = "1200";
+        works[0].DatationValue = 1200;
+        works[1].Datation = "1500";
+        works[1].DatationValue = 1500;
+        foreach (Work work in works)
+            repository.AddWork(work);
+
+        var page = repository.GetWorks(new WorkFilter
+        {
+            DatationMin = 1100,
+            DatationMax = 1300
+        });
+
+        Assert.Equal(1, page.Total);
+        Assert.Single(page.Items);
+        Assert.Equal("The Alpha", page.Items[0].Title);
+    }
+
+    [Fact]
     public void AddWork_SameKey_Suffixed()
     {
         ResetDatabase();

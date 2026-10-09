@@ -1,5 +1,9 @@
 # History
 
+- 2026-10-09:
+  - fixed works/containers type filter: it matched the type's name (or, when matching any, compared the type entity with a string) rather than its ID, which is what clients send and what `Work.Type` holds, so filtering by type never matched.
+  - fixed works/containers filter binding model, which lacked `DatationMin` and `DatationMax`: datation filters sent by clients were silently ignored.
+
 ## 9.0.2
 
 - 2026-09-05:
